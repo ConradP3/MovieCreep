@@ -1,7 +1,13 @@
+*.pyc
+__pycache__/*
+databases/*
+!databases/README.md
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
 *$py.class
+
 
 # C extensions
 *.so
