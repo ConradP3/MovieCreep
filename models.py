@@ -20,4 +20,60 @@ def get_time():
 #
 ## always commit your models to avoid problems later
 
+# Movie Table
+    # Movie ID
+    # Title
+    # Avg rating
+    # Genre
+    # Img
+    # src watched at
+    # release date
+    # Country
+    # Language
+db.define_table(
+    'movies',
+    Field('movies_title'),
+    Field('movies_rating'),
+    Field('movies_genre'),
+    Field('movies_img'),
+    Field('movies_source'),
+    Field('movies_releasedate'),
+    Field('movies_country'),
+    Field('movies_language')
+)
+# Reviews Table
+    # Movie ID
+    # User ID
+    # Review
+    # Rating
+db.define_table(
+    'reviews',
+    Field('movie_id', 'reference movies'),
+    Field('reviews_user_email', default=get_user_email),
+    Field('reviews_review'),
+    Field('reviews_rating')
+)
+
+# User Table
+    # User ID
+    # Movies/shows watched
+    # Rating
+    # Name/Email etc.
+    # Friends list
+    # When joined
+
+
+# Planned/already Watched
+    # Movie ID
+    # User ID
+    # Watched (Boolean)
+db.define_table(
+    'watch_list',
+    Field('movie_id', 'reference movies'),
+    Field('movie_title'),
+    Field('watch_list_user_email', default=get_user_email),
+    Field('watch_list_watched', 'boolean')
+)
+
+
 db.commit()
