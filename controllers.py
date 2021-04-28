@@ -38,3 +38,7 @@ url_signer = URLSigner(session)
 def index():
     print("User:", get_user_email())
     return dict()
+
+@action('test')
+def test():
+    print(db(db.movies.title == "Toy Story").select())

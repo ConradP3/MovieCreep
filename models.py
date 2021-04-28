@@ -5,7 +5,7 @@ This file defines the database models
 import datetime
 from .common import db, Field, auth
 from pydal.validators import *
-
+from py4web import URL
 
 def get_user_email():
     return auth.current_user.get('email') if auth.current_user else None
@@ -32,14 +32,13 @@ def get_time():
     # Language
 db.define_table(
     'movies',
-    Field('movies_title'),
-    Field('movies_rating'),
-    Field('movies_genre'),
-    Field('movies_img'),
-    Field('movies_source'),
-    Field('movies_releasedate'),
-    Field('movies_country'),
-    Field('movies_language')
+    Field('title'),
+    Field('rating'),
+    Field('genres'),
+    Field('img'),
+    Field('releasedate'),
+    Field('country'),
+    Field('language')
 )
 # Reviews Table
     # Movie ID
@@ -77,3 +76,6 @@ db.define_table(
 
 
 db.commit()
+
+with open('apps/MovieCreep/mdb.csv', 'r', encoding='utf-8', newline='') as movies_csv:
+    db.movies.import_from_csv_file(movies_csv)
