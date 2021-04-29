@@ -27,14 +27,60 @@ Warning: Fixtures MUST be declared with @action.uses({fixtures}) else your app w
 
 from py4web import action, request, abort, redirect, URL
 from yatl.helpers import A
-from .common import db, session, T, cache, auth, logger, authenticated, unauthenticated, flash
+from .common import db, session, T, cache, auth, logger, authenticated, unauthenticated, flash, Field
 from py4web.utils.url_signer import URLSigner
 from .models import get_user_email
+from py4web.utils.form import Form, FormStyleBulma
+from pydal.validators import *
 
 url_signer = URLSigner(session)
 
+# SRC : https://bitbucket.org/luca_de_alfaro/class_registration/src/master/
+
 @action('index')
-@action.uses(db, auth, 'index.html')
+@action.uses(db, auth.user, 'index.html')
 def index():
-    print("User:", get_user_email())
-    return dict()
+    movie_rows = db((db.watch_list.watch_list_user_email == get_user_email())).select()
+    return dict(rows=movie_rows, url_signer=url_signer)
+
+# add_movie: to add a new entry. 
+@action('add_movie', method=["GET", "POST"])
+@action.uses(db, session, auth.user, 'add_movie.html')
+def add():
+    form = Form(db.watch_list, csrf_session=session, formstyle=FormStyleBulma)
+    if form.accepted:
+        redirect(URL('index'))
+    return dict(form=form)
+
+# edit_movie
+@action('edit_movie/<watch_list_id:int>', method=["GET", "POST"])
+@action.uses(db, session, auth.user, url_signer.verify(), 'edit_movie.html')
+def edit(watch_list_id=None):
+    assert watch_list_id is not None
+    p = db.watch_list[watch_list_id]
+    if p is None :
+        # Nothing found to be edited
+        redirect(URL('index'))
+
+    form = Form(db.watch_list, record=p, deletable=False, csrf_session=session, formstyle=FormStyleBulma)
+
+    if form.accepted:
+        # The update already happened
+        redirect(URL('index'))
+
+    owner_info = db(db.watch_list.id == watch_list_id).select().first()
+    if owner_info['watch_list_user_email'] == get_user_email():
+        return dict(form=form)
+    else:
+        redirect(URL('index'))
+
+
+# delete_movie
+@action('delete_movie/<watch_list_id:int>')
+@action.uses(db, session, auth.user, url_signer.verify())
+def delete(watch_list_id=None):
+    assert watch_list_id is not None
+    owner_info = db(db.watch_list.id == watch_list_id).select().first()
+    if owner_info['watch_list_user_email'] == get_user_email():
+        db(db.watch_list.id == watch_list_id).delete()
+    redirect(URL('index'))

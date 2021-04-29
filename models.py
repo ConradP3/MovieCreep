@@ -3,7 +3,7 @@ This file defines the database models
 """
 
 import datetime
-from .common import db, Field, auth
+from .common import db, Field, auth, T
 from pydal.validators import *
 
 
@@ -74,6 +74,12 @@ db.define_table(
     Field('watch_list_user_email', default=get_user_email),
     Field('watch_list_watched', 'boolean')
 )
+
+db.watch_list.id.readable = db.watch_list.id.writable = False
+db.watch_list.movie_id.readable = db.watch_list.movie_id.writable = False
+db.watch_list.watch_list_user_email.readable = db.watch_list.watch_list_user_email.writable = False
+
+db.watch_list.watch_list_watched.label = T('Seen')
 
 
 db.commit()
