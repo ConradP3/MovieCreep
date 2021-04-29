@@ -43,6 +43,7 @@ def index():
     movie_rows = db((db.watch_list.watch_list_user_email == get_user_email())).select()
     return dict(rows=movie_rows, url_signer=url_signer)
 
+
 # add_movie: to add a new entry. 
 @action('add_movie', method=["GET", "POST"])
 @action.uses(db, session, auth.user, 'add_movie.html')
@@ -84,3 +85,24 @@ def delete(watch_list_id=None):
     if owner_info['watch_list_user_email'] == get_user_email():
         db(db.watch_list.id == watch_list_id).delete()
     redirect(URL('index'))
+
+
+
+@action('movie_reccomendations')
+@action.uses(db, auth.user, 'movie_reccomendations.html')
+def movie_reccomendations():
+    movie_rows = db((db.watch_list.watch_list_user_email == get_user_email())).select()
+    return dict(rows=movie_rows, url_signer=url_signer)
+
+
+@action('feed')
+@action.uses(db, auth.user, 'feed.html')
+def feed():
+    movie_rows = db((db.watch_list.watch_list_user_email == get_user_email())).select()
+    return dict(rows=movie_rows, url_signer=url_signer)
+
+@action('notifications')
+@action.uses(db, auth.user, 'notifications.html')
+def notifications():
+    movie_rows = db((db.watch_list.watch_list_user_email == get_user_email())).select()
+    return dict(rows=movie_rows, url_signer=url_signer)
