@@ -9,6 +9,31 @@
            </a>
         </div>
      </h1>
+     <div class="columns is-mobile">
+      [[for row in rows:]]
+
+      <div class="column">
+        <div class="box" >
+              <img src="./images/logo.png">
+                <p><B>[[=row.movie_title]]</B></p>
+                <p>[[=row.watch_list_watched]]</p>
+                <p>[[=row.watch_list_date]]</p>
+
+            <a class="button is-pulled-right" href="[[=URL('edit_movie', row.id, signer=url_signer)]]">
+              <span class="icon"><i class="fa fa-fw fa-pencil"></i></span> <span>Edit</span>
+            </a>
+
+            <a class="button is-pulled-right" href="[[=URL('delete_movie', row.id, signer=url_signer)]]">
+              <span class="icon"><i class="fa fa-fw fa-trash"></i></span>
+            </a>
+            
+            <br />
+            <br />
+
+        </div>
+      [[pass]]
+
+    </div>
   
       <table class="table is-striped is-fullwidth">
         <tr>

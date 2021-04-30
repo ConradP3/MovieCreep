@@ -71,6 +71,7 @@ db.define_table(
     'watch_list',
     Field('movie_id', 'reference movies'),
     Field('movie_title', requires=IS_LENGTH(minsize=1)),
+    Field('watch_list_date', 'date'),
     Field('watch_list_user_email', default=get_user_email),
     Field('watch_list_watched', 'boolean')
 )
