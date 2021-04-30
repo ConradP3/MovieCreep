@@ -11,12 +11,11 @@
   </head>
   <body>
     <!-- Navigation bar -->
-    <nav class="navbar is-info" role="navigation" aria-label="main navigation">
+    <nav class="navbar is-info">
+      <img src="./images/logo.png" href="[[=URL('index')]]" alt="Movue Creep" width="90" height="28">
       <div class="navbar-brand">
-
         <a class="navbar-item" href="[[=URL('index')]]">
-        <img class="logo" width="150" src="./images/logo.png">
-          Movies
+          Movie Watch List
           <!-- Planned and Already Watched Movies come up -->
         </a>
         <a class="navbar-item" href="[[=URL('feed')]]">
@@ -32,7 +31,6 @@
           <!-- Can choose to have notifications when friend adds you, they share a movie etc. -->
         </a>
 
-
         <a role="button" class="navbar-burger burger" aria-label="menu" aria-expanded="false" data-target="the-navbar-menu"
            onclick="this.classList.toggle('is-active');document.getElementById(this.dataset.target).classList.toggle('is-active');">
           <span aria-hidden="true"></span>
@@ -45,7 +43,6 @@
         <div class="navbar-start">
           [[block page_menu_items]]<!-- individual pages can add menu items here -->[[end]]
         </div>
-
         <div class="navbar-end">
           <div class="navbar-item">
             <div class="buttons">
@@ -62,9 +59,10 @@
                   </div>
                 </div>
               [[else:]]
-                <a class="button is-link" href="[[=URL('auth/register')]]">Sign up</a>
-                <a class="button is-success" href="[[=URL('auth/login')]]">Log in</a>
+                  <a class="button is-link" href="[[=URL('auth/register')]]">Sign up</a>
+                  <a class="button is-success" href="[[=URL('auth/login')]]">Log in</a>
               [[pass]]
+
             </div>
           </div>
         </div>
@@ -77,7 +75,7 @@
     <footer class="footer">
       <div class="content has-text-centered">
         Made with <a href="https://py4web.com">py4web</a>.
-        <a href="https://learn-py4web.github.io">Learn py4web!</a>
+        <!-- <a href="https://learn-py4web.github.io">Learn py4web!</a> -->
       </div>
     </footer>
   </body>

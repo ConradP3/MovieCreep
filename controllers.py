@@ -37,6 +37,9 @@ url_signer = URLSigner(session)
 
 # SRC : https://bitbucket.org/luca_de_alfaro/class_registration/src/master/
 
+# #######################################################
+# Index
+# #######################################################
 @action('index')
 @action.uses(db, auth.user, 'index.html')
 def index():
@@ -87,20 +90,32 @@ def delete(watch_list_id=None):
     redirect(URL('index'))
 
 
-
+# #######################################################
+# Movie Reccomendations
+# #######################################################
 @action('movie_reccomendations')
 @action.uses(db, auth.user, 'movie_reccomendations.html')
 def movie_reccomendations():
     movie_rows = db((db.watch_list.watch_list_user_email == get_user_email())).select()
     return dict(rows=movie_rows, url_signer=url_signer)
 
-
+# #######################################################
+# Feed
+# #######################################################
+# TODO
+# 1. Find a way to show only friends list's added movies with a timestamp similar to Twitter
 @action('feed')
 @action.uses(db, auth.user, 'feed.html')
 def feed():
-    movie_rows = db((db.watch_list.watch_list_user_email == get_user_email())).select()
+    movie_rows = db(db.watch_list).select()
     return dict(rows=movie_rows, url_signer=url_signer)
 
+# #######################################################
+# Notifications
+# #######################################################
+# TODO
+# 1. Friend added/removed notification
+# 2. Settings to show or not show friends added movies
 @action('notifications')
 @action.uses(db, auth.user, 'notifications.html')
 def notifications():

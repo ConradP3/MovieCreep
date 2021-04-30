@@ -1,9 +1,35 @@
 [[extend 'layout.html']]
-
 <div class="section">
+    <div class="container">
+      <h1 class="title">Feed</h1>
+        <div class='is-pulled-right'>
+           <a class="button is-success" href="[[=URL('add_movie')]]">
+              <span class="icon"><i class="fa fa-plus"></i></span>
+              <span>Add New Movie</span>
+           </a>
+        </div>
+     </h1>
+  
+      <table class="table is-striped is-fullwidth">
+        <tr>
+          <th>Movie Title</th>
+          <th>Watched</th>
+          <th>User</th>
+        </tr>
+        [[for row in rows:]]
+        <tr>
+          <td>[[=row.movie_title]]</td>
+          <td>[[=row.watch_list_watched]]</td>
+          <td>[[=row.watch_list_user_email]]</td>
 
-  <h1 class="title">Feed</h1>
-
+        </tr>
+        [[pass]]
+      </table>
+    </div>
+  
+  
+  
+  </div>
 
 
 </div>
