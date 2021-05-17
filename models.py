@@ -73,7 +73,8 @@ db.define_table(
     Field('movie_title', requires=IS_LENGTH(minsize=1)),
     Field('watch_list_date', 'date'),
     Field('watch_list_user_email', default=get_user_email),
-    Field('watch_list_watched', 'boolean')
+    Field('watch_list_watched', 'boolean'),
+    Field('watch_list_rating', 'integer', default=0)
 )
 
 db.watch_list.id.readable = db.watch_list.id.writable = False
