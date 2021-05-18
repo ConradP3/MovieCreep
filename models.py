@@ -6,7 +6,10 @@ import datetime
 from .common import db, Field, auth, T
 from pydal.validators import *
 
-MOVIE_DB_PATH = './projects/MovieCreep/mdb.csv'
+import os
+
+MOVIE_DB_PATH = os.path.dirname(os.path.abspath(__file__)) + '/mdb.csv'
+
 
 def get_user_email():
     return auth.current_user.get('email') if auth.current_user else None
