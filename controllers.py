@@ -78,6 +78,31 @@ def edit(watch_list_id=None):
     else:
         redirect(URL('index'))
 
+@action('get_rating')
+@action.uses(url_signer.verify(), db, auth.user)
+def get_rating():
+    """Returns the rating for a user and an image."""
+    id = request.params.get('review_id')
+    row = db((db.reviews.id == id) &
+             (db.reviews.reviews_user_email == get_user_email())).select().first()
+    rating = row.reviews_rating if row is not None else 0
+    return dict(rating=rating)
+
+@action('set_rating', method='POST')
+@action.uses(url_signer.verify(), db, auth.user)
+def set_rating():
+    """Sets the rating for movie."""
+    id = request.json.get('review_id')
+    rating = request.json.get('rating')
+    assert id is not None and rating is not None
+    db.reviews.update_or_insert(
+        ((db.reviews.id == id) & (db.reviews.reviews_user_email == get_user_email())),
+        image=image_id,
+        rater=get_user(),
+        rating=rating
+    )
+    return "ok" # Just to have some confirmation in the Network tab.
+
 
 # delete_movie
 @action('delete_movie/<watch_list_id:int>')

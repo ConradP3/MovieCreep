@@ -44,6 +44,23 @@ db.define_table(
     Field('country'),
     Field('language')
 )
+
+
+# Planned/already Watched
+    # Movie ID
+    # User ID
+    # Watched (Boolean)
+db.define_table(
+    'watch_list',
+    Field('movie_id', 'reference movies'),
+    Field('movie_title', requires=IS_LENGTH(minsize=1)),
+    Field('watch_list_date', 'date'),
+    Field('watch_list_user_email', default=get_user_email),
+    Field('watch_list_watched', 'boolean'),
+    Field('watch_list_rating', 'integer', default=0)
+)
+
+
 # Reviews Table
     # Movie ID
     # User ID
@@ -52,6 +69,7 @@ db.define_table(
 db.define_table(
     'reviews',
     Field('movie_id', 'reference movies'),
+    Field('watch_listid', 'reference watch_list'),
     Field('reviews_user_email', default=get_user_email),
     Field('reviews_review'),
     Field('reviews_rating')
@@ -66,18 +84,7 @@ db.define_table(
     # When joined
 
 
-# Planned/already Watched
-    # Movie ID
-    # User ID
-    # Watched (Boolean)
-db.define_table(
-    'watch_list',
-    Field('movie_id', 'reference movies'),
-    Field('movie_title', requires=IS_LENGTH(minsize=1)),
-    Field('watch_list_date', 'date'),
-    Field('watch_list_user_email', default=get_user_email),
-    Field('watch_list_watched', 'boolean')
-)
+
 
 db.watch_list.id.readable = db.watch_list.id.writable = False
 db.watch_list.movie_id.readable = db.watch_list.movie_id.writable = False
