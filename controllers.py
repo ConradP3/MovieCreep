@@ -33,6 +33,10 @@ from .models import get_user_email
 from py4web.utils.form import Form, FormStyleBulma
 from pydal.validators import *
 
+import json
+import requests
+
+
 url_signer = URLSigner(session)
 
 # SRC : https://bitbucket.org/luca_de_alfaro/class_registration/src/master/
@@ -44,6 +48,23 @@ url_signer = URLSigner(session)
 @action.uses(db, auth.user, 'index.html')
 def index():
     movie_rows = db((db.watch_list.watch_list_user_email == get_user_email())).select()
+    # print(movie_rows)
+    
+    for m in movie_rows:
+        try:
+            link = ''
+            url = 'http://www.omdbapi.com/?t=' + str(m['movie_title']) + '&apikey=8fb72c1a'
+            movie_data = requests.get(url).json()
+            r = requests.get(url)
+            link += str(movie_data['Poster'])
+            m['link'] = link
+        # https://api.themoviedb.org/3/movie/550?api_key=fa5fa1a7dd403108f2c44bf79fca3f2f
+        # https://image.tmdb.org/t/p/w500/pB8BM7pdSp6B6Ih7QZ4DrQ3PmJK.jpg
+        except:
+            pass
+
+
+    print(movie_rows)
     return dict(rows=movie_rows, url_signer=url_signer)
 
 
@@ -78,30 +99,30 @@ def edit(watch_list_id=None):
     else:
         redirect(URL('index'))
 
-@action('get_rating')
-@action.uses(url_signer.verify(), db, auth.user)
-def get_rating():
-    """Returns the rating for a user and an image."""
-    id = request.params.get('review_id')
-    row = db((db.reviews.id == id) &
-             (db.reviews.reviews_user_email == get_user_email())).select().first()
-    rating = row.reviews_rating if row is not None else 0
-    return dict(rating=rating)
+# @action('get_rating')
+# @action.uses(url_signer.verify(), db, auth.user)
+# def get_rating():
+#     """Returns the rating for a user and an image."""
+#     id = request.params.get('review_id')
+#     row = db((db.reviews.id == id) &
+#              (db.reviews.reviews_user_email == get_user_email())).select().first()
+#     rating = row.reviews_rating if row is not None else 0
+#     return dict(rating=rating)
 
-@action('set_rating', method='POST')
-@action.uses(url_signer.verify(), db, auth.user)
-def set_rating():
-    """Sets the rating for movie."""
-    id = request.json.get('review_id')
-    rating = request.json.get('rating')
-    assert id is not None and rating is not None
-    db.reviews.update_or_insert(
-        ((db.reviews.id == id) & (db.reviews.reviews_user_email == get_user_email())),
-        image=image_id,
-        rater=get_user(),
-        rating=rating
-    )
-    return "ok" # Just to have some confirmation in the Network tab.
+# @action('set_rating', method='POST')
+# @action.uses(url_signer.verify(), db, auth.user)
+# def set_rating():
+#     """Sets the rating for movie."""
+#     id = request.json.get('review_id')
+#     rating = request.json.get('rating')
+#     assert id is not None and rating is not None
+#     db.reviews.update_or_insert(
+#         ((db.reviews.id == id) & (db.reviews.reviews_user_email == get_user_email())),
+#         image=image_id,
+#         rater=get_user(),
+#         rating=rating
+#     )
+#     return "ok" # Just to have some confirmation in the Network tab.
 
 
 # delete_movie
@@ -133,6 +154,23 @@ def movie_reccomendations():
 @action.uses(db, auth.user, 'feed.html')
 def feed():
     movie_rows = db(db.watch_list).select()
+    # print(movie_rows)
+    
+    for m in movie_rows:
+        link = ''
+        try:
+            url = 'http://www.omdbapi.com/?t=' + str(m['movie_title']) + '&apikey=8fb72c1a'
+            movie_data = requests.get(url).json()
+            r = requests.get(url)
+            link += str(movie_data['Poster'])
+            m['link'] = link
+            # https://api.themoviedb.org/3/movie/550?api_key=fa5fa1a7dd403108f2c44bf79fca3f2f
+            # https://image.tmdb.org/t/p/w500/pB8BM7pdSp6B6Ih7QZ4DrQ3PmJK.jpg
+        except:
+            pass
+
+
+    print(movie_rows)
     return dict(rows=movie_rows, url_signer=url_signer)
 
 # #######################################################

@@ -14,10 +14,10 @@
 
       <div class="container block">
         <div class="box has-background-white-ter box-shadow">
-              <img src="./images/logo.png">
-                <p><B>[[=row.movie_title]]</B></p>
-                <p>[[=row.watch_list_watched]]</p>
-                <p>[[=row.watch_list_date]]</p>
+          <img src="[[=row.link]]" width="142">
+            <p><B>[[=row.movie_title]]</B></p>
+            <p>[[=row.watch_list_watched]]</p>
+            <p>[[=row.watch_list_date]]</p>
 
             <a class="button is-pulled-right" href="[[=URL('edit_movie', row.id, signer=url_signer)]]">
               <span class="icon"><i class="fa fa-fw fa-pencil"></i></span> <span>Edit</span>

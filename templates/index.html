@@ -13,15 +13,17 @@
       </div>
    </h1>
 
-      <div class="columns is-mobile">
+      <!-- <div class="columns is-mobile"> -->
             [[for row in rows:]]
 
             <div class="container block">
               <div class="box has-background-white-ter box-shadow">
-                    <img src="./images/logo.png">
+                    <!-- <img src="./images/logo.png"> -->
+                    <img src="[[=row.link]]" width="142">
                       <p><B>[[=row.movie_title]]</B></p>
                       <p>[[=row.watch_list_watched]]</p>
                       <p>[[=row.watch_list_date]]</p>
+                      <!-- <p>[[=row]]</p> -->
                                     <!-- This is the code for the star rating -->
                         <span @mouseout="stars_out(img._idx)">
                           <span @mouseover="stars_over(img._idx, star_idx)"
@@ -38,14 +40,19 @@
                   <a class="button is-pulled-right" href="[[=URL('delete_movie', row.id, signer=url_signer)]]">
                     <span class="icon"><i class="fa fa-fw fa-trash"></i></span>
                   </a>
-                  
+
+                 
                   <br />
+                  <br />
+                  <a class="is-pulled-right">
+                    <p>[[=row.watch_list_time_stamp]]</p>
+                  </a>
                   <br />
 
               </div>
             [[pass]]
 
-          </div>
+          <!-- </div> -->
         
 
 
