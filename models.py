@@ -17,7 +17,8 @@ def get_user_email():
 def get_time():
     return datetime.datetime.utcnow()
 
-
+def get_user():
+    return auth.current_user.get('id') if auth.current_user else None
 ### Define your table below
 #
 # db.define_table('thing', Field('name'))
@@ -56,6 +57,7 @@ db.define_table(
     Field('movie_title', requires=IS_LENGTH(minsize=1)),
     Field('watch_list_date', 'date'),
     Field('watch_list_user_email', default=get_user_email),
+    Field('watch_list_user_name', default=get_user),
     Field('watch_list_watched', 'boolean'),
     Field('watch_list_rating', 'integer', default=0),
     Field('watch_list_time_stamp', 'datetime', default=get_time)
@@ -87,6 +89,7 @@ db.define_table(
 
 
 db.watch_list.watch_list_time_stamp.readable = db.watch_list.watch_list_time_stamp.writable = False
+db.watch_list.watch_list_user_name.readable = db.watch_list.watch_list_user_name.writable = False
 db.watch_list.id.readable = db.watch_list.id.writable = False
 db.watch_list.movie_id.readable = db.watch_list.movie_id.writable = False
 db.watch_list.watch_list_user_email.readable = db.watch_list.watch_list_user_email.writable = False

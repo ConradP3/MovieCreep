@@ -10,6 +10,7 @@ let init = (app) => {
     // This is the Vue data.
     app.data = {
         images: [],
+        delete_edit_mode: false,
     };
 
     app.enumerate = (a) => {
@@ -45,11 +46,27 @@ let init = (app) => {
         img.num_stars_display = num_stars;
     };
 
+
+    app.set_delete_edit_status = function (new_status) {
+        app.vue.delete_edit_mode = new_status;
+    };
+
+    app.add_movie = function () {
+        axios.post(add_movie_url,
+            {
+                post_text: app.vue.add_post_text
+            }).then(function () {
+            app.set_delete_edit_status(false);
+        });
+    };
+
     // This contains all the methods.
     app.methods = {
         set_stars: app.set_stars,
         stars_out: app.stars_out,
         stars_over: app.stars_over,
+        set_delete_edit_status: app.set_delete_edit_status,
+        add_movie: app.add_movie,
     };
 
     // This creates the Vue instance.

@@ -21,7 +21,11 @@
                     <!-- <img src="./images/logo.png"> -->
                     <img src="[[=row.link]]" width="142">
                       <p><B>[[=row.movie_title]]</B></p>
-                      <p>[[=row.watch_list_watched]]</p>
+                      <p>[[if row.watch_list_watched:]]Seen
+                        [[else:]] 
+                          Not Seen
+                        [[pass]]
+                      </p>
                       <p>[[=row.watch_list_date]]</p>
                       <!-- <p>[[=row]]</p> -->
                                     <!-- This is the code for the star rating -->
@@ -63,3 +67,13 @@
 
 </div>
 
+
+[[block page_scripts]]
+<!-- Loads the index-specific js for Vue -->
+<script>
+  let add_movie_url = "[[=XML(add_movie_url)]]";
+  let get_rating_url = "[[=XML(get_rating_url)]]";
+  let set_rating_url = "[[=XML(set_rating_url)]]";
+</script>
+<script src="js/index.js"></script>
+[[end]]

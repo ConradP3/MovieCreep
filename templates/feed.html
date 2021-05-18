@@ -1,41 +1,73 @@
 [[extend 'layout.html']]
 <div class="section">
-    <div class="container">
-      <div class='is-pulled-right'>
-        <a class="button is-success" href="[[=URL('add_movie')]]">
-           <span class="icon"><i class="fa fa-plus"></i></span>
-           <span>Add New Movie</span>
-        </a>
-     </div>
-      <h1 class="title">Feed</h1>
-        
-     <div class="columns is-mobile">
+  <div class="container">
+    <div class='is-pulled-right'>
+      <a class="button is-success" href="[[=URL('add_movie')]]">
+        <span class="icon"><i class="fa fa-plus"></i></span>
+        <span>Add New Movie</span>
+      </a>
+    </div>
+    <h1 class="title">Feed</h1>
+
+    <div class="columns is-mobile">
       [[for row in rows:]]
 
       <div class="container block">
         <div class="box has-background-white-ter box-shadow">
           <img src="[[=row.link]]" width="142">
-            <p><B>[[=row.movie_title]]</B></p>
-            <p>[[=row.watch_list_watched]]</p>
-            <p>[[=row.watch_list_date]]</p>
+          <p><B>[[=row.movie_title]]</B></p>
+          [[if row.watch_list_watched: ]]
+            <p>Seen by [[=row.watch_list_user_name]]</p>
 
-            <a class="button is-pulled-right" href="[[=URL('edit_movie', row.id, signer=url_signer)]]">
-              <span class="icon"><i class="fa fa-fw fa-pencil"></i></span> <span>Edit</span>
-            </a>
+          [[else:]]
+            <p>[[=row.watch_list_user_name]] Hasn't seen this</p>
+          [[pass]]
+          
+          <p>[[=row.watch_list_date]]</p>
+            <span @mouseout="stars_out(img._idx)">
+              <span @mouseover="stars_over(img._idx, star_idx)"
+                    @click="set_stars(img._idx, star_idx)"
+                    v-for="star_idx in [1, 2, 3, 4, 5]">
+                <i v-if="star_idx <= img.num_stars_display" class="fa fa-star"></i>
+                <i v-if="star_idx > img.num_stars_display" class="fa fa-star-o"></i>
+              </span>
+            </span>
+          [[x=row.watch_list_user_email]]
+          [[y=user_email]]
+          [[if x == y:]]
+              <a class="button is-pulled-right" href="[[=URL('edit_movie', row.id, signer=url_signer)]]">
+                <span class="icon"><i class="fa fa-fw fa-pencil"></i></span> <span>Edit</span>
+              </a>
 
-            <a class="button is-pulled-right" href="[[=URL('delete_movie', row.id, signer=url_signer)]]">
-              <span class="icon"><i class="fa fa-fw fa-trash"></i></span>
+              <a class="button is-pulled-right" href="[[=URL('delete_movie', row.id, signer=url_signer)]]">
+                <span class="icon"><i class="fa fa-fw fa-trash"></i></span>
+              </a>
+
+              <br />
+              <br />
+              
+              <a class="is-pulled-right">
+                <p>[[=row.watch_list_time_stamp]]</p>
+              </a>
+              <br />
+          [[pass]]
+          <br />
+          <br />
+          [[if x !=y :]]
+            <a class="is-pulled-right">
+              <p>[[=row.watch_list_time_stamp]]</p>
             </a>
-            
-            <br />
-            <br />
+          [[pass]]
+          <br />
 
         </div>
+
+      </div>
       [[pass]]
 
     </div>
-  
-      <table class="table is-striped is-fullwidth">
+
+    <!-- <table class="table is-striped is-fullwidth">
         <tr>
           <th>Movie Title</th>
           <th>Watched</th>
@@ -49,12 +81,22 @@
 
         </tr>
         [[pass]]
-      </table>
-    </div>
-  
-  
-  
+      </table> -->
   </div>
 
 
+
+
 </div>
+
+
+
+[[block page_scripts]]
+<!-- Loads the index-specific js for Vue -->
+<script>
+  let add_movie_url = "[[=XML(add_movie_url)]]";
+  let get_rating_url = "[[=XML(get_rating_url)]]";
+  let set_rating_url = "[[=XML(set_rating_url)]]";
+</script>
+<script src="js/index.js"></script>
+[[end]]

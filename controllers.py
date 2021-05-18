@@ -49,7 +49,7 @@ url_signer = URLSigner(session)
 def index():
     movie_rows = db((db.watch_list.watch_list_user_email == get_user_email())).select()
     # print(movie_rows)
-    
+    apikeys = ['8fb72c1a']
     for m in movie_rows:
         try:
             link = ''
@@ -65,7 +65,11 @@ def index():
 
 
     print(movie_rows)
-    return dict(rows=movie_rows, url_signer=url_signer)
+    return dict(rows=movie_rows, url_signer=url_signer,
+                add_movie_url = URL('add_movie', signer=url_signer),
+                get_rating_url = URL('get_rating', signer=url_signer),
+                set_rating_url = URL('set_rating', signer=url_signer),
+                user_email=get_user_email())
 
 
 # add_movie: to add a new entry. 
@@ -155,7 +159,7 @@ def movie_reccomendations():
 def feed():
     movie_rows = db(db.watch_list).select()
     # print(movie_rows)
-    
+    apikeys = ['8fb72c1a']
     for m in movie_rows:
         link = ''
         try:
@@ -171,7 +175,11 @@ def feed():
 
 
     print(movie_rows)
-    return dict(rows=movie_rows, url_signer=url_signer)
+    return dict(rows=movie_rows, url_signer=url_signer,
+                add_movie_url = URL('add_movie', signer=url_signer),
+                get_rating_url = URL('get_rating', signer=url_signer),
+                set_rating_url = URL('set_rating', signer=url_signer),
+                user_email=get_user_email())
 
 # #######################################################
 # Notifications
