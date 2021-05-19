@@ -38,6 +38,7 @@ import requests
 import uuid
 import random
 url_signer = URLSigner(session)
+apikeys = ['8fb72c1a']
 
 # SRC : https://bitbucket.org/luca_de_alfaro/class_registration/src/master/
 
@@ -49,11 +50,10 @@ url_signer = URLSigner(session)
 def index():
     movie_rows = db((db.watch_list.watch_list_user_email == get_user_email())).select()
     # print(movie_rows)
-    apikeys = ['8fb72c1a']
     for m in movie_rows:
         try:
             link = ''
-            url = 'http://www.omdbapi.com/?t=' + str(m['movie_title']) + '&apikey=8fb72c1a'
+            url = 'http://www.omdbapi.com/?t=' + str(m['movie_title']) + '&apikey=' + apikeys[random.randint(0,len(apikeys)-1)]
             movie_data = requests.get(url).json()
             # r = requests.get(url)
             link += str(movie_data['Poster'])
@@ -160,11 +160,10 @@ def search():
 def movie_reccomendations():
     movie_rows = db((db.watch_list.watch_list_user_email != get_user_email())).select()
     # print(movie_rows)
-    apikeys = ['8fb72c1a']
     for m in movie_rows:
         link = ''
         try:
-            url = 'http://www.omdbapi.com/?t=' + str(m['movie_title']) + '&apikey=8fb72c1a'
+            url = 'http://www.omdbapi.com/?t=' + str(m['movie_title']) + '&apikey=' + apikeys[random.randint(0,len(apikeys)-1)]
             movie_data = requests.get(url).json()
             r = requests.get(url)
             link += str(movie_data['Poster'])
@@ -194,11 +193,10 @@ def movie_reccomendations():
 def feed():
     movie_rows = db(db.watch_list).select()
     # print(movie_rows)
-    apikeys = ['8fb72c1a']
     for m in movie_rows:
         link = ''
         try:
-            url = 'http://www.omdbapi.com/?t=' + str(m['movie_title']) + '&apikey=8fb72c1a'
+            url = 'http://www.omdbapi.com/?t=' + str(m['movie_title']) + '&apikey=' + apikeys[random.randint(0,len(apikeys)-1)]
             movie_data = requests.get(url).json()
             r = requests.get(url)
             link += str(movie_data['Poster'])
