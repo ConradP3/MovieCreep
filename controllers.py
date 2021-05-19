@@ -36,7 +36,6 @@ from pydal.validators import *
 import json
 import requests
 
-
 url_signer = URLSigner(session)
 
 # SRC : https://bitbucket.org/luca_de_alfaro/class_registration/src/master/
@@ -55,7 +54,7 @@ def index():
             link = ''
             url = 'http://www.omdbapi.com/?t=' + str(m['movie_title']) + '&apikey=8fb72c1a'
             movie_data = requests.get(url).json()
-            r = requests.get(url)
+            # r = requests.get(url)
             link += str(movie_data['Poster'])
             m['link'] = link
         # https://api.themoviedb.org/3/movie/550?api_key=fa5fa1a7dd403108f2c44bf79fca3f2f
@@ -146,9 +145,29 @@ def delete(watch_list_id=None):
 @action('movie_reccomendations')
 @action.uses(db, auth.user, 'movie_reccomendations.html')
 def movie_reccomendations():
-    movie_rows = db((db.watch_list.watch_list_user_email == get_user_email())).select()
-    return dict(rows=movie_rows, url_signer=url_signer)
+    movie_rows = db((db.watch_list.watch_list_user_email != get_user_email())).select()
+    # print(movie_rows)
+    apikeys = ['8fb72c1a']
+    for m in movie_rows:
+        link = ''
+        try:
+            url = 'http://www.omdbapi.com/?t=' + str(m['movie_title']) + '&apikey=8fb72c1a'
+            movie_data = requests.get(url).json()
+            r = requests.get(url)
+            link += str(movie_data['Poster'])
+            m['link'] = link
+            # https://api.themoviedb.org/3/movie/550?api_key=fa5fa1a7dd403108f2c44bf79fca3f2f
+            # https://image.tmdb.org/t/p/w500/pB8BM7pdSp6B6Ih7QZ4DrQ3PmJK.jpg
+        except:
+            pass
 
+
+    print(movie_rows)
+    return dict(rows=movie_rows, url_signer=url_signer,
+                add_movie_url = URL('add_movie', signer=url_signer),
+                get_rating_url = URL('get_rating', signer=url_signer),
+                set_rating_url = URL('set_rating', signer=url_signer),
+                user_email=get_user_email())
 # #######################################################
 # Feed
 # #######################################################
