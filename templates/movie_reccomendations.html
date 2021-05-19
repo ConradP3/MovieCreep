@@ -14,16 +14,16 @@
    </h1>
 
       <!-- <div class="columns is-mobile"> -->
-            [[for row in rows:]]
+            [[for row in reversed(rows):]]
 
             <div class="container block">
               <div class="box has-background-white-ter box-shadow">
                     <!-- <img src="./images/logo.png"> -->
                     <img src="[[=row.link]]" width="142">
                       <p><B>[[=row.movie_title]]</B></p>
-                      <p> [[if row.watch_list_watched:]]Recommended because [[=row.watch_list_user_name]] watched.
+                      <p> [[if row.watch_list_watched:]]Recommended because [[=row.watch_list_user_email]] watched.
                         [[else:]] 
-                          Reccommended because [[=row.watch_list_user_name]] added this to their profile.
+                          Reccommended because [[=row.watch_list_user_email]] added this to their profile.
                         [[pass]]
                       </p>
                       <p>[[=row.watch_list_date]]</p>

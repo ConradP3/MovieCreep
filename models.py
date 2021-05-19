@@ -51,13 +51,16 @@ db.define_table(
     # Movie ID
     # User ID
     # Watched (Boolean)
+# user_name = str(auth.current_user.get('first_name') )+ str(auth.current_user.get('last_name'))
+r = db(db.auth_user.email == get_user_email).select().first()
+name = r.first_name + " " + r.last_name if r is not None else "Unknown"
 db.define_table(
     'watch_list',
     Field('movie_id', 'reference movies'),
     Field('movie_title', requires=IS_LENGTH(minsize=1)),
     Field('watch_list_date', 'date'),
     Field('watch_list_user_email', default=get_user_email),
-    Field('watch_list_user_name', default=get_user),
+    Field('watch_list_user_name', default=name),
     Field('watch_list_watched', 'boolean'),
     Field('watch_list_rating', 'integer', default=0),
     Field('watch_list_time_stamp', 'datetime', default=get_time)

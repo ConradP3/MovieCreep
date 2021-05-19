@@ -156,6 +156,8 @@ def movie_reccomendations():
             r = requests.get(url)
             link += str(movie_data['Poster'])
             m['link'] = link
+
+            # m['user_name'] = str(auth.current_user.get('first_name') ) + ' ' + str(auth.current_user.get('last_name'))
             # https://api.themoviedb.org/3/movie/550?api_key=fa5fa1a7dd403108f2c44bf79fca3f2f
             # https://image.tmdb.org/t/p/w500/pB8BM7pdSp6B6Ih7QZ4DrQ3PmJK.jpg
         except:
@@ -168,6 +170,7 @@ def movie_reccomendations():
                 get_rating_url = URL('get_rating', signer=url_signer),
                 set_rating_url = URL('set_rating', signer=url_signer),
                 user_email=get_user_email())
+
 # #######################################################
 # Feed
 # #######################################################
@@ -187,18 +190,21 @@ def feed():
             r = requests.get(url)
             link += str(movie_data['Poster'])
             m['link'] = link
+            # m['user_name'] = str(auth.current_user.get('first_name') )+ ' ' + str(auth.current_user.get('last_name'))
+            
             # https://api.themoviedb.org/3/movie/550?api_key=fa5fa1a7dd403108f2c44bf79fca3f2f
             # https://image.tmdb.org/t/p/w500/pB8BM7pdSp6B6Ih7QZ4DrQ3PmJK.jpg
         except:
             pass
-
+    
 
     print(movie_rows)
     return dict(rows=movie_rows, url_signer=url_signer,
                 add_movie_url = URL('add_movie', signer=url_signer),
                 get_rating_url = URL('get_rating', signer=url_signer),
                 set_rating_url = URL('set_rating', signer=url_signer),
-                user_email=get_user_email())
+                user_email=get_user_email(),
+                 )
 
 # #######################################################
 # Notifications

@@ -10,17 +10,17 @@
     <h1 class="title">Feed</h1>
 
     <div class="columns is-mobile">
-      [[for row in rows:]]
+      [[for row in reversed(rows):]]
 
       <div class="container block">
         <div class="box has-background-white-ter box-shadow">
           <img src="[[=row.link]]" width="142">
           <p><B>[[=row.movie_title]]</B></p>
           [[if row.watch_list_watched: ]]
-            <p>Seen by [[=row.watch_list_user_name]]</p>
+            <p>Seen by [[=row.watch_list_user_email]]</p>
 
           [[else:]]
-            <p>[[=row.watch_list_user_name]] Hasn't seen this</p>
+            <p>[[=row.watch_list_user_email]] Hasn't seen this</p>
           [[pass]]
           
           <p>[[=row.watch_list_date]]</p>
