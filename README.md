@@ -1,6 +1,4 @@
 # MovieCreep
-
-
 - /Movies 
     feed of users previously added movies, see user profile image/info
         /Already-watched
@@ -21,7 +19,6 @@ Most Watched movies at top, eventually we may take into account user’s profile
     friend requests, potential movies user is interested in
 
 
-
-
 ## Data Sources
 - [The Movies Dataset](https://www.kaggle.com/rounakbanik/the-movies-dataset)
+- [OMDBb API](http://omdbapi.com/) RESTful web service to obtain movie information, over 280,000 images
