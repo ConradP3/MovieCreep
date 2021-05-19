@@ -1,0 +1,42 @@
+[[extend 'layout.html']]
+
+<div class="section">
+
+  <h1 class="title">Profile</h1>
+
+    <h2 class="title is-4 is-spaced">My Info
+        <a class="button is-light is-small" href="[[=URL('auth/profile')]]">
+            <span class="icon"><i class="fa fa-fw fa-pencil"></i></span> <span>Edit Info</span>
+        </a>
+
+        <h3 class="subtitle">
+            User Name: [[=name]]
+            <br />
+            User Email: [[=email]]
+        </h3>
+    </h2>
+
+    <br />
+
+    <h2 class="title is-4 is-spaced">My Friends
+        <h3 class="subtitle">
+
+        </h3>
+    </h2>
+
+
+  <!-- Sub nav tabs for later maybe
+
+  <div class="tabs is-small">
+    <ul>
+    <li href="[[=URL('my_info')]]"><a>My Info</a></li>
+    <li><a>Friends</a></li>
+    <li><a>Watch List</a></li>
+  </ul>
+  </div>
+
+   -->
+
+
+
+</div>

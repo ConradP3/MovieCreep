@@ -192,3 +192,19 @@ def feed():
 def notifications():
     movie_rows = db((db.watch_list.watch_list_user_email == get_user_email())).select()
     return dict(rows=movie_rows, url_signer=url_signer)
+
+
+# #######################################################
+# Feed
+# #######################################################
+# TODO
+# 1. Find a way to display list of all friends
+@action('profile')
+@action.uses(db, auth.user, 'profile.html')
+def profile():
+    rows = db(db.user.user_email == get_user_email()).select()
+    first_name = auth.current_user.get('first_name')
+    last_name = auth.current_user.get('last_name')
+    name = first_name + " " + last_name
+    email = get_user_email()
+    return dict(rows=rows, name=name, email=email, url_signer=url_signer)

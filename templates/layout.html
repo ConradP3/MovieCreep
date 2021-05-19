@@ -30,6 +30,10 @@
           Notifications
           <!-- Can choose to have notifications when friend adds you, they share a movie etc. -->
         </a>
+        <a class="navbar-item" href="[[=URL('profile')]]">
+          Profile
+          <!-- Profile -->
+        </a>
 
         <a role="button" class="navbar-burger burger" aria-label="menu" aria-expanded="false" data-target="the-navbar-menu"
            onclick="this.classList.toggle('is-active');document.getElementById(this.dataset.target).classList.toggle('is-active');">
@@ -53,7 +57,8 @@
                   </a>
                   <div class="navbar-dropdown">
                     <a class="navbar-item" href="[[=URL('auth/logout')]]">Logout</a>
-                    <a class="navbar-item" href="[[=URL('auth/profile')]]">Profile</a>
+                   <!-- removed auth/profile link from navbar and added it to profile tab -->
+                    <!--<a class="navbar-item" href="[[=URL('auth/profile')]]">Profile</a>-->
                     <a class="navbar-item" href="[[=URL('auth/change_password')]]">Change Password</a></li>
 
                   </div>

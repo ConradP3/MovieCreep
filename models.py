@@ -86,6 +86,20 @@ db.define_table(
     # Friends list
     # When joined
 
+db.define_table(
+    'user',
+    Field('user_name', default=get_user),
+    Field('user_email', default=get_user_email),
+    Field('join_date', 'datetime')
+)
+
+db.define_table(
+    'friends',
+    Field('friend_user_name'),
+    Field('friends_user_email'),
+    Field('user_id', 'reference user')
+)
+
 
 
 db.watch_list.watch_list_time_stamp.readable = db.watch_list.watch_list_time_stamp.writable = False
