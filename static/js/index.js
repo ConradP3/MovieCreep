@@ -10,6 +10,8 @@ let init = (app) => {
     // This is the Vue data.
     app.data = {
         images: [],
+        query: "",
+        results: [],
         delete_edit_mode: false,
     };
 
@@ -60,6 +62,17 @@ let init = (app) => {
         });
     };
 
+    app.search = function() {
+        if (app.vue.query.length > 1) {
+            axios.get(search_url, {params: {q: app.vue.query}
+            }).then(function (result) {
+                app.vue.results = result.data.results;
+            });
+        } else {
+            app.vue.results = [];
+        }
+    }
+    
     // This contains all the methods.
     app.methods = {
         set_stars: app.set_stars,
@@ -67,6 +80,7 @@ let init = (app) => {
         stars_over: app.stars_over,
         set_delete_edit_status: app.set_delete_edit_status,
         add_movie: app.add_movie,
+        search: app.search,
     };
 
     // This creates the Vue instance.
@@ -107,3 +121,4 @@ let init = (app) => {
 // This takes the (empty) app object, and initializes it,
 // putting all the code i
 init(app);
+
