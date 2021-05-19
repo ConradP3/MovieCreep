@@ -38,7 +38,7 @@ import requests
 import uuid
 import random
 url_signer = URLSigner(session)
-apikeys = ['8fb72c1a']
+apikeys = ['8fb72c1a', '2710f070']
 
 # SRC : https://bitbucket.org/luca_de_alfaro/class_registration/src/master/
 
