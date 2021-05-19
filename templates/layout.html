@@ -14,6 +14,10 @@
     <nav class="navbar is-info">
       <img src="./images/logo.png" href="[[=URL('index')]]" alt="Movue Creep" width="90" height="28">
       <div class="navbar-brand">
+        <a class="navbar-item" href="[[=URL('profile')]]">
+          Profile
+          <!-- Profile -->
+        </a>
         <a class="navbar-item" href="[[=URL('index')]]">
           Movie Watch List
           <!-- Planned and Already Watched Movies come up -->
@@ -30,10 +34,7 @@
           Notifications
           <!-- Can choose to have notifications when friend adds you, they share a movie etc. -->
         </a>
-        <a class="navbar-item" href="[[=URL('profile')]]">
-          Profile
-          <!-- Profile -->
-        </a>
+
 
         <a role="button" class="navbar-burger burger" aria-label="menu" aria-expanded="false" data-target="the-navbar-menu"
            onclick="this.classList.toggle('is-active');document.getElementById(this.dataset.target).classList.toggle('is-active');">
