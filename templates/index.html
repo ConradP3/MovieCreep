@@ -1,8 +1,14 @@
 [[extend 'layout.html']]
 
-<div class="section">
+<div class = "section" id = "vue-target" v-clock>
+  <h2>Search</h2>
+    <div class = "control block">
+      <input class = "input" type="text" v-model="query" @keyup="search" />
+    </div>
 
-
+    <div v-for ="r in results">{{r}}</div>
+</div>
+<div class = "section">
   <div class="container">
    <h1 class='title'><B>Your Movies</B>   
       <div class='is-pulled-right'>
@@ -14,20 +20,24 @@
    </h1>
 
       <!-- <div class="columns is-mobile"> -->
-            [[for row in reversed(rows):]]
+            [[for row in rows:]]
 
             <div class="container block">
               <div class="box has-background-white-ter box-shadow">
                     <!-- <img src="./images/logo.png"> -->
-                    <img src="[[=row.link]]" width="142">
-                      <p><B>[[=row.movie_title]]</B></p>
-                      <p>[[if row.watch_list_watched:]]Seen
+                    <div class="columns">
+                      <div class="column is-3">
+                        <img src="[[=row.link]]" width="175">
+                      </div>
+                      <div class="column">
+                        <p><B>[[=row.movie_title]]</B></p>
+                         <p>[[if row.watch_list_watched:]]Seen
                         [[else:]] 
                           Not Seen
                         [[pass]]
-                      </p>
-                      <p>[[=row.watch_list_date]]</p>
-                      <!-- <p>[[=row]]</p> -->
+                        </p>
+                       <p>[[=row.watch_list_date]]</p>
+                        <!-- <p>[[=row]]</p> -->
                                     <!-- This is the code for the star rating -->
                         <span @mouseout="stars_out(img._idx)">
                           <span @mouseover="stars_over(img._idx, star_idx)"
@@ -37,6 +47,8 @@
                             <i v-if="star_idx > img.num_stars_display" class="fa fa-star-o"></i>
                           </span>
                         </span>
+                      </div>
+                    </div>
                   <a class="button is-pulled-right" href="[[=URL('edit_movie', row.id, signer=url_signer)]]">
                     <span class="icon"><i class="fa fa-fw fa-pencil"></i></span> <span>Edit</span>
                   </a>
@@ -74,6 +86,7 @@
   let add_movie_url = "[[=XML(add_movie_url)]]";
   let get_rating_url = "[[=XML(get_rating_url)]]";
   let set_rating_url = "[[=XML(set_rating_url)]]";
+  let search_url = "[[=XML(search_url)]]";
 </script>
 <script src="js/index.js"></script>
 [[end]]
