@@ -35,7 +35,8 @@ from pydal.validators import *
 
 import json
 import requests
-
+import uuid
+import random
 url_signer = URLSigner(session)
 
 # SRC : https://bitbucket.org/luca_de_alfaro/class_registration/src/master/
@@ -68,6 +69,7 @@ def index():
                 add_movie_url = URL('add_movie', signer=url_signer),
                 get_rating_url = URL('get_rating', signer=url_signer),
                 set_rating_url = URL('set_rating', signer=url_signer),
+                search_url = URL('search', signer=url_signer),
                 user_email=get_user_email())
 
 
@@ -138,6 +140,17 @@ def delete(watch_list_id=None):
         db(db.watch_list.id == watch_list_id).delete()
     redirect(URL('index'))
 
+
+@action('search')
+@action.uses()
+def search():
+    q = request.params.get("q")
+    results = [q + ":" + str(uuid.uuid1()) for _ in range(random.randint(2, 6))]
+    #if (q in movierows)
+    #add row to results
+    #print results
+    return dict(results = results)
+#return movie rows that contain q
 
 # #######################################################
 # Movie Reccomendations
