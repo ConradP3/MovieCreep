@@ -229,9 +229,8 @@ def notifications():
     movie_rows = db((db.watch_list.watch_list_user_email == get_user_email())).select()
     return dict(rows=movie_rows, url_signer=url_signer)
 
-
 # #######################################################
-# Feed
+# Profile
 # #######################################################
 # TODO
 # 1. Find a way to display list of all friends
@@ -243,4 +242,16 @@ def profile():
     last_name = auth.current_user.get('last_name')
     name = first_name + " " + last_name
     email = get_user_email()
-    return dict(rows=rows, name=name, email=email, url_signer=url_signer)
+    return dict(rows=rows, name=name, email=email, 
+                file_upload_url = URL('file_upload', signer=url_signer))
+
+@action('file_upload', method="PUT")
+@action.uses(db) # Add here things you might want to use.
+def file_upload():
+    file_name = request.params.get("file_name")
+    file_type = request.params.get("file_type")
+    uploaded_file = request.body # This is a file, you can read it.
+    # Diagnostics
+    print("Uploaded", file_name, "of type", file_type)
+    print("Content:", uploaded_file.read())
+    return "ok"
