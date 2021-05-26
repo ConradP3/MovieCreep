@@ -1,7 +1,16 @@
 [[extend 'layout.html']]
-
+<style>
+  [v-cloak] {
+       display: none;
+  }
+  </style>
+  
 <div class="section">
-  <div class = "section" id = "vue-target" v-clock>
+  <span class="button is-success is-pulled-right" @click="set_view(true)" >
+    <span class="icon"><i class="fa fa-exchange"></i></span>
+    <span>Change View</span>
+  </span>
+  <div class = "section" id = "vue-target">
     <h2>Search</h2>
       <div class = "control block">
         <input class = "input" type="text" v-model="query" @keyup="search" />
@@ -14,6 +23,7 @@
     
   <div class="container">
    <h1 class='title'><B>Your Movies</B>   
+
       <div class='is-pulled-right'>
          <a class="button is-success" href="[[=URL('add_movie')]]">
             <span class="icon"><i class="fa fa-plus"></i></span>
@@ -25,10 +35,21 @@
       <!-- <div class="columns is-mobile"> -->
             [[for row in reversed(rows):]]
 
-            <div class="container block">
+            <div class="container block"  v-if="view_mode === 0">
               <div class="box has-background-white-ter box-shadow">
                     <!-- <img src="./images/logo.png"> -->
                     <img src="[[=row.link]]" width="142">
+                    <div class="tooltip"> <i class='fa fa-exclamation-circle'></i>
+                      <span class="tooltiptext is-pulled-left"> 
+                        <!-- plot, runtime, releasedate, rating, imbdbrating, genre -->
+                        <p><B>[[=row.movie_title]]</B></p>
+                        <p><B>Rated: [[=row.rating]]</B></p>
+                        <p><B>Released:[[=row.releasedate]]</B></p>
+                        <p><B>Runtime: [[=row.runtime]]</B></p>
+                        <p><B>Genre: [[=row.genre]]</B></p>
+                        <p><B>[[=row.plot]]</B></p>
+                      </span>
+                    </div>
                       <p><B>[[=row.movie_title]]</B></p>
                       <p>[[if row.watch_list_watched:]]Seen
                         [[else:]] 
@@ -87,3 +108,74 @@
 </script>
 <script src="js/index.js"></script>
 [[end]]
+
+<!-- https://www.w3schools.com/howto/howto_css_tooltip.asp -->
+<style>
+/* Tooltip container */
+.tooltip {
+  position: relative;
+  display: inline-block;
+  border-bottom: 1px dotted black; /* If you want dots under the hoverable text */
+}
+
+/* Tooltip text */
+.tooltip .tooltiptext {
+  visibility: hidden;
+  width: 400px;
+  background-color: #555;
+  color: #fff;
+  text-align: center;
+  padding: 5px 0;
+  border-radius: 6px;
+
+  /* Position the tooltip text */
+  position: absolute;
+  z-index: 1;
+  bottom: 125%;
+  left: 50%;
+  margin-left: -60px;
+
+  /* Fade in tooltip */
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+/* Tooltip arrow */
+.tooltip .tooltiptext::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  margin-left: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: #555 transparent transparent transparent;
+}
+
+/* Show the tooltip text when you mouse over the tooltip container */
+.tooltip:hover .tooltiptext {
+  visibility: visible;
+  opacity: 1;
+}
+
+div.gallery {
+  margin: 5px;
+  border: 1px solid #ccc;
+  float: left;
+  width: 180px;
+}
+
+div.gallery:hover {
+  border: 1px solid #777;
+}
+
+div.gallery img {
+  width: 100%;
+  height: auto;
+}
+
+div.desc {
+  padding: 15px;
+  text-align: center;
+}
+</style>

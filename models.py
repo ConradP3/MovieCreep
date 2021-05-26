@@ -60,6 +60,7 @@ db.define_table(
     Field('movie_title', requires=IS_LENGTH(minsize=1)),
     Field('watch_list_date', 'date'),
     Field('watch_list_user_email', default=get_user_email),
+    Field('thumbnail', 'text'),
     Field('watch_list_user_name', default=name),
     Field('watch_list_watched', 'boolean'),
     Field('watch_list_rating', 'integer', default=0),

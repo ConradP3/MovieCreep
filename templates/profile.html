@@ -1,72 +1,71 @@
 [[extend 'layout.html']]
 <style>
   [v-cloak] {
-       display: none;
+    display: none;
   }
-  </style>
+</style>
 
 <div class="section">
 
   <h1 class="title">Profile</h1>
 
-      <div class="section" id="vue-target" v-cloak>
-        <div v-if="!selection_done" class="field has-addons block">
-          <p class="control">
-            <div class="file is-info">
-              <label class="file-label">
-                <input class="file-input" type="file"
-                       accept=".jpg, .png, .jpeg, .gif, .bmp, .tif, .tiff|image/*"
-                       @change="select_file($event)">
-                <span class="file-cta">
-                  <span class="file-label">
-                    <span>Change Profile Picture</span>
-                  </span>
-                </span>
-              </label>
-            </div>
-          </p>
-        </div>
-        <template v-if="selection_done && !uploaded">
-          <div class="block">
-            <img width="400" :src="img_url" />
-          </div>
-          <div class="block">
-            <button class="button is-success" :disabled="uploading" @click="upload_file">
-              <span class="icon is-small">
-                <i v-if="!uploading" class="fa fa-upload"></i>
-                <i v-if="uploading" class="fa fa-spinner fa-pulse fa-fw"></i>
-              </span>
-              <span>Confirm</span>
-            </button>
-          </div>
-        </template>
-        <div v-if="uploaded">
-          <i class="fa fa-check"></i> Uploaded!
-        </div>
+  <div class="section" id="vue-target" v-cloak>
+    <div v-if="!selection_done" class="field has-addons block">
+      <p class="control">
+      <div class="file is-info">
+        <label class="file-label">
+          <input class="file-input" type="file" accept=".jpg, .png, .jpeg, .gif, .bmp, .tif, .tiff|image/*"
+            @change="select_file($event)">
+          <span class="file-cta">
+            <span class="file-label">
+              <span>Change Profile Picture</span>
+            </span>
+          </span>
+        </label>
       </div>
-  
+      </p>
+    </div>
+    <template v-if="selection_done && !uploaded">
+      <div class="block">
+        <img width="400" :src="img_url" />
+      </div>
+      <div class="block">
+        <button class="button is-success" :disabled="uploading" @click="upload_file">
+          <span class="icon is-small">
+            <i v-if="!uploading" class="fa fa-upload"></i>
+            <i v-if="uploading" class="fa fa-spinner fa-pulse fa-fw"></i>
+          </span>
+          <span>Confirm</span>
+        </button>
+      </div>
+    </template>
+    <div v-if="uploaded">
+      <i class="fa fa-check"></i> Uploaded!
+    </div>
+  </div>
 
-        <a class="button is-light is-small" href="[[=URL('auth/profile')]]">
-            <span class="icon"><i class="fa fa-fw fa-pencil"></i></span> <span>Edit Info</span>
-        </a>
 
-        <h3 class="subtitle">
-            User Name: [[=name]]
-            <br />
-            User Email: [[=email]]
-        </h3>
-    </h2>
+  <a class="button is-light is-small" href="[[=URL('auth/profile')]]">
+    <span class="icon"><i class="fa fa-fw fa-pencil"></i></span> <span>Edit Info</span>
+  </a>
 
+  <h3 class="subtitle">
+    User Name: [[=name]]
     <br />
+    User Email: [[=email]]
+  </h3>
+  </h2>
 
-    <h2 class="title is-4 is-spaced">My Friends
-        <h3 class="subtitle">
+  <br />
 
-        </h3>
+  <h2 class="title is-4 is-spaced">My Friends
+    <h3 class="subtitle">
+
+    </h3>
 
 
 
-  <!-- Sub nav tabs for later maybe
+    <!-- Sub nav tabs for later maybe
 
   <div class="tabs is-small">
     <ul>

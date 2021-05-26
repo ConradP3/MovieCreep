@@ -51,17 +51,37 @@ def index():
     movie_rows = db((db.watch_list.watch_list_user_email == get_user_email())).select()
     # print(movie_rows)
     for m in movie_rows:
-        try:
-            link = ''
-            url = 'http://www.omdbapi.com/?t=' + str(m['movie_title']) + '&apikey=' + apikeys[random.randint(0,len(apikeys)-1)]
-            movie_data = requests.get(url).json()
-            # r = requests.get(url)
-            link += str(movie_data['Poster'])
-            m['link'] = link
+        link = ''
+        plot = ''
+        runtime = ''
+        rating = ''
+        releasedate = ''
+        imdbrating = ''
+        genre = ''
+
+        url = 'http://www.omdbapi.com/?t=' + str(m['movie_title']) + '&apikey=' + apikeys[random.randint(0,len(apikeys)-1)]
+        movie_data = requests.get(url).json()
+        # r = requests.get(url)
+        link += str(movie_data['Poster'])
+        plot += str(movie_data['Plot'])
+        runtime += str(movie_data['Runtime'])
+        rating += str(movie_data['Rated'])
+        releasedate += str(movie_data['Released'])
+        # imdbrating += str(movie_data['imdbRating'])
+        genre += str(movie_data['Genre'])
+        m['link'] = link
+        m['genre'] = genre
+        # m['imdbrating'] = imdbrating
+        m['releasedate'] = releasedate
+        m['rating'] = rating
+        m['runtime'] = runtime
+        m['plot'] = plot
+
+            
         # https://api.themoviedb.org/3/movie/550?api_key=fa5fa1a7dd403108f2c44bf79fca3f2f
+
         # https://image.tmdb.org/t/p/w500/pB8BM7pdSp6B6Ih7QZ4DrQ3PmJK.jpg
-        except:
-            pass
+        # http://www.omdbapi.com/?t=interstellar&apikey=2710f070
 
 
     print(movie_rows)
@@ -162,18 +182,31 @@ def movie_reccomendations():
     # print(movie_rows)
     for m in movie_rows:
         link = ''
-        try:
-            url = 'http://www.omdbapi.com/?t=' + str(m['movie_title']) + '&apikey=' + apikeys[random.randint(0,len(apikeys)-1)]
-            movie_data = requests.get(url).json()
-            r = requests.get(url)
-            link += str(movie_data['Poster'])
-            m['link'] = link
+        plot = ''
+        runtime = ''
+        rating = ''
+        releasedate = ''
+        imdbrating = ''
+        genre = ''
 
-            # m['user_name'] = str(auth.current_user.get('first_name') ) + ' ' + str(auth.current_user.get('last_name'))
-            # https://api.themoviedb.org/3/movie/550?api_key=fa5fa1a7dd403108f2c44bf79fca3f2f
-            # https://image.tmdb.org/t/p/w500/pB8BM7pdSp6B6Ih7QZ4DrQ3PmJK.jpg
-        except:
-            pass
+        url = 'http://www.omdbapi.com/?t=' + str(m['movie_title']) + '&apikey=' + apikeys[random.randint(0,len(apikeys)-1)]
+        movie_data = requests.get(url).json()
+        # r = requests.get(url)
+        link += str(movie_data['Poster'])
+        plot += str(movie_data['Plot'])
+        runtime += str(movie_data['Runtime'])
+        rating += str(movie_data['Rated'])
+        releasedate += str(movie_data['Released'])
+        # imdbrating += str(movie_data['imdbRating'])
+        genre += str(movie_data['Genre'])
+        m['link'] = link
+        m['genre'] = genre
+        # m['imdbrating'] = imdbrating
+        m['releasedate'] = releasedate
+        m['rating'] = rating
+        m['runtime'] = runtime
+        m['plot'] = plot
+
 
 
     print(movie_rows)
@@ -195,18 +228,31 @@ def feed():
     # print(movie_rows)
     for m in movie_rows:
         link = ''
-        try:
-            url = 'http://www.omdbapi.com/?t=' + str(m['movie_title']) + '&apikey=' + apikeys[random.randint(0,len(apikeys)-1)]
-            movie_data = requests.get(url).json()
-            r = requests.get(url)
-            link += str(movie_data['Poster'])
-            m['link'] = link
-            # m['user_name'] = str(auth.current_user.get('first_name') )+ ' ' + str(auth.current_user.get('last_name'))
-            
-            # https://api.themoviedb.org/3/movie/550?api_key=fa5fa1a7dd403108f2c44bf79fca3f2f
-            # https://image.tmdb.org/t/p/w500/pB8BM7pdSp6B6Ih7QZ4DrQ3PmJK.jpg
-        except:
-            pass
+        plot = ''
+        runtime = ''
+        rating = ''
+        releasedate = ''
+        imdbrating = ''
+        genre = ''
+
+        url = 'http://www.omdbapi.com/?t=' + str(m['movie_title']) + '&apikey=' + apikeys[random.randint(0,len(apikeys)-1)]
+        movie_data = requests.get(url).json()
+        # r = requests.get(url)
+        link += str(movie_data['Poster'])
+        plot += str(movie_data['Plot'])
+        runtime += str(movie_data['Runtime'])
+        rating += str(movie_data['Rated'])
+        releasedate += str(movie_data['Released'])
+        # imdbrating += str(movie_data['imdbRating'])
+        genre += str(movie_data['Genre'])
+        m['link'] = link
+        m['genre'] = genre
+        # m['imdbrating'] = imdbrating
+        m['releasedate'] = releasedate
+        m['rating'] = rating
+        m['runtime'] = runtime
+        m['plot'] = plot
+
     
 
     print(movie_rows)
