@@ -1,56 +1,112 @@
 [[extend 'layout.html']]
+
 <style>
   [v-cloak] {
     display: none;
   }
 </style>
 
-<div class="section">
+
+<div class="section" id="vue-target" v-cloak>
 
   <h1 class="title">Profile</h1>
-
-  <div class="section" id="vue-target" v-cloak>
-    <div v-if="!selection_done" class="field has-addons block">
-      <p class="control">
-      <div class="file is-info">
-        <label class="file-label">
-          <input class="file-input" type="file" accept=".jpg, .png, .jpeg, .gif, .bmp, .tif, .tiff|image/*"
-            @change="select_file($event)">
-          <span class="file-cta">
-            <span class="file-label">
-              <span>Change Profile Picture</span>
-            </span>
-          </span>
-        </label>
-      </div>
-      </p>
-    </div>
-    <template v-if="selection_done && !uploaded">
-      <div class="block">
-        <img width="400" :src="img_url" />
-      </div>
-      <div class="block">
-        <button class="button is-success" :disabled="uploading" @click="upload_file">
-          <span class="icon is-small">
-            <i v-if="!uploading" class="fa fa-upload"></i>
-            <i v-if="uploading" class="fa fa-spinner fa-pulse fa-fw"></i>
-          </span>
-          <span>Confirm</span>
-        </button>
-      </div>
-    </template>
-    <div v-if="uploaded">
-      <i class="fa fa-check"></i> Uploaded!
-    </div>
-  </div>
+    <h2 class="title is-6 is-spaced">My Info
 
 
-  <a class="button is-light is-small" href="[[=URL('auth/profile')]]">
-    <span class="icon"><i class="fa fa-fw fa-pencil"></i></span> <span>Edit Info</span>
-  </a>
+        <div v-if="!selection_done" class="field has-addons block">
+          <p class="control">
+            <div class="file is-info">
+              <label class="file-label">
+                <input class="file-input" type="file"
+                       accept=".jpg, .png, .jpeg, .gif, .bmp, .tif, .tiff|image/*"
+                       @change="select_file($event)">
+                <span class="file-cta">
+                  <span class="file-label">
+                    <span>Change Profile Picture</span>
+                  </span>
+                </span>
+              </label>
+            </div>
+          </p>
+        </div>
+        <template v-if="selection_done && !uploaded">
+          <div class="block">
+            <img width="400" :src="img_url" />
+          </div>
+          <div class="block">
+            <button class="button is-success" :disabled="uploading" @click="upload_file">
+              <span class="icon is-small">
+                <i v-if="!uploading" class="fa fa-upload"></i>
+                <i v-if="uploading" class="fa fa-spinner fa-pulse fa-fw"></i>
+              </span>
+              <span>Confirm</span>
+            </button>
+          </div>
+        </template>
+        <div v-if="uploaded">
+          <i class="fa fa-check"></i> Uploaded!
+        </div>
 
-  <h3 class="subtitle">
-    User Name: [[=name]]
+
+
+        <table class="table is-fullwidth ">
+            <tr>
+                <th></th>
+                <th>Profile Picture</th>
+                <th>User Name </th>
+                <th>User Email</th>
+                <th></th>
+            </tr>
+            <tr>
+                <td>
+                </td>
+                <td>
+                 <!--
+                    COMMENT profile pic image upload code COMMENT
+                    <div v-if="!thumbnail">
+                        <p class="control">
+                            <div class="file is-info">
+                                <label class="file-label">
+                                    <input class="file-input" type="file"
+                                        accept=".jpg,.png, .jpeg, .gif, .bmp, .tif, .tifflimage/*"
+                                        @change="upload_file($event, r._idx)">
+                                    <span class="file-cta">
+                                        <span class="file-label">
+                                            <span><i class="fa fa-upload"></i></span>
+                                        </span>
+                                    </span>
+                                </label>
+                            </div>
+                        </p>
+                    </div>
+                    <img v-if="thumbnail" width="50" :src="thumbnail" />
+                 -->
+                </td>
+                <td>
+                    [[=name]]
+                </td>
+                <td>
+                    [[=email]]
+                </td>
+            </tr>
+
+        </table>
+
+    </h2>
+
+
+      <h2>Add Friend
+        <div class = "control block">
+          <input class = "input" type="text" v-model="query" @keyup="search" />
+        </div>
+
+        <div v-for ="r in results">
+            <a class="button is-hoverable">
+                  {{r}}
+            </a>
+        </div>
+      </h2>
+
     <br />
     User Email: [[=email]]
   </h3>
@@ -58,24 +114,73 @@
 
   <br />
 
-  <h2 class="title is-4 is-spaced">My Friends
-    <h3 class="subtitle">
+    <h2 class="title is-6 is-spaced">Following
+        <table class="table is-fullwidth ">
+            <tr>
+                <th></th>
+                <th>Profile Picture</th>
+                <th>User Name </th>
+                <th>User Email</th>
+                <th></th>
+            </tr>
+            <tr>
+                <td>
+                </td>
+                <td>
+                    <!-- Profile Pic -->
+                </td>
+                <td>
+                    <!-- Name -->
+                </td>
+                <td>
+                    <!-- Email -->
+                </td>
+            </tr>
 
-    </h3>
+        </table>
+    </h2>
 
+    <br />
+
+
+    <h2 class="title is-6 is-spaced">Followers
+       <table class="table is-fullwidth ">
+            <tr>
+                <th></th>
+                <th>Profile Picture</th>
+                <th>User Name </th>
+                <th>User Email</th>
+                <th></th>
+            </tr>
+            <tr>
+                <td>
+                </td>
+                <td>
+                    <!-- Profile Pic -->
+                </td>
+                <td>
+                    <!-- Name -->
+                </td>
+                <td>
+                    <!-- Email -->
+                </td>
+            </tr>
+
+        </table>
+    </h2>
 
 
     <!-- Sub nav tabs for later maybe
 
   <div class="tabs is-small">
     <ul>
-    <li href="[[=URL('my_info')]]"><a>My Info</a></li>
-    <li><a>Friends</a></li>
-    <li><a>Watch List</a></li>
+    <li><a>My Info</a></li>
+    <li><a>Following</a></li>
+    <li><a>Followers</a></li>
   </ul>
   </div>
 
-   -->
+ -->
 
 
 
@@ -86,6 +191,7 @@
 <!-- Loads the index-specific js for Vue -->
 <script>
   let file_upload_url = "[[=XML(file_upload_url)]]";
+  let search_url = "[[=XML(search_url)]]";
 </script>
 <script src="js/profile.js"></script>
 [[end]]

@@ -14,6 +14,11 @@ let init = (app) => {
         uploaded_file: "",
         uploaded: false,
         img_url: "",
+        query: "",
+        results: [],
+        add_first_name: "",
+        add_last_name: "",
+        rows: [],
     };
 
     // This is the file selected for upload.
@@ -64,10 +69,27 @@ let init = (app) => {
         }
     };
 
+    app.search = function() {
+        if (app.vue.query.length > 1) {
+            axios.get(search_url, {params: {q: app.vue.query}
+            }).then(function (result) {
+                app.vue.results = result.data.results;
+            });
+        } else {
+            app.vue.results = [];
+        }
+    }
+
+    app.add_following = function(row_idx) {
+        //app for adding follower to follower database
+    };
+
     // This contains all the methods.
     app.methods = {
         select_file: app.select_file,
         upload_file: app.upload_file,
+        search: app.search,
+        add_following: app.add_following,
     };
 
     // This creates the Vue instance.
