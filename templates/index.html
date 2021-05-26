@@ -1,23 +1,33 @@
 [[extend 'layout.html']]
-<style>
-  [v-cloak] {
-       display: none;
+<script>
+window.onload = function hide() {
+  var x = document.getElementById("hideThread");
+  if (x.style.display === "none") {
+    x.style.display = "block";
+  } else {
+    x.style.display = "none";
   }
-  </style>
-  
+};
+function hide() {
+  var x = document.getElementById("hideThread");
+  if (x.style.display === "none") {
+    x.style.display = "block";
+  } else {
+    x.style.display = "none";
+  }
+}
+</script>
 <div class="section">
-  <span class="button is-success is-pulled-right" @click="set_view(true)" >
+  <span class="button is-info is-pulled-right" @click="set_view(true)" >
     <span class="icon"><i class="fa fa-exchange"></i></span>
-    <span>Change View</span>
   </span>
-  <div class = "section" id = "vue-target" v-cloak>
-
+  <div class = "section">
     <h2>Search</h2>
       <div class = "control block">
         <input class = "input" type="text" v-model="query" @keyup="search" />
       </div>
   
-      <div v-for ="r in results">{{r}}</div>
+      <div v-for ="r in results"></div>
   </div>
   <div class = "section">
 
@@ -26,7 +36,7 @@
    <h1 class='title'><B>Your Movies</B>   
 
       <div class='is-pulled-right'>
-         <a class="button is-success" href="[[=URL('add_movie')]]">
+         <a class="button is-info" href="[[=URL('add_movie')]]">
             <span class="icon"><i class="fa fa-plus"></i></span>
             <span>Add New Movie</span>
          </a>
@@ -36,7 +46,7 @@
       <!-- <div class="columns is-mobile"> -->
             [[for row in reversed(rows):]]
 
-            <div class="container block"  v-if="view_mode === 0">
+            <div class="container block "  v-if="view_mode === false">
               <div class="box has-background-white-ter box-shadow">
                     <!-- <img src="./images/logo.png"> -->
                     <img src="[[=row.link]]" width="142">
@@ -58,16 +68,88 @@
                         [[pass]]
                       </p>
                       <p>[[=row.watch_list_date]]</p>
-                      <!-- <p>[[=row]]</p> -->
-                                    <!-- This is the code for the star rating -->
-                        <span @mouseout="stars_out(img._idx)">
-                          <span @mouseover="stars_over(img._idx, star_idx)"
-                                @click="set_stars(img._idx, star_idx)"
-                                v-for="star_idx in [1, 2, 3, 4, 5]">
-                            <i v-if="star_idx <= img.num_stars_display" class="fa fa-star"></i>
-                            <i v-if="star_idx > img.num_stars_display" class="fa fa-star-o"></i>
-                          </span>
+                      <span @mouseout="stars_out(img._idx)">
+                        <span @mouseover="stars_over(img._idx, star_idx)"
+                              @click="set_stars(img._idx, star_idx)"
+                              v-for="star_idx in [1, 2, 3, 4, 5]">
+                          <i v-if="star_idx <= img.num_stars_display" class="fa fa-star"></i>
+                          <i v-if="star_idx > img.num_stars_display" class="fa fa-star-o"></i>
                         </span>
+                      </span>
+                      <br />
+                      <button class='button is-info' onclick="hide()">Open Thread</button>
+                      <div class="section" id="vue-target" v-cloak>
+                        <div id="hideThread">
+                        <div v-if="add_mode" class="container block">
+                          <br />
+                          <div class="form">
+                            <div class="field">
+                              <div class="control">
+                                <textarea class="textarea" id="post_text_area" v-model="add_post_text" placeholder="Enter new post here"></textarea>
+                              </div>
+                            </div>
+                      
+                            <div class="field">
+                              <div class="control">
+                                <input type="submit" v-on:click="add_post" value="Post" class="button is-info">
+                                <input type="submit" @click="set_add_status(false)" value="Cancel" class="button is-danger">
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      <div v-if="!add_mode" class="container block">  
+                          <button @click="set_add_status(true)"  class="button is-info">
+                            <i class="fa fa-plus fa-fw"></i>
+                          </button>
+                      </div>
+                      
+                      
+                        <div class="container block">
+                          <div class="box has-background-white-ter box-shadow" v-for="r in rows.slice().reverse()">
+                              <p>{{r.post_text}}</p>
+                              <h3 class="has-text-grey-light" >{{r.name}}{{r.post_user}}</h3>
+                              <div v-if="r.post_email === curremail || r.post_email === '[[=c_email]]'"> 
+                                  <button @click="delete_post(r._idx)" class="button is-danger is-pulled-right">
+                                    <span class='icon'><i class="fa fa-fw fa-trash"></i></span>
+                                  </button>
+                              </div>
+                                <!-- Thumbs up -->
+                                    <span @mouseout="r.temp=0">
+                                      <span @mouseover="r.temp=1">
+                                        <i class="fa fa-thumbs-up fa-lg is-size-4" v-on:click="set_rating(r._idx, -1)" v-if="r.rating == 1" style="color: #0099CC;"></i>
+                                        <i class="fa fa-thumbs-o-up fa-lg is-size-4" v-on:click="set_rating(r._idx, 1)" v-if="(r.rating == -1 || r.rating==0 ) || r.rating==None" style="color: #0099CC;"></i>
+                                      </span>
+                                    </span> 
+                      
+                                <!-- Thumbs Down -->
+                                   <span  @mouseout="r.temp=0">
+                                     <span @mouseover="r.temp=-1" >
+                                      <i class="fa fa-thumbs-down fa-lg is-size-4" v-on:click="set_rating(r._idx, -1)" v-if="r.rating == 0 " style="color: #0099CC;"></i>
+                                      <i class="fa fa-thumbs-o-down fa-lg is-size-4" v-on:click="set_rating(r._idx, 0)" v-if="(r.rating== 1 || r.rating==-1) || r.rating==None" style="color: #0099CC;"></i>
+                                    </span> 
+                                  </span> 
+                             
+                                    <span class="has-text-info">
+                                      <span v-if="r.temp==1 || r.temp==-1" class="is-size-7">
+                                        <br />
+                                        Liked by: {{r.likers}}
+                                        <a v-if="r.rating == 1">[[=username]]</a>
+                                        <br />
+                                        Disliked by: {{r.dislikers}}
+                                        <a v-if="r.rating == 0" >[[=username]]</a>
+                                      </span>
+                                    </span>
+                                    <br />
+                                    <br />
+                            
+                        </div>
+                      </div>
+                    </div>
+                      </div>
+                      <!-- <p>[[=row]]</p> -->
+                                    <!-- This is the code for the rating -->
+
+             
                   <a class="button is-pulled-right" href="[[=URL('edit_movie', row.id, signer=url_signer)]]">
                     <span class="icon"><i class="fa fa-fw fa-pencil"></i></span> <span>Edit</span>
                   </a>
@@ -102,9 +184,13 @@
 [[block page_scripts]]
 <!-- Loads the index-specific js for Vue -->
 <script>
-  let add_movie_url = "[[=XML(add_movie_url)]]";
+  let load_post_url = "[[=XML(load_post_url)]]";
+  let add_post_url = "[[=XML(add_post_url)]]";
+  let delete_post_url = "[[=XML(delete_post_url)]]";
   let get_rating_url = "[[=XML(get_rating_url)]]";
   let set_rating_url = "[[=XML(set_rating_url)]]";
+  let username = "[[=XML(username)]]";
+  let useremail = "[[=XML(useremail)]]";
   let search_url = "[[=XML(search_url)]]";
 </script>
 <script src="js/index.js"></script>
@@ -180,3 +266,4 @@ div.desc {
   text-align: center;
 }
 </style>
+

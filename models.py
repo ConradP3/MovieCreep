@@ -60,10 +60,9 @@ db.define_table(
     Field('movie_title', requires=IS_LENGTH(minsize=1)),
     Field('watch_list_date', 'date'),
     Field('watch_list_user_email', default=get_user_email),
-    Field('thumbnail', 'text'),
     Field('watch_list_user_name', default=name),
     Field('watch_list_watched', 'boolean'),
-    Field('watch_list_rating', 'integer', default=0),
+    Field('watch_list_rating', 'integer', default=-1),
     Field('watch_list_time_stamp', 'datetime', default=get_time)
 )
 
@@ -76,10 +75,11 @@ db.define_table(
 db.define_table(
     'reviews',
     Field('movie_id', 'reference movies'),
-    Field('watch_listid', 'reference watch_list'),
+    Field('watch_listid', 'reference watch_list'),      # Movie Liked
     Field('reviews_user_email', default=get_user_email),
+    Field('reviews_reviewer', 'reference auth_user'),   # User liking
     Field('reviews_review'),
-    Field('reviews_rating')
+    Field('reviews_rating', 'integer', default=-1),     # Rating
 )
 
 # User Table
@@ -121,6 +121,23 @@ db.define_table(
     Field('user_id', 'reference user')
 )
 
+
+db.define_table('post',
+                Field('post_text'),
+                Field('watch_list_movie', 'reference watch_list'),
+                Field('post_user', default=name),
+                Field('post_email', default=get_user_email),
+                Field('post_timestamp', 'datetime', default=get_time),
+                )
+
+db.define_table('likes',
+                Field('likes_post', 'reference post'), # post liked
+                Field('watch_list_movie', 'reference watch_list'),
+                Field('rating', 'integer', default=-1),
+                Field('likes_liker', 'reference auth_user'), # User doing the like.
+                Field('likes_name'),
+                Field('likes_user_email', default=get_user_email),
+                )
 
 db.watch_list.watch_list_time_stamp.readable = db.watch_list.watch_list_time_stamp.writable = False
 db.watch_list.watch_list_user_name.readable = db.watch_list.watch_list_user_name.writable = False

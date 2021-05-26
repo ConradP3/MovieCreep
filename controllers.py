@@ -29,7 +29,7 @@ from py4web import action, request, abort, redirect, URL
 from yatl.helpers import A
 from .common import db, session, T, cache, auth, logger, authenticated, unauthenticated, flash, Field
 from py4web.utils.url_signer import URLSigner
-from .models import get_user_email
+from .models import get_user_email, get_user, get_time
 from py4web.utils.form import Form, FormStyleBulma
 from pydal.validators import *
 
@@ -48,6 +48,9 @@ apikeys = ['8fb72c1a', '2710f070']
 @action('index')
 @action.uses(db, auth.user, 'index.html')
 def index():
+    r = db(db.auth_user.email == get_user_email()).select().first()
+    username=auth.current_user.get('first_name') + " " + auth.current_user.get("last_name")
+
     movie_rows = db((db.watch_list.watch_list_user_email == get_user_email())).select()
     # print(movie_rows)
     for m in movie_rows:
@@ -87,10 +90,16 @@ def index():
     print(movie_rows)
     return dict(rows=movie_rows, url_signer=url_signer,
                 add_movie_url = URL('add_movie', signer=url_signer),
+                load_post_url = URL('load_post', signer=url_signer),
+                add_post_url = URL('add_post', signer=url_signer),
+                delete_post_url = URL('delete_post', signer=url_signer),
                 get_rating_url = URL('get_rating', signer=url_signer),
                 set_rating_url = URL('set_rating', signer=url_signer),
+                c_email=get_user_email(),
                 search_url = URL('search', signer=url_signer),
-                user_email=get_user_email())
+                useremail=get_user_email(),
+                username=username,
+                )
 
 
 # add_movie: to add a new entry. 
@@ -124,30 +133,42 @@ def edit(watch_list_id=None):
     else:
         redirect(URL('index'))
 
-# @action('get_rating')
-# @action.uses(url_signer.verify(), db, auth.user)
-# def get_rating():
-#     """Returns the rating for a user and an image."""
-#     id = request.params.get('review_id')
-#     row = db((db.reviews.id == id) &
-#              (db.reviews.reviews_user_email == get_user_email())).select().first()
-#     rating = row.reviews_rating if row is not None else 0
-#     return dict(rating=rating)
+@action('get_rating', method='GET')
+@action.uses(url_signer.verify(), db, auth.user)
+def get_rating():
+    """Returns the rating for a user and post."""
+    print("Getting Ratings")
+    watch_id = request.params.get('id')
+    rows = db((db.reviews.watch_listid == watch_id) &
+             (db.reviews.reviews_reviewer == get_user())).select().first()
 
-# @action('set_rating', method='POST')
-# @action.uses(url_signer.verify(), db, auth.user)
-# def set_rating():
-#     """Sets the rating for movie."""
-#     id = request.json.get('review_id')
-#     rating = request.json.get('rating')
-#     assert id is not None and rating is not None
-#     db.reviews.update_or_insert(
-#         ((db.reviews.id == id) & (db.reviews.reviews_user_email == get_user_email())),
-#         image=image_id,
-#         rater=get_user(),
-#         rating=rating
-#     )
-#     return "ok" # Just to have some confirmation in the Network tab.
+    # if rows is not None:
+    rating = rows.reviews_rating 
+    # assert rating is not None
+    return dict(rating=rating)
+
+@action('set_rating', method='POST')
+@action.uses(url_signer.verify(), db, auth.user)
+def set_rating():
+    """Sets the rating for post."""
+    # r = db(db.auth_user.email == get_user_email()).select().first()
+    # name = r.first_name + " " + r.last_name if r is not None else "Unknown"
+    username=auth.current_user.get('first_name') + " " + auth.current_user.get("last_name")
+    print("Setting Ratings")
+    id = request.json.get('id')
+    rating = request.json.get('rating')
+    print(id)
+    print(rating)
+    assert id is not None and rating is not None
+    db.reviews.update_or_insert(
+        ((db.reviews.watch_listid == id) & (db.reviews.reviews_reviewer == get_user())),
+        watch_list_id=id,
+        reviews_user_email=get_user_email(),
+        reviewer_reviewer=username,
+        reviews_review='',
+        reviews_rating=rating,
+    )
+    return "ok" 
 
 
 # delete_movie
@@ -330,3 +351,92 @@ def add():
     rows = db(db.user.user_email == get_user_email()).select()
 
     return dict(rows)
+
+
+
+# #######################################################
+# Posts
+# #######################################################
+# This is our very first API function.
+@action('load_post')
+@action.uses(url_signer.verify(), db, auth.user)
+def load_post():
+    rows = db(db.post).select().as_list()
+    likes = db(db.likes).select().as_list()
+    username=auth.current_user.get('first_name') + " " + auth.current_user.get("last_name")
+    for i in rows:
+        user_likes = ''
+        user_dislikes = ''
+        for j in likes:
+            if i['id'] == j['likes_post'] and j['rating'] == 1 and j['likes_user_email'] != get_user_email():
+                user_likes += str(j['likes_name']) + ', '
+            if i['id'] == j['likes_post'] and j['rating'] == 0 and j['likes_user_email'] != get_user_email():
+                user_dislikes += str(j['likes_name']) + ', '
+            i["likers"] = user_likes[:-2]
+            i["dislikers"] = user_dislikes[:-2]
+            if i['id'] == j['likes_post'] and j['likes_user_email'] == get_user_email():
+                i['rating'] = j['rating']
+
+    print(rows)
+    print(likes)
+    return dict(rows=rows)
+        
+
+@action('add_post', method="POST")
+@action.uses(url_signer.verify(), db)
+def add_post():
+    print("Adding Post")
+    r = db(db.auth_user.email == get_user_email()).select().first()
+    id = db.post.insert(
+        post_text=request.json.get('post_text'),
+        post_user= r.first_name + " " + r.last_name if r is not None else "Unknown",
+        post_email=r.email if r is not None else "Unknown",
+        post_timestamp=get_time(),
+    )
+    return dict(id=id)
+
+@action('delete_post')
+@action.uses(url_signer.verify(), db, auth.user)
+def delete_post():
+    id = request.params.get('id')
+    assert id is not None
+    db(db.post.id == id).delete()
+    return "ok"
+
+
+@action('get_rating', method='GET')
+@action.uses(url_signer.verify(), db, auth.user)
+def get_rating():
+    """Returns the rating for a user and post."""
+    print("Getting Ratings")
+    post_id = request.params.get('id')
+    rows = db((db.likes.likes_post == post_id) &
+             (db.likes.likes_liker == get_user())).select().first()
+
+    # if rows is not None:
+    rating = rows.rating 
+    # assert rating is not None
+    return dict(rating=rating)
+
+@action('set_rating', method='POST')
+@action.uses(url_signer.verify(), db, auth.user)
+def set_rating():
+    """Sets the rating for post."""
+    # r = db(db.auth_user.email == get_user_email()).select().first()
+    # name = r.first_name + " " + r.last_name if r is not None else "Unknown"
+    username=auth.current_user.get('first_name') + " " + auth.current_user.get("last_name")
+    print("Setting Ratings")
+    id = request.json.get('id')
+    rating = request.json.get('rating')
+    print(id)
+    print(rating)
+    assert id is not None and rating is not None
+    db.likes.update_or_insert(
+        ((db.likes.likes_post == id) & (db.likes.likes_liker == get_user())),
+        likes_post=id,
+        likes_liker=get_user(),
+        likes_name=username,
+        rating=rating,
+        likes_user_email=get_user_email(),
+    )
+    return "ok" 
