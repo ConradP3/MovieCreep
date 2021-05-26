@@ -243,7 +243,8 @@ def profile():
     name = first_name + " " + last_name
     email = get_user_email()
     return dict(rows=rows, name=name, email=email, 
-                file_upload_url = URL('file_upload', signer=url_signer))
+                file_upload_url = URL('file_upload', signer=url_signer),
+                search_url=URL('search_friends', signer=url_signer))
 
 @action('file_upload', method="PUT")
 @action.uses(db) # Add here things you might want to use.
@@ -255,3 +256,31 @@ def file_upload():
     print("Uploaded", file_name, "of type", file_type)
     print("Content:", uploaded_file.read())
     return "ok"
+
+@action('search_friends')
+@action.uses(db, auth)
+def search_friends():
+    #q = request.params.get("q")
+    #rows = db(db.auth_user.email == q).select()
+
+    #for row in rows:
+    #    results = row['first_name'] + " " + row['last_name'] + " " + row['email']
+    #print(results)
+
+    q = request.params.get("q")
+    resultsrows = db(db.auth_user.email == q).select()
+    for r in resultsrows:
+        output = r['first_name'] + " " + r['last_name'] + " " + r['email']
+        friend_id = r['id']
+
+    results = [output]
+    print(friend_id)
+
+    return dict(results = results, friend_id=friend_id)
+
+@action('add_following')
+@action.uses(db, session, auth.user)
+def add():
+    rows = db(db.user.user_email == get_user_email()).select()
+
+    return dict(rows)

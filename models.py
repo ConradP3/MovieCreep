@@ -93,6 +93,7 @@ db.define_table(
     'user',
     Field('user_name', default=get_user),
     Field('user_email', default=get_user_email),
+    Field('user_pic'),
     Field('join_date', 'datetime')
 )
 
@@ -103,6 +104,21 @@ db.define_table(
     Field('user_id', 'reference user')
 )
 
+db.define_table(
+    'following',
+    Field('following_user_name'),
+    Field('following_user_email'),
+    Field('following_thumbnail'),
+    Field('user_id', 'reference user')
+)
+
+db.define_table(
+    'follower',
+    Field('follower_user_name'),
+    Field('follower_user_email'),
+    Field('follower_thumbnail'),
+    Field('user_id', 'reference user')
+)
 
 
 db.watch_list.watch_list_time_stamp.readable = db.watch_list.watch_list_time_stamp.writable = False
