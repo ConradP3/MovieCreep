@@ -2,9 +2,9 @@
 
 <style>
   [v-cloak] {
-       display: none;
+    display: none;
   }
-  </style>
+</style>
 
 
 <div class="section" id="vue-target" v-cloak>
@@ -48,10 +48,6 @@
         </div>
 
 
-
-        <a class="button is-light is-small" href="[[=URL('auth/profile')]]">
-            <span class="icon"><i class="fa fa-fw fa-pencil"></i></span> <span>Edit Info</span>
-        </a>
 
         <table class="table is-fullwidth ">
             <tr>
@@ -112,6 +108,11 @@
       </h2>
 
     <br />
+    User Email: [[=email]]
+  </h3>
+  </h2>
+
+  <br />
 
     <h2 class="title is-6 is-spaced">Following
         <table class="table is-fullwidth ">
@@ -141,6 +142,7 @@
 
     <br />
 
+
     <h2 class="title is-6 is-spaced">Followers
        <table class="table is-fullwidth ">
             <tr>
@@ -168,7 +170,7 @@
     </h2>
 
 
-  <!-- Sub nav tabs for later maybe
+    <!-- Sub nav tabs for later maybe
 
   <div class="tabs is-small">
     <ul>

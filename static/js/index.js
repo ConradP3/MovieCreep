@@ -13,6 +13,8 @@ let init = (app) => {
         query: "",
         results: [],
         delete_edit_mode: false,
+
+        view_mode: 0,
     };
 
     app.enumerate = (a) => {
@@ -74,6 +76,12 @@ let init = (app) => {
         }
     }
 
+
+    // Toggle gallery view
+    app.set_view = function (new_status) {
+        app.vue.view_mode = new_status;
+    };
+
     // This contains all the methods.
     app.methods = {
         set_stars: app.set_stars,
@@ -82,6 +90,9 @@ let init = (app) => {
         set_delete_edit_status: app.set_delete_edit_status,
         add_movie: app.add_movie,
         search: app.search,
+
+
+        set_view: app.set_view,
     };
 
     // This creates the Vue instance.
