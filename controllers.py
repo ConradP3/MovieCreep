@@ -242,13 +242,17 @@ def feed():
         url = 'http://www.omdbapi.com/?t=' + str(m['movie_title']) + '&apikey=' + apikeys[random.randint(0,len(apikeys)-1)]
         movie_data = requests.get(url).json()
         # r = requests.get(url)
-        link += str(movie_data['Poster'])
-        plot += str(movie_data['Plot'])
-        runtime += str(movie_data['Runtime'])
-        rating += str(movie_data['Rated'])
-        releasedate += str(movie_data['Released'])
-        # imdbrating += str(movie_data['imdbRating'])
-        genre += str(movie_data['Genre'])
+        if movie_data['Response'] != 'False':
+            link += str(movie_data['Poster'])
+            plot += str(movie_data['Plot'])
+            runtime += str(movie_data['Runtime'])
+            rating += str(movie_data['Rated'])
+            releasedate += str(movie_data['Released'])
+            # imdbrating += str(movie_data['imdbRating'])
+            genre += str(movie_data['Genre'])
+        else:
+            # See index controller comments
+            plot = 'Movie was not found when trying to contact omdbapi.'
         m['link'] = link
         m['genre'] = genre
         # m['imdbrating'] = imdbrating
