@@ -5,7 +5,7 @@
   }
 </style>
 
-<div class="section">
+<div class="section" id="vue-target" v-cloak>
 
   <div class="container">
 
@@ -111,9 +111,9 @@
   let add_movie_url = "[[=XML(add_movie_url)]]";
   let get_rating_url = "[[=XML(get_rating_url)]]";
   let set_rating_url = "[[=XML(set_rating_url)]]";
-  //let get_comments_url = "";
+  let get_comments_url = "[[=XML(get_comments_url)]]";
 </script>
-
+<script src="js/feed.js"></script>
 [[end]]
 
 

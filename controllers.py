@@ -265,15 +265,13 @@ def feed():
         m['runtime'] = runtime
         m['plot'] = plot
 
-    
-
     print(movie_rows)
     return dict(rows=movie_rows, url_signer=url_signer,
                 add_movie_url = URL('add_movie', signer=url_signer),
                 get_rating_url = URL('get_rating', signer=url_signer),
                 set_rating_url = URL('set_rating', signer=url_signer),
-                user_email=get_user_email(),
-                 )
+                get_comments_url = URL('get_comments', signer=url_signer),
+                user_email=get_user_email())
 
 # #######################################################
 # Notifications
