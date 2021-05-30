@@ -94,9 +94,15 @@ let init = (app) => {
         document.getElementById(p_tag_id).innerHTML = comment_string;
     }
 
+    // When a user hovers away from the commentors icon, clear the text
+    app.hide_comment = function(p_tag_id) {
+        document.getElementById(p_tag_id).innerHTML = "";
+    }
+
     // This contains all the methods.
     app.methods = {
         get_comment: app.get_comment, // Get comment of your review
+        hide_comment: app.hide_comment, // clear the p tag of text
 
         set_stars: app.set_stars,
         stars_out: app.stars_out,
