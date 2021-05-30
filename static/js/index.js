@@ -9,11 +9,16 @@ let init = (app) => {
 
     // This is the Vue data.
     app.data = {
+        // review comments feature
+        review_comments: {}, // This is an object that is kindof like a dictionary.
+                             // The key will be the review id and the value is
+                             // another object with the commenters user name and
+                             // comment
+        // end of review comments feature
         images: [],
         query: "",
         results: [],
         delete_edit_mode: false,
-
         view_mode: 0,
     };
 
@@ -82,15 +87,23 @@ let init = (app) => {
         app.vue.view_mode = new_status;
     };
 
+    // Get a comment by review_comment id
+    app.get_comment = function(comment_id, p_tag_id) {
+        comment_row = app.vue.review_comments["" + comment_id];
+        comment_string = comment_row.name + " says: " + comment_row.comment;
+        document.getElementById(p_tag_id).innerHTML = comment_string;
+    }
+
     // This contains all the methods.
     app.methods = {
+        get_comment: app.get_comment, // Get comment of your review
+
         set_stars: app.set_stars,
         stars_out: app.stars_out,
         stars_over: app.stars_over,
         set_delete_edit_status: app.set_delete_edit_status,
         add_movie: app.add_movie,
         search: app.search,
-
 
         set_view: app.set_view,
     };
@@ -104,26 +117,15 @@ let init = (app) => {
 
     // And this initializes it.
     app.init = () => {
-        // First we get the images.
-        axios.get(get_images_url)
+        // Populate the review comment object
+        axios.get(get_comments_url)
             .then((result) => {
-                // We set them
-                let images = result.data.images;
-                app.enumerate(images);
-                app.complete(images);
-                app.vue.images = images;
-            })
-            .then(() => {
-                // Then we get the star ratings for each image.
-                // These depend on the user.
-                for (let img of app.vue.images) {
-                    axios.get(get_rating_url, {params: {"image_id": img.id}})
-                        .then((result) => {
-                            img.rating = result.data.rating;
-                            img.num_stars_display = result.data.rating;
-                        });
+                comments = result.data.comments;
+                for (let comment_id in comments) {
+                    Vue.set(app.vue.review_comments, comment_id, comments["" + comment_id]);
                 }
             });
+        // End of review comment object population
     };
 
     // Call to the initializer.

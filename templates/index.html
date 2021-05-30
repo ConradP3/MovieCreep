@@ -5,14 +5,14 @@
   }
 </style>
   
-<div class="section">
+<div class="section" id="vue-target">
 
   <span class="button is-success is-pulled-right" @click="set_view(true)">
     <span class="icon"><i class="fa fa-exchange"></i></span>
     <span>Change View</span>
   </span>
 
-  <div class = "section" id = "vue-target" v-cloak>
+  <div class = "section" id="" v-cloak>
     <h2>Search</h2>
       <div class = "control block">
         <input class="input" type="text" v-model="query" @keyup="search">
@@ -29,6 +29,7 @@
             <span>Add New Movie</span>
          </a>
       </h1>
+    </div>
     <!-- <div class="columns is-mobile"> -->
     [[for row in reversed(rows):]]
     <div class="container block"  v-if="view_mode === 0">
@@ -60,12 +61,14 @@
 
               <div class="block">
                 <p>[[if row.watch_list_watched:]]Seen: [[=row.watch_list_date]][[else:]]Not Seen[[pass]]</p>
-                <span @mouseout="stars_out(img._idx)">
+<!--                <span @mouseout="stars_out(img._idx)">
                   <span @mouseover="stars_over(img._idx, star_idx)" @click="set_stars(img._idx, star_idx)" v-for="star_idx in [1, 2, 3, 4, 5]">
                     <i v-if="star_idx <= img.num_stars_display" class="fa fa-star"></i>
                     <i v-if="star_idx > img.num_stars_display" class="fa fa-star-o"></i>
                   </span>
                 </span>
+                <br>
+                <br> -->
               </div>
 
             </div>
@@ -78,14 +81,17 @@
                 <p>[[if row.watch_list_review == None:]]No review posted[[else:]][[=row.watch_list_review]][[pass]]</p>
               </div>
 
-              <div class="block is-pulled-right">
-                <a class="button" href="[[=URL('edit_movie', row.id, signer=url_signer)]]">
-                  <span class="icon"><i class="fa fa-fw fa-pencil"></i></span>
-                  <span>Edit</span>
-                </a>
-                <a class="button" href="[[=URL('delete_movie', row.id, signer=url_signer)]]">
-                  <span class="icon"><i class="fa fa-fw fa-trash"></i></span>
-                </a>
+              <div class="block">
+                 [[if len(row.comments) != 0:]]
+                 <h5 class="title is-5">Friend Comments</h5>
+                 [[pass]]
+
+                 [[for comment in row.comments:]]
+                 <figure class="is-inline-block image is-32x32">
+                   <img src="https://www.jing.fm/clipimg/detail/195-1952632_account-customer-login-man-user-icon-login-icon.png" class="is-rounded" @mouseover="get_comment([[=comment.id]], [[=row.id]])">
+                 </figure>
+                 [[pass]]
+                 <p id="[[=row.id]]"></p> <!-- For identifying the row -->
               </div>
             </div>
             <!-- End of movie interactions tile -->
@@ -93,13 +99,31 @@
           </div>
           <!-- End of Parent tile for movie content -->
 
-          <!-- Parent tile for timestamp -->
+          <!-- Parent tile for timestamp and edit delete-->
           <div class="tile is-parent">
             <div class="tile is-child">
-              <a class="is-pulled-right"><p>[[=row.watch_list_time_stamp]]</p></a>
+              <div class="level">
+                <div class="level-left"></div> <!-- Dummy left elemenn -->
+                <div class="level-right">
+                  <a class="button is-warning level-item" href="[[=URL('edit_movie', row.id, signer=url_signer)]]">
+                    <span class="icon"><i class="fa fa-fw fa-pencil"></i></span>
+                    <span>Edit</span>
+                  </a>
+                  <a class="button is-danger level-item" href="[[=URL('delete_movie', row.id, signer=url_signer)]]">
+                    <span class="icon"><i class="fa fa-fw fa-trash"></i></span>
+
+                  </a>
+                </div>
+              </div>
+              <div class="level">
+                <div class="level-left"></div> <!-- Dummy left element -->
+                <div class="level-right">
+                  <a class="level-item"><p>[[=row.watch_list_time_stamp]]</p></a>
+                </div>
+              </div>
             </div> 
           </div>
-          <!-- End of parent tile for timestamp -->
+          <!-- End of parent tile for timestamp and edit delete-->
 
         </div>
       </div>
@@ -118,6 +142,7 @@
   let get_rating_url = "[[=XML(get_rating_url)]]";
   let set_rating_url = "[[=XML(set_rating_url)]]";
   let search_url = "[[=XML(search_url)]]";
+  let get_comments_url = "[[=XML(get_comments_url)]]";
 </script>
 <script src="js/index.js"></script>
 [[end]]
