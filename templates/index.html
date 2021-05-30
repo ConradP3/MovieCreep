@@ -22,13 +22,16 @@
 
   <div class = "section">
 
-    <div class="container">
-      <h1 class='title'><B>Your Movies</B>   
-         <a class="button is-success is-pulled-right" href="[[=URL('add_movie')]]">
+    <div class="level">
+      <div class="level-left">
+        <h1 class='title is-1 level-item'><B>Your Movies</B></h1>
+      </div>
+      <div class="level-right">
+         <a class="button is-success" href="[[=URL('add_movie')]]">
             <span class="icon"><i class="fa fa-plus"></i></span>
             <span>Add New Movie</span>
          </a>
-      </h1>
+      </div>
     </div>
     <!-- <div class="columns is-mobile"> -->
     [[for row in reversed(rows):]]
