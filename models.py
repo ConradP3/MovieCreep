@@ -30,13 +30,13 @@ name = r.first_name + " " + r.last_name if r is not None else "Unknown"
 db.define_table(
     'watch_list',
     Field('movie_title', requires=IS_LENGTH(minsize=1)),
+    Field('watch_list_watched', 'boolean'),
     Field('watch_list_date', 'date'),
     Field('watch_list_user_email', default=get_user_email),
-    Field('thumbnail', 'text'),
     Field('watch_list_user_name', default=name),
-    Field('watch_list_watched', 'boolean'),
     Field('watch_list_rating', 'integer', default=0),
-    Field('watch_list_time_stamp', 'datetime', default=get_time)
+    Field('watch_list_time_stamp', 'datetime', default=get_time),
+    Field('watch_list_review')
 )
 
 
@@ -99,6 +99,7 @@ db.watch_list.id.readable = db.watch_list.id.writable = False
 db.watch_list.watch_list_user_email.readable = db.watch_list.watch_list_user_email.writable = False
 
 db.watch_list.watch_list_watched.label = T('Seen')
-
+db.watch_list.watch_list_rating.label = T('Your Movie Rating')
+db.watch_list.watch_list_review.label = T('Your Movie Review')
 
 db.commit()
