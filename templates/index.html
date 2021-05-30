@@ -5,14 +5,14 @@
   }
 </style>
   
-<div class="section" id="vue-target">
+<div class="section" id="vue-target" v-cloak>
 
   <span class="button is-success is-pulled-right" @click="set_view(true)">
     <span class="icon"><i class="fa fa-exchange"></i></span>
     <span>Change View</span>
   </span>
 
-  <div class = "section" id="" v-cloak>
+  <div class = "section">
     <h2>Search</h2>
       <div class = "control block">
         <input class="input" type="text" v-model="query" @keyup="search">
