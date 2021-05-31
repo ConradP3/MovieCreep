@@ -60,9 +60,19 @@ let init = (app) => {
                 listing_id: app.vue.editing_id,
                 comment: app.vue.comment_box
             }).then(function (response) {
-                app.vue.comment_box = "";
-                app.vue.editing_id = -1;
-                app.vue.editing = false;
+                if (response.data.stat == "ok") {
+                    axios.get(get_comments_url)
+                        .then((result) => {
+                            comments = result.data.comments;
+                            for (let comment_id in comments) {
+                                Vue.set(app.vue.review_comments, comment_id,
+                                        comments["" + comment_id]);
+                            }
+                        });
+                    app.vue.comment_box = "";
+                    app.vue.editing_id = -1;
+                    app.vue.editing = false;
+                }
             });
     }
 

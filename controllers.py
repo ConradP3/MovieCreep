@@ -373,6 +373,6 @@ def post_comment():
             (db.review_comment.watch_list_id == watch_list_id),
             watch_list_id=watch_list_id,
             comment=comment)
-        return dict(status="ok")
+        return dict(stat="ok")
     else:
-        return dict(status="error")
+        return dict(stat="error")
