@@ -366,7 +366,13 @@ def get_comments():
 @action.uses(db, auth.user, url_signer.verify())
 def post_comment():
     comment = request.json.get('comment')
+    watch_list_id = request.json.get('listing_id')
     if len(comment.strip()) > 0:
-        db.review_comment.insert(watch_list_id=request.json.get('listing_id'),
-                                 comment=request.json.get('comment'))
-        redirect(URL('feed'))
+        db.review_comment.update_or_insert(
+            (db.review_comment.user_email == get_user_email()) &
+            (db.review_comment.watch_list_id == watch_list_id),
+            watch_list_id=watch_list_id,
+            comment=comment)
+        return dict(status="ok")
+    else:
+        return dict(status="error")
