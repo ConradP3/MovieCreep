@@ -75,6 +75,9 @@ let init = (app) => {
                     app.vue.comment_box = "";
                     app.vue.editing_id = -1;
                     app.vue.editing = false;
+                    // a lazy fix:
+                    //https://laracasts.com/discuss/channels/vue/is-there-anyway-to-have-vue-reload-a-page
+                    location.reload();
                 }
             });
     }
