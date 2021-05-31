@@ -382,11 +382,17 @@ def post_comment():
     comment = request.json.get('comment')
     watch_list_id = request.json.get('listing_id')
     if len(comment.strip()) > 0:
+        exists = "false"
+        row = db((db.review_comment.user_email == get_user_email()) &
+                 (db.review_comment.watch_list_id == watch_list_id)).select().first()
+        if row is not None:
+            exists = "true"
+
         db.review_comment.update_or_insert(
             (db.review_comment.user_email == get_user_email()) &
             (db.review_comment.watch_list_id == watch_list_id),
             watch_list_id=watch_list_id,
             comment=comment)
-        return dict(stat="ok")
+        return dict(stat="ok",updated=exists)
     else:
         return dict(stat="error")

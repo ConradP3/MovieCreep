@@ -77,7 +77,9 @@ let init = (app) => {
                     app.vue.editing = false;
                     // a lazy fix:
                     //https://laracasts.com/discuss/channels/vue/is-there-anyway-to-have-vue-reload-a-page
-                    location.reload();
+                    if (response.data.updated == "false") { //no previous entry
+                        location.reload();
+                    }
                 }
             });
     }
