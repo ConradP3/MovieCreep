@@ -85,16 +85,16 @@
               </div>
 
               <div class="block">
-                 [[if len(row.comments) != 0:]]
-                 <h5 class="title is-5">Follower Comments</h5>
-                 [[pass]]
+                [[if len(row.comments) != 0:]]
+                <h5 class="title is-5">Follower Comments</h5>
+                [[pass]]
 
-                 [[for comment in row.comments:]]
-                 <figure class="is-inline-block image is-32x32">
-                   <img src="https://www.jing.fm/clipimg/detail/195-1952632_account-customer-login-man-user-icon-login-icon.png" class="is-rounded" @mouseover="get_comment([[=comment.id]], [[=row.id]])" @mouseout="hide_comment([[=row.id]])">
-                 </figure>
-                 [[pass]]
-                 <p id="[[=row.id]]"></p> <!-- For identifying the row -->
+                [[for comment in row.comments:]]
+                <figure class="is-inline-block image is-32x32">
+                  <img src="https://www.jing.fm/clipimg/detail/195-1952632_account-customer-login-man-user-icon-login-icon.png" class="is-rounded" @mouseover="get_comment([[=comment.id]], [[=row.id]])" @mouseout="hide_comment([[=row.id]])">
+                </figure>
+                [[pass]]
+                <p id="[[=row.id]]"></p> <!-- For identifying the row -->
               </div>
             </div>
             <!-- End of movie interactions tile -->
@@ -106,7 +106,7 @@
           <div class="tile is-parent">
             <div class="tile is-child">
               <div class="level">
-                <div class="level-left"></div> <!-- Dummy left elemenn -->
+                <div class="level-left"></div> <!-- Dummy left element -->
                 <div class="level-right">
                   <a class="button is-warning level-item" href="[[=URL('edit_movie', row.id, signer=url_signer)]]">
                     <span class="icon"><i class="fa fa-fw fa-pencil"></i></span>

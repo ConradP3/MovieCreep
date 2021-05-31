@@ -9,6 +9,11 @@ from pydal.validators import *
 def get_user_email():
     return auth.current_user.get('email') if auth.current_user else None
 
+def get_user_name():
+    first_name = auth.current_user.get('first_name') if auth.current_user else None
+    last_name = auth.current_user.get('last_name') if auth.current_user else None
+    return first_name + " " + last_name
+
 def get_time():
     return datetime.datetime.utcnow()
 
@@ -33,7 +38,7 @@ db.define_table(
     Field('watch_list_watched', 'boolean'),
     Field('watch_list_date', 'date'),
     Field('watch_list_user_email', default=get_user_email),
-    Field('watch_list_user_name', default=name),
+    Field('watch_list_user_name', default=get_user_name),
     Field('watch_list_rating', 'integer', default=0),
     Field('watch_list_time_stamp', 'datetime', default=get_time),
     Field('watch_list_review')
@@ -49,7 +54,7 @@ db.define_table(
     'review_comment',
     Field('watch_list_id', 'reference watch_list'),
     Field('user_email', default=get_user_email),
-    Field('user_name', default=name),
+    Field('user_name', default=get_user_name),
     Field('comment', requires=IS_LENGTH(minsize=1))
 )
 

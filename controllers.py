@@ -200,13 +200,16 @@ def movie_reccomendations():
         url = 'http://www.omdbapi.com/?t=' + str(m['movie_title']) + '&apikey=' + apikeys[random.randint(0,len(apikeys)-1)]
         movie_data = requests.get(url).json()
         # r = requests.get(url)
-        link += str(movie_data['Poster'])
-        plot += str(movie_data['Plot'])
-        runtime += str(movie_data['Runtime'])
-        rating += str(movie_data['Rated'])
-        releasedate += str(movie_data['Released'])
-        # imdbrating += str(movie_data['imdbRating'])
-        genre += str(movie_data['Genre'])
+        if movie_data['Response'] != "False":
+            link += str(movie_data['Poster'])
+            plot += str(movie_data['Plot'])
+            runtime += str(movie_data['Runtime'])
+            rating += str(movie_data['Rated'])
+            releasedate += str(movie_data['Released'])
+            # imdbrating += str(movie_data['imdbRating'])
+            genre += str(movie_data['Genre'])
+        else:
+            plot = 'Movie was not found when trying to contact omdbapi.'
         m['link'] = link
         m['genre'] = genre
         # m['imdbrating'] = imdbrating
@@ -232,7 +235,8 @@ def movie_reccomendations():
 @action('feed')
 @action.uses(db, auth.user, 'feed.html')
 def feed():
-    movie_rows = db(db.watch_list).select()
+    movie_rows = db(db.watch_list.watch_list_user_email != get_user_email()).select() # This gets all movie entries besides your own
+    #movie_rows = db(db.watch_list).select() # This gets all movie entries
     # print(movie_rows)
     for m in movie_rows:
         link = ''
@@ -265,15 +269,17 @@ def feed():
         m['runtime'] = runtime
         m['plot'] = plot
 
-    
+        m['comments'] = db(db.review_comment.watch_list_id == m['id']).select()
 
     print(movie_rows)
     return dict(rows=movie_rows, url_signer=url_signer,
                 add_movie_url = URL('add_movie', signer=url_signer),
                 get_rating_url = URL('get_rating', signer=url_signer),
                 set_rating_url = URL('set_rating', signer=url_signer),
-                user_email=get_user_email(),
-                 )
+                get_comment_url = URL('get_comment', signer=url_signer),
+                get_comments_url = URL('get_comments', signer=url_signer),
+                post_comment_url = URL('post_comment', signer=url_signer),
+                user_email=get_user_email())
 
 # #######################################################
 # Notifications
@@ -343,10 +349,23 @@ def add():
 
     return dict(rows)
 
+# get an individual comment for a user given the movie listing id
+# there's only one comment per user on a given movie listing id so this is ok
+@action('get_comment')
+@action.uses(db, auth.user, url_signer.verify())
+def get_comment():
+    watch_list_id = request.params.get('watch_list_id')
+    row = db((db.review_comment.user_email == get_user_email()) &
+             (db.review_comment.watch_list_id == watch_list_id)).select().first()
+    comment = ""
+    if row is not None:
+        comment = row.comment
+    return dict(comment=comment)
+
 # get comments that are visible when you hover over the authors
 # icon below your own review
 @action('get_comments')
-@action.uses(db, auth.user)
+@action.uses(db, auth.user, url_signer.verify())
 def get_comments():
     rows = db(db.review_comment).select()
     comments = {}
@@ -356,8 +375,24 @@ def get_comments():
         comments[str(row.id)] = {"name":row.user_name,"comment":row.comment}
     return dict(comments=comments)
     
+# post a comment to the review_comment db table
+@action('post_comment', method=['POST'])
+@action.uses(db, auth.user, url_signer.verify())
+def post_comment():
+    comment = request.json.get('comment')
+    watch_list_id = request.json.get('listing_id')
+    if len(comment.strip()) > 0:
+        exists = "false"
+        row = db((db.review_comment.user_email == get_user_email()) &
+                 (db.review_comment.watch_list_id == watch_list_id)).select().first()
+        if row is not None:
+            exists = "true"
 
-
-
-
-
+        db.review_comment.update_or_insert(
+            (db.review_comment.user_email == get_user_email()) &
+            (db.review_comment.watch_list_id == watch_list_id),
+            watch_list_id=watch_list_id,
+            comment=comment)
+        return dict(stat="ok",updated=exists)
+    else:
+        return dict(stat="error")
