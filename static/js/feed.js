@@ -10,10 +10,13 @@ let init = (app) => {
     // This is the Vue data.
     app.data = {
         // review comments feature
-        review_comments: {}  // This is an object that is kindof like a dictionary.
+        review_comments: {}, // This is an object that is kindof like a dictionary.
                              // The key will be the review id and the value is
                              // another object with the commenters user name and
                              // comment
+        comment_box: "",
+        editing_id: -1,      // Id of the movie listing to edit
+        editing: false
         // end of review comments feature
     };
 
@@ -36,10 +39,41 @@ let init = (app) => {
         document.getElementById(p_tag_id).innerHTML = "";
     }
 
+    // When the user presses the comment button in the feed on a movie listing
+    app.edit_comment = function(element_id) {
+        app.vue.comment_box = "";
+        app.vue.editing_id = element_id;
+        app.vue.editing = true;
+    }
+
+    // Cancel the comment editing
+    app.cancel_comment = function() {
+        app.vue.comment_box = "";
+        app.vue.editing_id = -1;
+        app.vue.editing = false;
+    }
+
+    // Post the comment to the review_comment table
+    app.post_comment = function() {
+        axios.post(post_comment_url, 
+            {
+                listing_id: app.vue.editing_id,
+                comment: app.vue.comment_box
+            }).then(function (response) {
+                app.vue.comment_box = "";
+                app.vue.editing_id = -1;
+                app.vue.editing = false;
+            });
+    }
+
     // This contains all the methods.
     app.methods = {
-        get_comment: app.get_comment, // Get comment of your review
-        hide_comment: app.hide_comment // clear the p tag of text
+        get_comment: app.get_comment,   // Get comment of your review
+        hide_comment: app.hide_comment, // clear the p tag of text
+
+        edit_comment: app.edit_comment,
+        cancel_comment: app.cancel_comment,
+        post_comment: app.post_comment
     };
 
     // This creates the Vue instance.

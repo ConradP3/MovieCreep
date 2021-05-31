@@ -79,7 +79,15 @@
                 <img src="https://www.jing.fm/clipimg/detail/195-1952632_account-cu    stomer-login-man-user-icon-login-icon.png" class="is-rounded" @mouseover="get_comment([[=comment.id]], [[=row.id]])" @mouseout="hide_comment([[=row.id]])">
               </figure>
               [[pass]]
-              <p id="[[=row.id]]"></p> <!-- For identifying the row in feed.js -->
+              <div class="block">
+                <p id="[[=row.id]]"></p> <!-- For identifying the row in feed.js -->
+              </div>
+              <div class="field block" v-if="[[=row.id]] == editing_id && editing">
+                <h5 class="title is-5">My Comment:</h5>
+                <p class="control">
+                  <input class="input" type="text" v-model="comment_box">
+                </p>
+              </div>
             </div>
           </div> <!-- End of movie interactions tile -->
 
@@ -91,16 +99,13 @@
             <div class="level">
               <div class="level-left"></div> <!-- Dummy left element -->
               <div class="level-right">
-                <!-- If this movie listing belongs to you -->
-<!--                [[if row.watch_list_user_email == user_email:]]
-                <a class="button is-warning level-item" href="[[=URL('edit_movie', row.id, signer=url_signer)]]">
-                  <span class="icon"><i class="fa fa-fw fa-pencil"></i></span>
-                  <span>Edit</span>
-                </a>
-                <a class="button is-danger level-item" href="[[=URL('delete_movie', row.id, signer=url_signer)]]">
-                  <span class="icon"><i class="fa fa-fw fa-trash"></i></span>
-                </a>
-                [[pass]] -->
+                <div v-if="editing && [[=row.id]] == editing_id">
+                  <button class="button is-primary" @click="post_comment()">Post</button>
+                  <button class="button is-danger" @click="cancel_comment()">Cancel</button>
+                </div>
+                <div v-else>
+                  <button class="button is-warning" @click="edit_comment([[=row.id]])">Comment</button>
+                </div>
               </div>
             </div>
             <div class="level">
@@ -129,6 +134,7 @@
   let get_rating_url = "[[=XML(get_rating_url)]]";
   let set_rating_url = "[[=XML(set_rating_url)]]";
   let get_comments_url = "[[=XML(get_comments_url)]]";
+  let post_comment_url = "[[=XML(post_comment_url)]]";
 </script>
 <script src="js/feed.js"></script>
 [[end]]

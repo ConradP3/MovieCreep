@@ -277,6 +277,7 @@ def feed():
                 get_rating_url = URL('get_rating', signer=url_signer),
                 set_rating_url = URL('set_rating', signer=url_signer),
                 get_comments_url = URL('get_comments', signer=url_signer),
+                post_comment_url = URL('post_comment', signer=url_signer),
                 user_email=get_user_email())
 
 # #######################################################
@@ -350,7 +351,7 @@ def add():
 # get comments that are visible when you hover over the authors
 # icon below your own review
 @action('get_comments')
-@action.uses(db, auth.user)
+@action.uses(db, auth.user, url_signer.verify())
 def get_comments():
     rows = db(db.review_comment).select()
     comments = {}
@@ -360,8 +361,12 @@ def get_comments():
         comments[str(row.id)] = {"name":row.user_name,"comment":row.comment}
     return dict(comments=comments)
     
-
-
-
-
-
+# post a comment to the review_comment db table
+@action('post_comment', method=['POST'])
+@action.uses(db, auth.user, url_signer.verify())
+def post_comment():
+    comment = request.json.get('comment')
+    if len(comment) > 0:
+        db.review_comment.insert(watch_list_id=request.json.get('listing_id'),
+                                 comment=request.json.get('comment'))
+        redirect(URL('feed'))
