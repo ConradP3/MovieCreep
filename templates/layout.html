@@ -1,92 +1,135 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <base href="[[=URL('static')]]/">
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="shortcut icon" href="data:image/x-icon;base64,AAABAAEAAQEAAAEAIAAwAAAAFgAAACgAAAABAAAAAgAAAAEAIAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAPAAAAAA=="/>
-    <link rel="stylesheet" href="css/bulma.css">
-    <link rel="stylesheet" href="font-awesome-4.7.0/css/font-awesome.css">
-    [[block page_head]]<!-- individual pages can customize header here -->[[end]]
-  </head>
-  <body>
-    <!-- Navigation bar -->
-    <nav class="navbar is-info">
-      <img src="./images/logo.png" href="[[=URL('index')]]" alt="Movue Creep" width="90" height="28">
-      <div class="navbar-brand">
-        <a class="navbar-item" href="[[=URL('profile')]]">
-          Profile
-          <!-- Profile -->
-        </a>
-        <a class="navbar-item" href="[[=URL('index')]]">
-          Movie Watch List
-          <!-- Planned and Already Watched Movies come up -->
-        </a>
-        <a class="navbar-item" href="[[=URL('feed')]]">
-          Feed
-          <!-- Friends movies and your own -->
-        </a>
-        <a class="navbar-item" href="[[=URL('movie_reccomendations')]]">
-          Movie Recommendations
-          <!-- Reccomended movies -->
-        </a>
-        <a class="navbar-item" href="[[=URL('notifications')]]">
-          Notifications
-          <!-- Can choose to have notifications when friend adds you, they share a movie etc. -->
-        </a>
+
+<head>
+  <base href="[[=URL('static')]]/">
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="shortcut icon"
+    href="data:image/x-icon;base64,AAABAAEAAQEAAAEAIAAwAAAAFgAAACgAAAABAAAAAgAAAAEAIAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAPAAAAAA==" />
+  <link rel="stylesheet" href="css/bulma.css">
+  <link rel="stylesheet" href="font-awesome-4.7.0/css/font-awesome.css">
+  [[block page_head]]
+  <!-- individual pages can customize header here -->[[end]]
+</head>
+
+<body>
+  <!-- Navigation bar -->
+  <nav class="navbar is-info">
+    <img src="./images/logo.png" href="[[=URL('index')]]" alt="Movue Creep" width="90" height="28">
+    <div class="navbar-brand">
+      <a class="navbar-item" href="[[=URL('profile')]]">
+        Profile
+        <!-- Profile -->
+      </a>
+      <a class="navbar-item" href="[[=URL('index')]]">
+        Movie Watch List
+        <!-- Planned and Already Watched Movies come up -->
+      </a>
+      <a class="navbar-item" href="[[=URL('feed')]]">
+        Feed
+        <!-- Friends movies and your own -->
+      </a>
+      <a class="navbar-item" href="[[=URL('movie_reccomendations')]]">
+        Movie Recommendations
+        <!-- Reccomended movies -->
+      </a>
+      <a class="navbar-item" href="[[=URL('notifications')]]">
+        Notifications
+        <!-- Can choose to have notifications when friend adds you, they share a movie etc. -->
+      </a>
 
 
-        <a role="button" class="navbar-burger burger" aria-label="menu" aria-expanded="false" data-target="the-navbar-menu"
-           onclick="this.classList.toggle('is-active');document.getElementById(this.dataset.target).classList.toggle('is-active');">
-          <span aria-hidden="true"></span>
-          <span aria-hidden="true"></span>
-          <span aria-hidden="true"></span>
-        </a>
+      <a role="button" class="navbar-burger burger" aria-label="menu" aria-expanded="false"
+        data-target="the-navbar-menu"
+        onclick="this.classList.toggle('is-active');document.getElementById(this.dataset.target).classList.toggle('is-active');">
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+      </a>
+    </div>
+
+    <div id="the-navbar-menu" class="navbar-menu">
+      <div class="navbar-start">
+        [[block page_menu_items]]
+        <!-- individual pages can add menu items here -->[[end]]
       </div>
-
-      <div id="the-navbar-menu" class="navbar-menu">
-        <div class="navbar-start">
-          [[block page_menu_items]]<!-- individual pages can add menu items here -->[[end]]
-        </div>
-        <div class="navbar-end">
-          <div class="navbar-item">
-            <div class="buttons">
-              [[if globals().get('user'):]]
-                <div class="navbar-item has-dropdown is-hoverable">
-                  <a class="navbar-link is-primary">
-                    [[=globals().get('user').get('email')]]
-                  </a>
-                  <div class="navbar-dropdown">
-                    <a class="navbar-item" href="[[=URL('auth/logout')]]">Logout</a>
-                    <a class="navbar-item" href="[[=URL('auth/profile')]]">Profile</a>
-                    <a class="navbar-item" href="[[=URL('auth/change_password')]]">Change Password</a></li>
-
+      <div class="navbar-end">
+        <div class="navbar-item">
+          <div class="buttons">
+            [[if globals().get('user'):]]
+            <div class="navbar-item has-dropdown is-hoverable">
+              <a class="navbar-link is-primary">
+                [[=globals().get('user').get('email')]]
+              </a>
+              <div class="navbar-dropdown">
+                <a class="navbar-item" href="[[=URL('auth/logout')]]">Logout</a>
+                <a class="navbar-item" href="[[=URL('auth/profile')]]">Profile</a>
+                <a class="navbar-item" href="[[=URL('auth/change_password')]]">Change Password</a></li>
+                <a class="navbar-item">Toggle Light/Dark Mode &nbsp;
+                  <div class="field has-addons">
+                    <p class="control">
+                      <button class="button is-light" onclick='toggleLightDark()'>
+                        <span class="icon is-small">
+                          <i class="fa fa-sun-o"></i>
+                        </span>
+                      </button>
+                    </p>
+                    <p class="control">
+                      <button class="button is-dark" onclick='toggleLightDark()'>
+                        <span class="icon is-small">
+                          <i class="fa fa-moon-o"></i>
+                        </span>
+                      </button>
+                    </p>
                   </div>
-                </div>
-              [[else:]]
-                  <a class="button is-link" href="[[=URL('auth/register')]]">Sign up</a>
-                  <a class="button is-success" href="[[=URL('auth/login')]]">Log in</a>
-              [[pass]]
-
+                </a>
+              </div>
             </div>
+            [[else:]]
+            <a class="button is-link" href="[[=URL('auth/register')]]">Sign up</a>
+            <a class="button is-success" href="[[=URL('auth/login')]]">Log in</a>
+            [[pass]]
+
           </div>
         </div>
       </div>
-    </nav>
+    </div>
+  </nav>
 
-    <!-- beginning of HTML inserted by extending template -->
-    [[include]]
-    <!-- end of HTML inserted by extending template -->
-    <!-- <footer class="footer"> -->
-      <!-- <div class="content has-text-centered"> -->
-        <!-- Made with <a href="https://py4web.com">py4web</a>. -->
-        <!-- <a href="https://learn-py4web.github.io">Learn py4web!</a> -->
-      <!-- </div> -->
-    <!-- </footer> -->
-  </body>
-  <script src="js/sugar.min.js"></script>
-  <script src="js/axios.min.js"></script>
-  <script src="js/vue.js"></script>
-  <script src="js/utils.js"></script>
-  [[block page_scripts]]<!-- individual pages can add scripts here -->[[end]]
+  <!-- beginning of HTML inserted by extending template -->
+  [[include]]
+  <!-- end of HTML inserted by extending template -->
+  <!-- <footer class="footer"> -->
+  <div class="content has-text-centered">
+    Made with <a href="https://py4web.com">py4web</a>.
+  </div>
+  <!-- </footer> -->
+</body>
+<!-- https://blog.webjeda.com/dark-theme-switch/ -->
+<script>
+  document.body.style.backgroundColor = sessionStorage.getItem('bg');
+  document.body.style.color = sessionStorage.getItem('cc');
+  function toggleLightDark() {
+    if (sessionStorage.getItem('bg') === 'rgb(255, 255, 255)') {
+      sessionStorage.setItem('bg', 'rgb(6, 23, 37)');
+      sessionStorage.setItem('cc', '#777');
+    }
+    else if (sessionStorage.getItem('bg') === 'rgb(6, 23, 37)') {
+      sessionStorage.setItem('bg', 'rgb(255, 255, 255)');
+      sessionStorage.setItem('cc', '#333');
+    }
+
+    document.body.style.backgroundColor = sessionStorage.getItem('bg');
+    document.body.style.color = sessionStorage.getItem('cc');
+
+  }
+</script>
+<script src="js/sugar.min.js"></script>
+<script src="js/axios.min.js"></script>
+<script src="js/vue.js"></script>
+<script src="js/utils.js"></script>
+[[block page_scripts]]
+<!-- individual pages can add scripts here -->[[end]]
+
 </html>
