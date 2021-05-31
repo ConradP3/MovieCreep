@@ -210,11 +210,13 @@ def movie_reccomendations():
         similarities = sorted(list(enumerate(cosine_sim[indices[title]])), key=lambda x: x[1], reverse=True)[1:31]
         movie_indices = [i[0] for i in similarities]
         return titles.iloc[movie_indices]
+  
     
+
     users_added_movies = db((db.watch_list.watch_list_user_email == get_user_email())).select()
     for movie in users_added_movies:
         try:
-            recommended = get_recommendations(movie['movie_title']).head(1)
+            recommended = get_recommendations(movie['movie_title']).sample()
             recommended_list = recommended.to_list()
             movie['recommended'] = recommended_list
 
@@ -236,6 +238,7 @@ def movie_reccomendations():
                 genre += str(movie_data['Genre'])
             else:
                 plot = 'Movie was not found when trying to contact omdbapi.'
+                movie['recommended'] = None
             movie['link'] = link
             movie['genre'] = genre
             movie['releasedate'] = releasedate
