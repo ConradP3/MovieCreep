@@ -33,6 +33,12 @@ from .models import get_user_email
 from py4web.utils.form import Form, FormStyleBulma
 from pydal.validators import *
 
+
+import pandas as pd
+import numpy as np
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.metrics.pairwise import linear_kernel, cosine_similarity
+
 import json
 import requests
 import uuid
@@ -186,8 +192,73 @@ def search():
 @action('movie_reccomendations')
 @action.uses(db, auth.user, 'movie_reccomendations.html')
 def movie_reccomendations():
+    recommended_list = []
+
+    movieData = pd.read_csv('./movies.csv')
+    movieData['description'] = movieData['overview'] + movieData['tagline']
+    movieData['description'].fillna(value='', inplace=True)
+    
+    tf = TfidfVectorizer(analyzer='word',ngram_range=(1, 2),min_df=0, stop_words='english')
+    tfidf_matrix = tf.fit_transform(movieData['description'])
+    cosine_sim = linear_kernel(tfidf_matrix, tfidf_matrix)              # Measure of similarity between two movies
+
+    titles = movieData['title']
+    indices = pd.Series(movieData.index, index=movieData['title'])
+
+    # Get similar movies based on description of movie added to user profile
+    def get_recommendations(title):
+        similarities = sorted(list(enumerate(cosine_sim[indices[title]])), key=lambda x: x[1], reverse=True)[1:31]
+        movie_indices = [i[0] for i in similarities]
+        return titles.iloc[movie_indices]
+    
+    users_added_movies = db((db.watch_list.watch_list_user_email == get_user_email())).select()
+    for movie in users_added_movies:
+        try:
+            recommended = get_recommendations(movie['movie_title']).head(1)
+            recommended_list = recommended.to_list()
+            movie['recommended'] = recommended_list
+
+            link = ''
+            plot = ''
+            runtime = ''
+            rating = ''
+            releasedate = ''
+            imdbrating = ''
+            genre = ''
+            url = 'http://www.omdbapi.com/?t=' + str(movie['recommended']) + '&apikey=' + apikeys[random.randint(0,len(apikeys)-1)]
+            movie_data = requests.get(url).json()
+            if movie_data['Response'] != "False":
+                link += str(movie_data['Poster'])
+                plot += str(movie_data['Plot'])
+                runtime += str(movie_data['Runtime'])
+                rating += str(movie_data['Rated'])
+                releasedate += str(movie_data['Released'])
+                genre += str(movie_data['Genre'])
+            else:
+                plot = 'Movie was not found when trying to contact omdbapi.'
+            movie['link'] = link
+            movie['genre'] = genre
+            movie['releasedate'] = releasedate
+            movie['rating'] = rating
+            movie['runtime'] = runtime
+            movie['plot'] = plot
+
+
+        except:
+            print("Movie Recommendations: " + str(movie['movie_title']) + " Not Recognized")
+            movie['recommended'] = None
+            movie['link'] = None
+            movie['genre'] = None
+            movie['releasedate'] = None
+            movie['rating'] = None
+            movie['runtime'] = None
+            movie['plot'] = None
+            pass
+
+     
+
     movie_rows = db((db.watch_list.watch_list_user_email != get_user_email())).select()
-    # print(movie_rows)
+    print(movie_rows)
     for m in movie_rows:
         link = ''
         plot = ''
@@ -199,7 +270,6 @@ def movie_reccomendations():
 
         url = 'http://www.omdbapi.com/?t=' + str(m['movie_title']) + '&apikey=' + apikeys[random.randint(0,len(apikeys)-1)]
         movie_data = requests.get(url).json()
-        # r = requests.get(url)
         if movie_data['Response'] != "False":
             link += str(movie_data['Poster'])
             plot += str(movie_data['Plot'])
@@ -221,7 +291,9 @@ def movie_reccomendations():
 
 
     print(movie_rows)
-    return dict(rows=movie_rows, url_signer=url_signer,
+    return dict(rows=movie_rows,
+                content_based_recommendations=users_added_movies,
+                url_signer=url_signer,
                 add_movie_url = URL('add_movie', signer=url_signer),
                 get_rating_url = URL('get_rating', signer=url_signer),
                 set_rating_url = URL('set_rating', signer=url_signer),
