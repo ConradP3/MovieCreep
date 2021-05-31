@@ -232,7 +232,8 @@ def movie_reccomendations():
 @action('feed')
 @action.uses(db, auth.user, 'feed.html')
 def feed():
-    movie_rows = db(db.watch_list).select()
+    movie_rows = db(db.watch_list.watch_list_user_email != get_user_email()).select() # This gets all movie entries besides your own
+    #movie_rows = db(db.watch_list).select() # This gets all movie entries
     # print(movie_rows)
     for m in movie_rows:
         link = ''
