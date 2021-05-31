@@ -23,29 +23,31 @@
 
     <!-- <div class="columns is-mobile"> -->
     [[for row in reversed(rows):]]
-      <div class="container block">
-        <div class="box has-background-white-ter box-shadow">
-          <img src="[[=row.link]]" width="142">
-          <div class="tooltip"> <i class='fa fa-exclamation-circle'></i>
-            <span class="tooltiptext is-pulled-left"> 
-              <!-- plot, runtime, releasedate, rating, imbdbrating, genre -->
-              <p><B>[[=row.movie_title]]</B></p>
-              <p><B>Rated: [[=row.rating]]</B></p>
-              <p><B>Released:[[=row.releasedate]]</B></p>
-              <p><B>Runtime: [[=row.runtime]]</B></p>
-              <p><B>Genre: [[=row.genre]]</B></p>
-              <p><B>[[=row.plot]]</B></p>
-            </span>
-          </div>
-          <p><B>[[=row.movie_title]]</B></p>
-          [[if row.watch_list_watched: ]]
-            <p>Seen by [[=row.watch_list_user_email]]</p>
+    <div class="container block">
+      <!-- Start of ancestor tile -->
+      <div class="box has-background-white-ter box-shadow tile is-ancestor is-vertical">
 
-          [[else:]]
-            <p>[[=row.watch_list_user_email]] Hasn't seen this</p>
-          [[pass]]
-          
-          <p>[[=row.watch_list_date]]</p>
+        <div class="tile is-parent"> <!-- Parent tile for the actual content -->
+
+          <div class="tile is-child is-2"> <!-- Movie info tile (left side of listing) -->
+            <img src="[[=row.link]]" width="142">
+
+            <p><B>[[=row.movie_title]]</B></p>
+            <!-- Tooltip -->
+            <div class="tooltip">
+              <i class='fa fa-exclamation-circle'></i>
+              <span class="tooltiptext is-pulled-left">
+                <p><B>[[=row.movie_title]]</B></p>
+                <p><B>Rated: [[=row.rating]]</B></p>
+                <p><B>Released:[[=row.releasedate]]</B></p>
+                <p><B>Runtime: [[=row.runtime]]</B></p>
+                <p><B>Genre: [[=row.genre]]</B></p>
+                <p><B>[[=row.plot]]</B></p>
+              </span>
+            </div> <!-- End of tooltip -->
+
+            <div class="block">
+              <p>[[if row.watch_list_watched:]]Seen: [[=row.watch_list_date]][[else:]]Not Seen[[pass]]</p>
 <!--            <span @mouseout="stars_out(img._idx)">
               <span @mouseover="stars_over(img._idx, star_idx)"
                     @click="set_stars(img._idx, star_idx)"
@@ -54,55 +56,53 @@
                 <i v-if="star_idx > img.num_stars_display" class="fa fa-star-o"></i>
               </span>
             </span> -->
-          [[x=row.watch_list_user_email]]
-          [[y=user_email]]
-          [[if x == y:]]
-              <a class="button is-pulled-right" href="[[=URL('edit_movie', row.id, signer=url_signer)]]">
-                <span class="icon"><i class="fa fa-fw fa-pencil"></i></span> <span>Edit</span>
-              </a>
+            </div>
+          </div> <!-- End of  movie info tile -->
 
-              <a class="button is-pulled-right" href="[[=URL('delete_movie', row.id, signer=url_signer)]]">
-                <span class="icon"><i class="fa fa-fw fa-trash"></i></span>
-              </a>
+          <div class="tile is-child"> <!-- Movie interactions tile (right side) -->
+<!--            <div class="block">
+              <h5 class="tile is-5">[[=row.watch_list_user_name]]'s Review</h5>
+              <p>[[if row.watch_list_review == None:]]No review posted[[else:]][[=row.watch_list_review]][[pass]]</p>
+            </div>-->
+          </div> <!-- End of movie interactions tile -->
 
-              <br />
-              <br />
-              
-              <a class="is-pulled-right">
-                <p>[[=row.watch_list_time_stamp]]</p>
-              </a>
-              <br />
-          [[pass]]
-          <br />
-          <br />
-          [[if x !=y :]]
-            <a class="is-pulled-right">
-              <p>[[=row.watch_list_time_stamp]]</p>
-            </a>
-          [[pass]]
-          <br />
-        </div>
-      </div>
-    [[pass]]
+
+        </div> <!-- End of parent content tile -->
+
+        <div class="tile is-parent"> <!-- Parent tile for buttons and timestamp -->
+          <div class="tile is-child">
+            <div class="level">
+              <div class="level-left"></div> <!-- Dummy left element -->
+              <div class="level-right">
+                <!-- If this movie listing belongs to you -->
+<!--                [[if row.watch_list_user_email == user_email:]]
+                <a class="button is-warning level-item" href="[[=URL('edit_movie', row.id, signer=url_signer)]]">
+                  <span class="icon"><i class="fa fa-fw fa-pencil"></i></span>
+                  <span>Edit</span>
+                </a>
+                <a class="button is-danger level-item" href="[[=URL('delete_movie', row.id, signer=url_signer)]]">
+                  <span class="icon"><i class="fa fa-fw fa-trash"></i></span>
+                </a>
+                [[pass]] -->
+              </div>
+            </div>
+            <div class="level">
+              <div class="level-left"></div> <!-- Dummy left element -->
+              <div class="level-right">
+				        <a class="level-item"><p>[[=row.watch_list_time_stamp]]</p></a>
+              </div>
+            </div>
+          </div>
+        </div> <!-- End of parent tile for buttons and timestamp -->
+
+      </div> <!-- End of ancestor tile -->
+
     </div>
-    <!-- <table class="table is-striped is-fullwidth">
-        <tr>
-          <th>Movie Title</th>
-          <th>Watched</th>
-          <th>User</th>
-        </tr>
-        [[for row in rows:]]
-        <tr>
-          <td>[[=row.movie_title]]</td>
-          <td>[[=row.watch_list_watched]]</td>
-          <td>[[=row.watch_list_user_email]]</td>
+    [[pass]]
 
-        </tr>
-        [[pass]]
-      </table> -->
   </div>
-</div>
 
+</div>
 
 
 [[block page_scripts]]

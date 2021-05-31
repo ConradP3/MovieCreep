@@ -265,6 +265,8 @@ def feed():
         m['runtime'] = runtime
         m['plot'] = plot
 
+        m['comments'] = db(db.review_comment.watch_list_id == m['id']).select()
+
     print(movie_rows)
     return dict(rows=movie_rows, url_signer=url_signer,
                 add_movie_url = URL('add_movie', signer=url_signer),
