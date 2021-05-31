@@ -366,7 +366,7 @@ def get_comments():
 @action.uses(db, auth.user, url_signer.verify())
 def post_comment():
     comment = request.json.get('comment')
-    if len(comment) > 0:
+    if len(comment.strip()) > 0:
         db.review_comment.insert(watch_list_id=request.json.get('listing_id'),
                                  comment=request.json.get('comment'))
         redirect(URL('feed'))
