@@ -276,6 +276,7 @@ def feed():
                 add_movie_url = URL('add_movie', signer=url_signer),
                 get_rating_url = URL('get_rating', signer=url_signer),
                 set_rating_url = URL('set_rating', signer=url_signer),
+                get_comment_url = URL('get_comment', signer=url_signer),
                 get_comments_url = URL('get_comments', signer=url_signer),
                 post_comment_url = URL('post_comment', signer=url_signer),
                 user_email=get_user_email())
@@ -347,6 +348,19 @@ def add():
     rows = db(db.user.user_email == get_user_email()).select()
 
     return dict(rows)
+
+# get an individual comment for a user given the movie listing id
+# there's only one comment per user on a given movie listing id so this is ok
+@action('get_comment')
+@action.uses(db, auth.user, url_signer.verify())
+def get_comment():
+    watch_list_id = request.params.get('watch_list_id')
+    row = db((db.review_comment.user_email == get_user_email()) &
+             (db.review_comment.watch_list_id == watch_list_id)).select().first()
+    comment = ""
+    if row is not None:
+        comment = row.comment
+    return dict(comment=comment)
 
 # get comments that are visible when you hover over the authors
 # icon below your own review

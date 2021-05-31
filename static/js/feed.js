@@ -41,9 +41,12 @@ let init = (app) => {
 
     // When the user presses the comment button in the feed on a movie listing
     app.edit_comment = function(element_id) {
-        app.vue.comment_box = "";
-        app.vue.editing_id = element_id;
-        app.vue.editing = true;
+        axios.get(get_comment_url, {params: {watch_list_id: element_id}})
+             .then(function (response) {
+                 app.vue.comment_box = response.data.comment;
+                 app.vue.editing_id = element_id;
+                 app.vue.editing = true;
+             });
     }
 
     // Cancel the comment editing
