@@ -22,7 +22,7 @@
             <div class="tooltip"> <i class='fa fa-exclamation-circle'></i>
               <span class="tooltiptext is-pulled-left"> 
                 <!-- plot, runtime, releasedate, rating, imbdbrating, genre -->
-                <p><B>[[=row.recommended]]</B></p>
+                <p><B>[[=row.recommended[-1] ]]</B></p>
                 <p><B>Rated: [[=row.rating]]</B></p>
                 <p><B>Released:[[=row.releasedate]]</B></p>
                 <p><B>Runtime: [[=row.runtime]]</B></p>
@@ -81,9 +81,9 @@
                       </span>
                     </div>
                       <p><B>[[=row.movie_title]]</B></p>
-                      <p> [[if row.watch_list_watched:]]Recommended because [[=row.watch_list_user_email]] watched.
+                      <p> [[if row.watch_list_watched:]]Recommended because [[=row.watch_list_user_name]] watched.
                         [[else:]] 
-                          Reccommended because [[=row.watch_list_user_email]] added this to their profile.
+                          Reccommended because [[=row.watch_list_user_name]] added this to their profile.
                         [[pass]]
                       </p>
                       <p>[[=row.watch_list_date]]</p>
