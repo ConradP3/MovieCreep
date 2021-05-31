@@ -68,6 +68,19 @@
               [[pass]]
               <p>[[if row.watch_list_review == None:]]No review posted[[else:]][[=row.watch_list_review]][[pass]]</p>
             </div>
+
+            <div class="block">
+              [[if len(row.comments) != 0:]]
+              <h5 class="title is-5">[[=row.watch_list_user_name]]'s Follower Comments</h5>
+              [[pass]]
+
+              [[for comment in row.comments:]]
+              <figure class="is-inline-block image is-32x32">
+                <img src="https://www.jing.fm/clipimg/detail/195-1952632_account-cu    stomer-login-man-user-icon-login-icon.png" class="is_rounded">
+              </figure>
+              [[pass]]
+              <p id="[[=row.id]]"></p> <!-- For identifying the row in feed.js -->
+            </div>
           </div> <!-- End of movie interactions tile -->
 
 
