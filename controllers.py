@@ -62,13 +62,17 @@ def index():
         url = 'http://www.omdbapi.com/?t=' + str(m['movie_title']) + '&apikey=' + apikeys[random.randint(0,len(apikeys)-1)]
         movie_data = requests.get(url).json()
         # r = requests.get(url)
-        link += str(movie_data['Poster'])
-        plot += str(movie_data['Plot'])
-        runtime += str(movie_data['Runtime'])
-        rating += str(movie_data['Rated'])
-        releasedate += str(movie_data['Released'])
-        # imdbrating += str(movie_data['imdbRating'])
-        genre += str(movie_data['Genre'])
+        # Check for this or else user's account can get bricked
+        if movie_data['Response'] != "False":
+            link += str(movie_data['Poster'])
+            plot += str(movie_data['Plot'])
+            runtime += str(movie_data['Runtime'])
+            rating += str(movie_data['Rated'])
+            releasedate += str(movie_data['Released'])
+            # imdbrating += str(movie_data['imdbRating'])
+            genre += str(movie_data['Genre'])
+        else:
+            plot += "Movie not found when attempting to contact omdbapi"
         m['link'] = link
         m['genre'] = genre
         # m['imdbrating'] = imdbrating
@@ -77,7 +81,10 @@ def index():
         m['runtime'] = runtime
         m['plot'] = plot
 
-            
+        # Get the review comments for the movie
+        comment_rows = db(db.review_comment.watch_list_id == m['id']).select()
+        m['comments'] = comment_rows
+
         # https://api.themoviedb.org/3/movie/550?api_key=fa5fa1a7dd403108f2c44bf79fca3f2f
 
         # https://image.tmdb.org/t/p/w500/pB8BM7pdSp6B6Ih7QZ4DrQ3PmJK.jpg
@@ -90,6 +97,7 @@ def index():
                 get_rating_url = URL('get_rating', signer=url_signer),
                 set_rating_url = URL('set_rating', signer=url_signer),
                 search_url = URL('search', signer=url_signer),
+                get_comments_url = URL('get_comments', signer=url_signer),
                 user_email=get_user_email())
 
 
@@ -238,13 +246,17 @@ def feed():
         url = 'http://www.omdbapi.com/?t=' + str(m['movie_title']) + '&apikey=' + apikeys[random.randint(0,len(apikeys)-1)]
         movie_data = requests.get(url).json()
         # r = requests.get(url)
-        link += str(movie_data['Poster'])
-        plot += str(movie_data['Plot'])
-        runtime += str(movie_data['Runtime'])
-        rating += str(movie_data['Rated'])
-        releasedate += str(movie_data['Released'])
-        # imdbrating += str(movie_data['imdbRating'])
-        genre += str(movie_data['Genre'])
+        if movie_data['Response'] != 'False':
+            link += str(movie_data['Poster'])
+            plot += str(movie_data['Plot'])
+            runtime += str(movie_data['Runtime'])
+            rating += str(movie_data['Rated'])
+            releasedate += str(movie_data['Released'])
+            # imdbrating += str(movie_data['imdbRating'])
+            genre += str(movie_data['Genre'])
+        else:
+            # See index controller comments
+            plot = 'Movie was not found when trying to contact omdbapi.'
         m['link'] = link
         m['genre'] = genre
         # m['imdbrating'] = imdbrating
@@ -330,3 +342,22 @@ def add():
     rows = db(db.user.user_email == get_user_email()).select()
 
     return dict(rows)
+
+# get comments that are visible when you hover over the authors
+# icon below your own review
+@action('get_comments')
+@action.uses(db, auth.user)
+def get_comments():
+    rows = db(db.review_comment).select()
+    comments = {}
+    # end result should be, as EX:
+    #{1:{"name":"John","comment":"Bad opinion"},2:{"name":"Dave","comment":"eh"}}
+    for row in rows:
+        comments[str(row.id)] = {"name":row.user_name,"comment":row.comment}
+    return dict(comments=comments)
+    
+
+
+
+
+

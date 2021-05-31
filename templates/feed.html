@@ -9,9 +9,8 @@
     </div>
     <h1 class="title">Feed</h1>
 
-    <div class="columns is-mobile">
-      [[for row in reversed(rows):]]
-
+    <!-- <div class="columns is-mobile"> -->
+    [[for row in reversed(rows):]]
       <div class="container block">
         <div class="box has-background-white-ter box-shadow">
           <img src="[[=row.link]]" width="142">
@@ -70,13 +69,10 @@
             </a>
           [[pass]]
           <br />
-
         </div>
-
-      [[pass]]
-
+      </div>
+    [[pass]]
     </div>
-
     <!-- <table class="table is-striped is-fullwidth">
         <tr>
           <th>Movie Title</th>
@@ -93,10 +89,6 @@
         [[pass]]
       </table> -->
   </div>
-
-
-
-
 </div>
 
 

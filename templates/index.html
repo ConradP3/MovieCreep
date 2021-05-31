@@ -3,99 +3,138 @@
   [v-cloak] {
        display: none;
   }
-  </style>
+</style>
   
-<div class="section">
-  <span class="button is-success is-pulled-right" @click="set_view(true)" >
+<div class="section" id="vue-target" v-cloak>
+
+  <span class="button is-success is-pulled-right" @click="set_view(true)">
     <span class="icon"><i class="fa fa-exchange"></i></span>
     <span>Change View</span>
   </span>
-  <div class = "section" id = "vue-target" v-cloak>
 
+  <div class = "section">
     <h2>Search</h2>
       <div class = "control block">
-        <input class = "input" type="text" v-model="query" @keyup="search" />
+        <input class="input" type="text" v-model="query" @keyup="search">
       </div>
-  
       <div v-for ="r in results">{{r}}</div>
   </div>
+
   <div class = "section">
 
-    
-  <div class="container">
-   <h1 class='title'><B>Your Movies</B>   
-
-      <div class='is-pulled-right'>
+    <div class="level">
+      <div class="level-left">
+        <h1 class='title is-1 level-item'><B>Your Movies</B></h1>
+      </div>
+      <div class="level-right">
          <a class="button is-success" href="[[=URL('add_movie')]]">
             <span class="icon"><i class="fa fa-plus"></i></span>
             <span>Add New Movie</span>
          </a>
       </div>
-   </h1>
+    </div>
+    <!-- <div class="columns is-mobile"> -->
+    [[for row in reversed(rows):]]
+    <div class="container block"  v-if="view_mode === 0">
+      <!-- Ancestor tile -->
+      <div class="box has-background-white-ter box-shadow tile is-ancestor">
+        <div class="tile is-vertical">
 
-      <!-- <div class="columns is-mobile"> -->
-            [[for row in reversed(rows):]]
+          <!-- Parent tile for the actual content-->
+          <div class="tile is-parent">
 
-            <div class="container block"  v-if="view_mode === 0">
-              <div class="box has-background-white-ter box-shadow">
-                    <!-- <img src="./images/logo.png"> -->
-                    <img src="[[=row.link]]" width="142">
-                    <div class="tooltip"> <i class='fa fa-exclamation-circle'></i>
-                      <span class="tooltiptext is-pulled-left"> 
-                        <!-- plot, runtime, releasedate, rating, imbdbrating, genre -->
-                        <p><B>[[=row.movie_title]]</B></p>
-                        <p><B>Rated: [[=row.rating]]</B></p>
-                        <p><B>Released:[[=row.releasedate]]</B></p>
-                        <p><B>Runtime: [[=row.runtime]]</B></p>
-                        <p><B>Genre: [[=row.genre]]</B></p>
-                        <p><B>[[=row.plot]]</B></p>
-                      </span>
-                    </div>
-                      <p><B>[[=row.movie_title]]</B></p>
-                      <p>[[if row.watch_list_watched:]]Seen
-                        [[else:]] 
-                          Not Seen
-                        [[pass]]
-                      </p>
-                      <p>[[=row.watch_list_date]]</p>
-                      <!-- <p>[[=row]]</p> -->
-                                    <!-- This is the code for the star rating -->
-                        <span @mouseout="stars_out(img._idx)">
-                          <span @mouseover="stars_over(img._idx, star_idx)"
-                                @click="set_stars(img._idx, star_idx)"
-                                v-for="star_idx in [1, 2, 3, 4, 5]">
-                            <i v-if="star_idx <= img.num_stars_display" class="fa fa-star"></i>
-                            <i v-if="star_idx > img.num_stars_display" class="fa fa-star-o"></i>
-                          </span>
-                        </span>
-                  <a class="button is-pulled-right" href="[[=URL('edit_movie', row.id, signer=url_signer)]]">
-                    <span class="icon"><i class="fa fa-fw fa-pencil"></i></span> <span>Edit</span>
-                  </a>
+            <!-- Movie info tile (left side of movie listing) -->
+            <div class="tile is-child is-2">
+              <img src="[[=row.link]]" width="142">
 
-                  <a class="button is-pulled-right" href="[[=URL('delete_movie', row.id, signer=url_signer)]]">
-                    <span class="icon"><i class="fa fa-fw fa-trash"></i></span>
-                  </a>
-
-                 
-                  <br />
-                  <br />
-                  <a class="is-pulled-right">
-                    <p>[[=row.watch_list_time_stamp]]</p>
-                  </a>
-                  <br />
-
+              <p><B>[[=row.movie_title]]</B></p>
+              <!-- Tooltip -->
+              <div class="tooltip">
+                <i class='fa fa-exclamation-circle'></i>
+                <span class="tooltiptext is-pulled-left"> 
+                  <p><B>[[=row.movie_title]]</B></p>
+                  <p><B>Rated: [[=row.rating]]</B></p>
+                  <p><B>Released: [[=row.releasedate]]</B></p>
+                  <p><B>Runtime: [[=row.runtime]]</B></p>
+                  <p><B>Genre: [[=row.genre]]</B></p>
+                  <p><B>[[=row.plot]]</B></p>
+                </span>
               </div>
-            [[pass]]
+              <!-- End of tooltip -->
 
-          <!-- </div> -->
-        
+              <div class="block">
+                <p>[[if row.watch_list_watched:]]Seen: [[=row.watch_list_date]][[else:]]Not Seen[[pass]]</p>
+<!--                <span @mouseout="stars_out(img._idx)">
+                  <span @mouseover="stars_over(img._idx, star_idx)" @click="set_stars(img._idx, star_idx)" v-for="star_idx in [1, 2, 3, 4, 5]">
+                    <i v-if="star_idx <= img.num_stars_display" class="fa fa-star"></i>
+                    <i v-if="star_idx > img.num_stars_display" class="fa fa-star-o"></i>
+                  </span>
+                </span>
+                <br>
+                <br> -->
+              </div>
 
+            </div>
+            <!-- End of Movie info tile (left side of movie listing) -->
 
+            <!-- Movie interactions tile (right side of movie listing) -->
+            <div class="tile is-child">
+              <div class="block">
+                <h5 class="title is-5">My Review</h5>
+                <p>[[if row.watch_list_review == None:]]No review posted[[else:]][[=row.watch_list_review]][[pass]]</p>
+              </div>
+
+              <div class="block">
+                 [[if len(row.comments) != 0:]]
+                 <h5 class="title is-5">Follower Comments</h5>
+                 [[pass]]
+
+                 [[for comment in row.comments:]]
+                 <figure class="is-inline-block image is-32x32">
+                   <img src="https://www.jing.fm/clipimg/detail/195-1952632_account-customer-login-man-user-icon-login-icon.png" class="is-rounded" @mouseover="get_comment([[=comment.id]], [[=row.id]])" @mouseout="hide_comment([[=row.id]])">
+                 </figure>
+                 [[pass]]
+                 <p id="[[=row.id]]"></p> <!-- For identifying the row -->
+              </div>
+            </div>
+            <!-- End of movie interactions tile -->
+
+          </div>
+          <!-- End of Parent tile for movie content -->
+
+          <!-- Parent tile for timestamp and edit delete-->
+          <div class="tile is-parent">
+            <div class="tile is-child">
+              <div class="level">
+                <div class="level-left"></div> <!-- Dummy left elemenn -->
+                <div class="level-right">
+                  <a class="button is-warning level-item" href="[[=URL('edit_movie', row.id, signer=url_signer)]]">
+                    <span class="icon"><i class="fa fa-fw fa-pencil"></i></span>
+                    <span>Edit</span>
+                  </a>
+                  <a class="button is-danger level-item" href="[[=URL('delete_movie', row.id, signer=url_signer)]]">
+                    <span class="icon"><i class="fa fa-fw fa-trash"></i></span>
+
+                  </a>
+                </div>
+              </div>
+              <div class="level">
+                <div class="level-left"></div> <!-- Dummy left element -->
+                <div class="level-right">
+                  <a class="level-item"><p>[[=row.watch_list_time_stamp]]</p></a>
+                </div>
+              </div>
+            </div> 
+          </div>
+          <!-- End of parent tile for timestamp and edit delete-->
+
+        </div>
+      </div>
+      <!-- End of Ancestor tile -->
+    </div>
+    [[pass]]
 
   </div>
-
-
-
 </div>
 
 
@@ -106,6 +145,7 @@
   let get_rating_url = "[[=XML(get_rating_url)]]";
   let set_rating_url = "[[=XML(set_rating_url)]]";
   let search_url = "[[=XML(search_url)]]";
+  let get_comments_url = "[[=XML(get_comments_url)]]";
 </script>
 <script src="js/index.js"></script>
 [[end]]
@@ -178,5 +218,9 @@ div.gallery img {
 div.desc {
   padding: 15px;
   text-align: center;
+}
+
+.inline-block {
+  display: inline-block;
 }
 </style>
