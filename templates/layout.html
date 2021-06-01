@@ -13,7 +13,25 @@
   <!-- individual pages can customize header here -->[[end]]
 </head>
 
+
 <body>
+  <!-- https://blog.webjeda.com/dark-theme-switch/ -->
+<script>
+  document.body.style.backgroundColor = sessionStorage.getItem('bg');
+  document.body.style.color = sessionStorage.getItem('cc');
+  function toggleLightDark() {
+    if (sessionStorage.getItem('bg') === 'rgb(255, 255, 255)') {
+      sessionStorage.setItem('bg', 'rgb(6, 23, 37)');
+      sessionStorage.setItem('cc', '#777');
+    }
+    else if (sessionStorage.getItem('bg') === 'rgb(6, 23, 37)') {
+      sessionStorage.setItem('bg', 'rgb(255, 255, 255)');
+      sessionStorage.setItem('cc', '#333');
+    }
+    document.body.style.backgroundColor = sessionStorage.getItem('bg');
+    document.body.style.color = sessionStorage.getItem('cc');
+  }
+</script>
   <!-- Navigation bar -->
   <nav class="navbar is-info">
     <img src="./images/logo.png" href="[[=URL('index')]]" alt="Movue Creep" width="90" height="28">
@@ -55,6 +73,51 @@
         <!-- individual pages can add menu items here -->[[end]]
       </div>
       <div class="navbar-end">
+
+        [[if globals().get('user'):]]
+        <div class="navbar-item">
+          <div class="navbar-item has-dropdown is-hoverable">
+            <a class="navbar-link is-primary">
+              <p>[[=globals().get('user').get('email')]]</p>
+            </a>
+            <div class="navbar-dropdown">
+              <a class="navbar-item" href="[[=URL('auth/logout')]]">Logout</a>
+              <a class="navbar-item" href="[[=URL('auth/profile')]]">Profile</a>
+              <a class="navbar-item" href="[[=URL('auth/change_password')]]">Change Password</a></li>
+              <a class="navbar-item">Light/Dark Mode &nbsp;
+                <div class="field has-addons">
+                  <p class="control">
+                    <button class="button is-light" onclick='toggleLightDark()'>
+                      <span class="icon is-small">
+                        <i class="fa fa-sun-o"></i>
+                      </span>
+                    </button>
+                  </p>
+                  <p class="control">
+                    <button class="button is-dark" onclick='toggleLightDark()'>
+                      <span class="icon is-small">
+                        <i class="fa fa-moon-o"></i>
+                      </span>
+                    </button>
+                  </p>
+                </div>
+              </a>
+            </div>
+          </div>
+        </div>
+        [[pass]]
+        <div class="navbar-item">
+          <div class="buttons">
+            [[if globals().get('user'):]]
+            <a class="button is-light" href="[[=URL('auth/logout')]]">Sign out</a>
+            [[else:]]
+            <a class="button is-link" href="[[=URL('auth/plugin/oauth2google/login', vars=dict(next='../index'))]]">Sign In</a>
+            [[pass]]
+          </div>
+        </div>
+
+      </div>
+      <!-- <div class="navbar-end">
         <div class="navbar-item">
           <div class="buttons">
             [[if globals().get('user'):]]
@@ -93,7 +156,7 @@
 
           </div>
         </div>
-      </div>
+      </div> -->
     </div>
   </nav>
 
@@ -106,25 +169,7 @@
   </div>
   <!-- </footer> -->
 </body>
-<!-- https://blog.webjeda.com/dark-theme-switch/ -->
-<script>
-  document.body.style.backgroundColor = sessionStorage.getItem('bg');
-  document.body.style.color = sessionStorage.getItem('cc');
-  function toggleLightDark() {
-    if (sessionStorage.getItem('bg') === 'rgb(255, 255, 255)') {
-      sessionStorage.setItem('bg', 'rgb(6, 23, 37)');
-      sessionStorage.setItem('cc', '#777');
-    }
-    else if (sessionStorage.getItem('bg') === 'rgb(6, 23, 37)') {
-      sessionStorage.setItem('bg', 'rgb(255, 255, 255)');
-      sessionStorage.setItem('cc', '#333');
-    }
 
-    document.body.style.backgroundColor = sessionStorage.getItem('bg');
-    document.body.style.color = sessionStorage.getItem('cc');
-
-  }
-</script>
 <script src="js/sugar.min.js"></script>
 <script src="js/axios.min.js"></script>
 <script src="js/vue.js"></script>
