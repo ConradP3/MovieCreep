@@ -81,8 +81,10 @@ let init = (app) => {
     app.add_following = function(r) {
         console.log(r);
         console.log(r.email);
-        email = r.email;
-        axios.post(add_following_url,{email: email});
+        //email = r.email;
+        axios.post(add_following_url, {
+            email: r.email,
+        });
     };
 
     // This contains all the methods.

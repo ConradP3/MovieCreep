@@ -385,8 +385,8 @@ def profile():
     last_name = auth.current_user.get('last_name')
     name = first_name + " " + last_name
     email = get_user_email()
-    #followings = db(db.following.user_id == auth.current_user.get('id'))
-    return dict(rows=rows, name=name, email=email,
+    followings = db(db.following.user_id == auth.current_user.get('id'))
+    return dict(rows=rows, name=name, email=email, followings=followings,
                 load_user_url=URL('load_user', signer=url_signer),
                 upload_thumbnail_url=URL('upload_thumbnail', signer=url_signer),
                 search_url=URL('search_friends', signer=url_signer),
@@ -443,18 +443,20 @@ def search_friends():
 
 
 # add people to your following list
-@action('add_following', method="GET")
+@action('add_following', method=["GET", "POST"])
 @action.uses(db, auth.user, url_signer.verify())
 def add_following():
-    request.json.get(force=True)
-    email = request.json.get('email')
+    #request.json.get(force=True)
+    email = request.json.get("email")
     print(email)
 
     assert email is not None
     rows = db(db.auth_user.email == email).select().as_list()
     print(rows)
+    for r in rows:
+        print(r['id'])
+        db.following.insert(following_id = r['id'], following_user_name = r['first_name'] + " " + r['last_name'], following_user_email = r['email'])
 
-    db.following.insert(following_id = rows.id, following_user_name = rows.first_name + " " + rows.last_name, following_user_email = rows.email)
 
     return "ok"
 
