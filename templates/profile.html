@@ -99,16 +99,16 @@
         <div class = "control block">
           <input class = "input" type="text" v-model="query" @keyup="search" />
         </div>
-
         <div v-for ="r in results">
-            <a class="button is-hoverable">
-                  {{r}}
-            </a>
+            <button @click="add_following(r)" class="button is-success is-light is-hoverable" >
+                    <i class="fa fa-plus fa-fw"></i> {{r.first_name + " " + r.last_name + ", " + r.email}}
+            </button>
+
         </div>
       </h2>
 
     <br />
-    User Email: [[=email]]
+
   </h3>
   </h2>
 
@@ -190,8 +190,10 @@
 [[block page_scripts]]
 <!-- Loads the index-specific js for Vue -->
 <script>
-  let file_upload_url = "[[=XML(file_upload_url)]]";
-  let search_url = "[[=XML(search_url)]]";
+    let load_user_url = "[[=XML(load_user_url)]]";
+    let upload_thumbnail_url = "[[=XML(upload_thumbnail_url)]]";
+    let search_url = "[[=XML(search_url)]]";
+    let add_following_url = "[[=XML(add_following_url)]]";
 </script>
 <script src="js/profile.js"></script>
 [[end]]

@@ -380,53 +380,85 @@ def notifications():
 @action('profile')
 @action.uses(db, auth.user, 'profile.html')
 def profile():
-    rows = db(db.user.user_email == get_user_email()).select()
+    rows = db((db.user.user_email == get_user_email())).select()
     first_name = auth.current_user.get('first_name')
     last_name = auth.current_user.get('last_name')
     name = first_name + " " + last_name
     email = get_user_email()
-    return dict(rows=rows, name=name, email=email, 
-                file_upload_url = URL('file_upload', signer=url_signer),
-                search_url=URL('search_friends', signer=url_signer))
+    #followings = db(db.following.user_id == auth.current_user.get('id'))
+    return dict(rows=rows, name=name, email=email,
+                load_user_url=URL('load_user', signer=url_signer),
+                upload_thumbnail_url=URL('upload_thumbnail', signer=url_signer),
+                search_url=URL('search_friends', signer=url_signer),
+                add_following_url=URL('add_following', signer=url_signer))
 
-@action('file_upload', method="PUT")
-@action.uses(db) # Add here things you might want to use.
-def file_upload():
-    file_name = request.params.get("file_name")
-    file_type = request.params.get("file_type")
-    uploaded_file = request.body # This is a file, you can read it.
-    # Diagnostics
-    print("Uploaded", file_name, "of type", file_type)
-    print("Content:", uploaded_file.read())
+@action('load_user')
+@action.uses(db, auth.user, session, url_signer.verify())
+def load_user():
+
+    userrows = db((db.user.user_email == get_user_email())).select().as_list()
+
+    print(userrows)
+    return dict(userrows = userrows)
+
+"""
+@action('following')
+@action.uses(db, auth.user, 'following.html')
+def profile():
+    rows = db((db.user.user_email == get_user_email())).select()
+
+    #followings = db(db.following.user_id == auth.current_user.get('id'))
+    return dict(rows=rows)
+
+
+@action('followers')
+@action.uses(db, auth.user, 'followers.html')
+def profile():
+    rows = db((db.user.user_email == get_user_email())).select()
+
+
+    # followings = db(db.following.user_id == auth.current_user.get('id'))
+    return dict(rows=rows)
+"""
+
+
+@action('upload_thumbnail', method="POST")
+@action.uses(url_signer.verify(), db)
+def upload_thumbnail():
+    user_id = request.json.get("user_id")
+    thumbnail = request.json.get("thumbnail")
+    db(db.user.id == user_id).update(thumbnail =thumbnail)
     return "ok"
 
 @action('search_friends')
 @action.uses(db, auth)
 def search_friends():
-    #q = request.params.get("q")
-    #rows = db(db.auth_user.email == q).select()
-
-    #for row in rows:
-    #    results = row['first_name'] + " " + row['last_name'] + " " + row['email']
-    #print(results)
 
     q = request.params.get("q")
-    resultsrows = db(db.auth_user.email == q).select()
-    for r in resultsrows:
-        output = r['first_name'] + " " + r['last_name'] + " " + r['email']
-        friend_id = r['id']
+    rows = db(db.auth_user.email == q).select().as_list()
+    results = rows
 
-    results = [output]
-    print(friend_id)
+    #print(results)
+    return dict(results = results)
 
-    return dict(results = results, friend_id=friend_id)
 
-@action('add_following')
-@action.uses(db, session, auth.user)
-def add():
-    rows = db(db.user.user_email == get_user_email()).select()
+# add people to your following list
+@action('add_following', method="GET")
+@action.uses(db, auth.user, url_signer.verify())
+def add_following():
+    request.json.get(force=True)
+    email = request.json.get('email')
+    print(email)
 
-    return dict(rows)
+    assert email is not None
+    rows = db(db.auth_user.email == email).select().as_list()
+    print(rows)
+
+    db.following.insert(following_id = rows.id, following_user_name = rows.first_name + " " + rows.last_name, following_user_email = rows.email)
+
+    return "ok"
+
+
 
 # get an individual comment for a user given the movie listing id
 # there's only one comment per user on a given movie listing id so this is ok

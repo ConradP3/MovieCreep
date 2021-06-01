@@ -70,22 +70,16 @@ db.define_table(
     'user',
     Field('user_name', default=get_user),
     Field('user_email', default=get_user_email),
-    Field('user_pic'),
-    Field('join_date', 'datetime')
+    Field('thumbnail'),
 )
 
-db.define_table(
-    'friends',
-    Field('friend_user_name'),
-    Field('friends_user_email'),
-    Field('user_id', 'reference user')
-)
 
 db.define_table(
     'following',
     Field('following_user_name'),
     Field('following_user_email'),
     Field('following_thumbnail'),
+    Field('following_id'),
     Field('user_id', 'reference user')
 )
 
@@ -94,6 +88,7 @@ db.define_table(
     Field('follower_user_name'),
     Field('follower_user_email'),
     Field('follower_thumbnail'),
+    Field('follower_id'),
     Field('user_id', 'reference user')
 )
 

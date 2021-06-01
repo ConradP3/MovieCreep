@@ -16,9 +16,7 @@ let init = (app) => {
         img_url: "",
         query: "",
         results: [],
-        add_first_name: "",
-        add_last_name: "",
-        rows: [],
+        userrows: [],
     };
 
     // This is the file selected for upload.
@@ -80,8 +78,11 @@ let init = (app) => {
         }
     }
 
-    app.add_following = function(row_idx) {
-        //app for adding follower to follower database
+    app.add_following = function(r) {
+        console.log(r);
+        console.log(r.email);
+        email = r.email;
+        axios.post(add_following_url,{email: email});
     };
 
     // This contains all the methods.
@@ -103,6 +104,13 @@ let init = (app) => {
     app.init = () => {
         // Put here any initialization code.
         // Typically this is a server GET call to load the data.
+        axios.get(search_url).then(function (response) {
+            app.vue.results = app.enumerate(response.data.results)
+        });
+
+        axios.get(load_user_url).then(function(response) {
+            app.vue.userrows = app.enumerate(respones.data.userrows)
+        });
     };
 
     // Call to the initializer.
