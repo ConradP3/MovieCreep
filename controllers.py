@@ -47,7 +47,7 @@ import random
 url_signer = URLSigner(session)
 apikeys = ['8fb72c1a', '2710f070']
 
-CURR_DIR = os.getcwd()
+CSV_PATH = os.path.dirname(os.path.abspath(__file__)) + '/movies.csv'
 
 
 # SRC : https://bitbucket.org/luca_de_alfaro/class_registration/src/master/
@@ -198,7 +198,7 @@ def search():
 def movie_reccomendations():
     recommended_list = []
 
-    movieData = pd.read_csv(CURR_DIR + '/movies.csv')
+    movieData = pd.read_csv(CSV_PATH)
     movieData['description'] = movieData['overview'] + movieData['tagline']
     movieData['description'].fillna(value='', inplace=True)
     
