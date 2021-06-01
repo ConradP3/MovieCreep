@@ -123,6 +123,7 @@
                 <th>User Email</th>
                 <th></th>
             </tr>
+            [[for row in rows:]]
             <tr>
                 <td>
                 </td>
@@ -131,12 +132,14 @@
                 </td>
                 <td>
                     <!-- Name -->
+                    [[=row.following_user_name]]
                 </td>
                 <td>
                     <!-- Email -->
+                    [[=row.following_user_email]]
                 </td>
             </tr>
-
+            [[pass]]
         </table>
     </h2>
 

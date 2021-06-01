@@ -111,7 +111,7 @@ let init = (app) => {
         });
 
         axios.get(load_user_url).then(function(response) {
-            app.vue.userrows = app.enumerate(respones.data.userrows)
+            app.vue.userrows = app.enumerate(response.data.userrows)
         });
     };
 

@@ -380,13 +380,16 @@ def notifications():
 @action('profile')
 @action.uses(db, auth.user, 'profile.html')
 def profile():
-    rows = db((db.user.user_email == get_user_email())).select()
+    #rows = db((db.user.user_email == get_user_email())).select()
     first_name = auth.current_user.get('first_name')
     last_name = auth.current_user.get('last_name')
     name = first_name + " " + last_name
     email = get_user_email()
-    followings = db(db.following.user_id == auth.current_user.get('id'))
-    return dict(rows=rows, name=name, email=email, followings=followings,
+    rows = db(db.following.reference == auth.current_user.get('id')).select()
+    print(rows)
+    for row in rows:
+        print(row)
+    return dict(rows=rows, name=name, email=email,
                 load_user_url=URL('load_user', signer=url_signer),
                 upload_thumbnail_url=URL('upload_thumbnail', signer=url_signer),
                 search_url=URL('search_friends', signer=url_signer),
@@ -448,16 +451,23 @@ def search_friends():
 def add_following():
     #request.json.get(force=True)
     email = request.json.get("email")
-    print(email)
+    #print(email)
 
     assert email is not None
     rows = db(db.auth_user.email == email).select().as_list()
-    print(rows)
+    #print(rows)
     for r in rows:
-        print(r['id'])
-        db.following.insert(following_id = r['id'], following_user_name = r['first_name'] + " " + r['last_name'], following_user_email = r['email'])
+        id = r['id']
+        db.following.insert(following_id = r['id'],
+                            following_user_name = r['first_name'] + " " + r['last_name'],
+                            following_user_email = r['email'],
+                            reference = auth.current_user.get('id'))
 
-
+        #followers = db(db.auth_user.email == email).select()
+        #print(followers)
+            #insert(follower_id = auth.current_user.get('id'),
+                                                       # follower_user_name = auth.current_user.get('first_name') + " " + auth.current_user.get('last_name'),
+                                                       # follower_user_email = auth.current_user.get('email'))
     return "ok"
 
 

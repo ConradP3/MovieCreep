@@ -70,7 +70,8 @@ db.define_table(
     'user',
     Field('user_name', default=get_user),
     Field('user_email', default=get_user_email),
-    Field('thumbnail'),
+    Field('user_id', default = get_user()),
+    Field('thumbnail')
 )
 
 
@@ -80,7 +81,7 @@ db.define_table(
     Field('following_user_email'),
     Field('following_thumbnail'),
     Field('following_id'),
-    Field('user_id', 'reference user')
+    Field('reference')
 )
 
 db.define_table(
@@ -89,7 +90,7 @@ db.define_table(
     Field('follower_user_email'),
     Field('follower_thumbnail'),
     Field('follower_id'),
-    Field('user_id', 'reference user')
+    Field('user_id')
 )
 
 
