@@ -38,6 +38,7 @@ import pandas as pd
 import numpy as np
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import linear_kernel, cosine_similarity
+import os
 
 import json
 import requests
@@ -45,6 +46,9 @@ import uuid
 import random
 url_signer = URLSigner(session)
 apikeys = ['8fb72c1a', '2710f070']
+
+CURR_DIR = os.getcwd()
+
 
 # SRC : https://bitbucket.org/luca_de_alfaro/class_registration/src/master/
 
@@ -194,7 +198,7 @@ def search():
 def movie_reccomendations():
     recommended_list = []
 
-    movieData = pd.read_csv('./movies.csv')
+    movieData = pd.read_csv(CURR_DIR + '/movies.csv')
     movieData['description'] = movieData['overview'] + movieData['tagline']
     movieData['description'].fillna(value='', inplace=True)
     
