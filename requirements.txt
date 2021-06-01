@@ -1,0 +1,10 @@
+py4web==1.20210522.2
+requests==2.24.0
+numpy==1.17.0
+celery==5.0.0
+pandas==1.1.2
+yatl==20210326.1
+pydal==20210215.1
+python_memcached==1.59
+redis==3.5.3
+scikit_learn==0.24.2
