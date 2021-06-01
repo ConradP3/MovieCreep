@@ -19,7 +19,7 @@ let init = (app) => {
         // query: "",
         // results: [],
         // delete_edit_mode: false,
-        view_mode: 0,
+        view_mode: -1,
     };
 
     // app.enumerate = (a) => {
