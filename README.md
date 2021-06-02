@@ -60,25 +60,38 @@ CREATE TABLE `py4web_session` (
 
 CREATE TABLE `watch_list` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `movie_title` varchar(512) DEFAULT NULL,
-  `watch_list_watched` boolean,
-  `watch_list_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `movie_title` varchar(512),
+  `watch_list_watched` int,
+  `watch_list_date` DATE,
   `watch_list_user_email` varchar(512),
-  `watch_list_user_name` varchar(512) DEFAULT NULL,
-  `watch_list_rating` int DEFAULT 0,
-  `watch_list_time_stamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `watch_list_user_name` varchar(512),
+  `watch_list_rating` int,
+  `watch_list_time_stamp` DATETIME,
   `watch_list_review` varchar(512),
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+CREATE TABLE `watch_list` (
+	`id` INT NOT NULL AUTO_INCREMENT,
+	`movie_title` TEXT DEFAULT NULL,
+	`watch_list_watched` TEXT DEFAULT NULL,
+	`watch_list_date` DATE DEFAULT NULL,
+	`watch_list_user_email` TEXT DEFAULT NULL,
+	`watch_list_user_name` TEXT DEFAULT NULL,
+	`watch_list_rating` INT DEFAULT '0',
+	`watch_list_time_stamp` DATETIME DEFAULT NULL,
+	`watch_list_review` TEXT DEFAULT NULL, 
+	PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `review_comment` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `watch_list_id` varchar(512),
-  `user_email` varchar(512),
-  `user_name` varchar(512),
-  `comment` varchar(512),
-  PRIMARY KEY (`id`)
+  `user_email` varchar(512) DEFAULT NULL,
+  `user_name` varchar(512) DEFAULT NULL,
+  `comment` varchar(512) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  CONSTRAINT `watch_list_id` FOREIGN KEY (`id`) REFERENCES `watch_list` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `user` (
