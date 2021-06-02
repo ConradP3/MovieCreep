@@ -385,11 +385,16 @@ def profile():
     last_name = auth.current_user.get('last_name')
     name = first_name + " " + last_name
     email = get_user_email()
-    rows = db(db.following.reference == auth.current_user.get('id')).select()
-    print(rows)
-    for row in rows:
-        print(row)
-    return dict(rows=rows, name=name, email=email,
+    followingrows = db(db.following.reference == auth.current_user.get('id')).select()
+
+    db.user.insert(user_name = auth.current_user.get('first_name') + " " + auth.current_user.get('last_name'),
+                   user_email = get_user_email(),
+                   user_id = auth.current_user.get('id'))
+
+    userrows = db(db.user.user_email == get_user_email()).select()
+
+    print(userrows)
+    return dict(followingrows=followingrows, name=name, email=email,
                 load_user_url=URL('load_user', signer=url_signer),
                 upload_thumbnail_url=URL('upload_thumbnail', signer=url_signer),
                 search_url=URL('search_friends', signer=url_signer),

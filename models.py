@@ -69,7 +69,7 @@ db.define_table(
     'user',
     Field('user_name', default=get_user),
     Field('user_email', default=get_user_email),
-    Field('user_id', default = get_user()),
+    Field('user_id', default = get_user),
     Field('thumbnail')
 )
 
