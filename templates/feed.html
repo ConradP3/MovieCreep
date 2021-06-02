@@ -105,6 +105,25 @@
                 </div>
                 <div v-else>
                   <button class="button is-warning" @click="edit_comment([[=row.id]])">Comment</button>
+
+                [[if user_email == row.watch_list_user_email: ]]
+                <br />
+                <br />
+                  <div class="level">
+                    <div class="level-left"></div> <!-- Dummy left element -->
+                    <div class="level-right">
+                      <a class="button is-warning level-item" href="[[=URL('edit_movie', row.id, signer=url_signer)]]">
+                        <span class="icon"><i class="fa fa-fw fa-pencil"></i></span>
+                      </a>
+                      <a class="button is-danger level-item" href="[[=URL('delete_movie', row.id, signer=url_signer)]]">
+                        <span class="icon"><i class="fa fa-fw fa-trash"></i></span>
+    
+                      </a>
+                    </div>
+                  </div>
+                [[else: ]]
+                  [[pass]]
+
                 </div>
               </div>
             </div>
