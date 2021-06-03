@@ -412,9 +412,10 @@ def profile():
 
     userrows = db(db.user.user_email == get_user_email()).select()
 
-    print(userrows)
+    #print(userrows)
     return dict(followingrows=followingrows, name=name, email=email,
                 load_user_url=URL('load_user', signer=url_signer),
+                load_following_url=URL('load_following', signer=url_signer),
                 upload_thumbnail_url=URL('upload_thumbnail', signer=url_signer),
                 search_url=URL('search_friends', signer=url_signer),
                 add_following_url=URL('add_following', signer=url_signer))
@@ -426,6 +427,14 @@ def load_user():
     userrows = db((db.user.user_email == get_user_email())).select().as_list()
 
     return dict(userrows = userrows)
+
+@action('load_following')
+@action.uses(db, auth.user, session, url_signer.verify())
+def load_following():
+
+    followingrows = db(db.following.reference == auth.current_user.get('id')).select().as_list()
+
+    return dict(followingrows = followingrows)
 
 """
 @action('following')
@@ -472,26 +481,22 @@ def search_friends():
 @action('add_following', method=["GET", "POST"])
 @action.uses(db, auth.user, url_signer.verify())
 def add_following():
-    #request.json.get(force=True)
     email = request.json.get("email")
     #print(email)
-
     assert email is not None
     rows = db(db.auth_user.email == email).select().as_list()
     #print(rows)
     for r in rows:
-        id = r['id']
+        getthumbnail = db(db.user.user_email == r['email']).select().as_list()
+        for t in getthumbnail:
+            thumbnail = t['user_thumbnail']
 
         db.following.insert(following_id = r['id'],
                             following_user_name = r['first_name'] + " " + r['last_name'],
                             following_user_email = r['email'],
+                            following_thumbnail = thumbnail,
                             reference = auth.current_user.get('id'))
 
-        #followers = db(db.auth_user.email == email).select()
-        #print(followers)
-            #insert(follower_id = auth.current_user.get('id'),
-                                                       # follower_user_name = auth.current_user.get('first_name') + " " + auth.current_user.get('last_name'),
-                                                       # follower_user_email = auth.current_user.get('email'))
     return "ok"
 
 

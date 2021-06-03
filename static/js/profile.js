@@ -123,6 +123,9 @@ let init = (app) => {
         axios.get(load_user_url).then(function(response) {
             app.vue.userrows = app.enumerate(response.data.userrows)
         });
+        axios.get(load_following_url).then(function(response) {
+            app.vue.followingrows = app.enumerate(response.data.followingrows)
+        });
     };
 
     // Call to the initializer.
