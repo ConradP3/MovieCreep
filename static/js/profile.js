@@ -29,21 +29,30 @@ let init = (app) => {
         return a;
     };
 
-    app.select_file = function (event) {
-        // Reads the file.
+    app.upload_file = function (event, row_idx) {
         let input = event.target;
-        app.file = input.files[0];
-        if (app.file) {
-            app.vue.selection_done = true;
-            // We read the file.
+        let file = input.files[0];
+        let row = app.vue.userrows[row_idx];
+        if (file) {
             let reader = new FileReader();
             reader.addEventListener("load", function () {
-                app.vue.img_url = reader.result;
+                // Sends the image to the server.
+                axios.post(upload_thumbnail_url,
+                    {
+                        user_id: row.id,
+                        thumbnail: reader.result,
+                    })
+                    .then(function () {
+                        // Sets the local preview.
+                        row.user_thumbnail = reader.result;
+
+                    });
             });
-            reader.readAsDataURL(app.file);
+            reader.readAsDataURL(file);
         }
     };
 
+    /*
     app.upload_complete = function (file_name, file_type) {
         app.vue.uploading = false;
         app.vue.uploaded = true;
@@ -66,6 +75,7 @@ let init = (app) => {
             req.send(app.file);
         }
     };
+     */
 
     app.search = function() {
         if (app.vue.query.length > 1) {
@@ -89,7 +99,7 @@ let init = (app) => {
 
     // This contains all the methods.
     app.methods = {
-        select_file: app.select_file,
+        //select_file: app.select_file,
         upload_file: app.upload_file,
         search: app.search,
         add_following: app.add_following,

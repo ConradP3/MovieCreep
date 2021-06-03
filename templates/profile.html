@@ -13,42 +13,6 @@
     <h2 class="title is-6 is-spaced">My Info
 
 
-        <div v-if="!selection_done" class="field has-addons block">
-          <p class="control">
-            <div class="file is-info">
-              <label class="file-label">
-                <input class="file-input" type="file"
-                       accept=".jpg, .png, .jpeg, .gif, .bmp, .tif, .tiff|image/*"
-                       @change="select_file($event)">
-                <span class="file-cta">
-                  <span class="file-label">
-                    <span>Change Profile Picture</span>
-                  </span>
-                </span>
-              </label>
-            </div>
-          </p>
-        </div>
-        <template v-if="selection_done && !uploaded">
-          <div class="block">
-            <img width="400" :src="img_url" />
-          </div>
-          <div class="block">
-            <button class="button is-success" :disabled="uploading" @click="upload_file">
-              <span class="icon is-small">
-                <i v-if="!uploading" class="fa fa-upload"></i>
-                <i v-if="uploading" class="fa fa-spinner fa-pulse fa-fw"></i>
-              </span>
-              <span>Confirm</span>
-            </button>
-          </div>
-        </template>
-        <div v-if="uploaded">
-          <i class="fa fa-check"></i> Uploaded!
-        </div>
-
-
-
         <table class="table is-fullwidth ">
             <tr>
                 <th></th>
@@ -57,47 +21,47 @@
                 <th>User Email</th>
                 <th></th>
             </tr>
-            <tr>
+            <tr v-for="r in userrows">
                 <td>
                 </td>
                 <td>
-                 <!--
-                    COMMENT profile pic image upload code COMMENT
-                    <div v-if="!thumbnail">
-                        <p class="control">
-                            <div class="file is-info">
-                                <label class="file-label">
-                                    <input class="file-input" type="file"
-                                        accept=".jpg,.png, .jpeg, .gif, .bmp, .tif, .tifflimage/*"
-                                        @change="upload_file($event, r._idx)">
-                                    <span class="file-cta">
-                                        <span class="file-label">
-                                            <span><i class="fa fa-upload"></i></span>
-                                        </span>
-                                    </span>
-                                </label>
-                            </div>
-                        </p>
-                    </div>
-                    <img v-if="thumbnail" width="50" :src="thumbnail" />
-                 -->
+
+                    <div v-if="!r.user_thumbnail">
+                    <p class="control">
+                      <div class="file is-info">
+                        <label class="file-label">
+                          <input class="file-input" type="file"
+                                 accept=".jpg, .png, .jpeg, .gif, .bmp, .tif, .tiff|image/*"
+                                 @change="upload_file($event, r._idx)">
+                          <span class="file-cta">
+                            <span class="file-label">
+                              <span><i class="fa fa-upload"></i></span>
+                            </span>
+                          </span>
+                        </label>
+                      </div>
+                    </p>
+                  </div>
+
+                  <img v-if="r.user_thumbnail" width="50" :src="r.user_thumbnail" />
+
+
                 </td>
                 <td>
-                    [[=name]]
+                    {{r.user_name}}
                 </td>
                 <td>
-                    [[=email]]
+                    {{r.user_email}}
                 </td>
             </tr>
-
         </table>
 
     </h2>
 
 
-      <h2>Add Friend
+      <h2>Add Friends
         <div class = "control block">
-          <input class = "input" type="text" v-model="query" @keyup="search" />
+          <input class = "input" type="text" v-model="query" @keyup="search" placeholder="Search for Friends (by email)" style="width: 500px;"/>
         </div>
         <div v-for ="r in results">
             <button @click="add_following(r)" class="button is-success is-light is-hoverable" >

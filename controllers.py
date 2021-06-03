@@ -387,7 +387,7 @@ def profile():
     email = get_user_email()
     followingrows = db(db.following.reference == auth.current_user.get('id')).select()
 
-    db.user.insert(user_name = auth.current_user.get('first_name') + " " + auth.current_user.get('last_name'),
+    db.user.update_or_insert(user_name = auth.current_user.get('first_name') + " " + auth.current_user.get('last_name'),
                    user_email = get_user_email(),
                    user_id = auth.current_user.get('id'))
 
@@ -406,7 +406,6 @@ def load_user():
 
     userrows = db((db.user.user_email == get_user_email())).select().as_list()
 
-    print(userrows)
     return dict(userrows = userrows)
 
 """
@@ -435,7 +434,7 @@ def profile():
 def upload_thumbnail():
     user_id = request.json.get("user_id")
     thumbnail = request.json.get("thumbnail")
-    db(db.user.id == user_id).update(thumbnail =thumbnail)
+    db(db.user.id == user_id).update(user_thumbnail =thumbnail)
     return "ok"
 
 @action('search_friends')
@@ -463,6 +462,7 @@ def add_following():
     #print(rows)
     for r in rows:
         id = r['id']
+
         db.following.insert(following_id = r['id'],
                             following_user_name = r['first_name'] + " " + r['last_name'],
                             following_user_email = r['email'],
