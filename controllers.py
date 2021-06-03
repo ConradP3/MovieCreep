@@ -29,7 +29,7 @@ from py4web import action, request, abort, redirect, URL
 from yatl.helpers import A
 from .common import db, session, T, cache, auth, logger, authenticated, unauthenticated, flash, Field
 from py4web.utils.url_signer import URLSigner
-from .models import get_user_email
+from .models import get_user_email, get_time, get_user_name, get_user
 from py4web.utils.form import Form, FormStyleBulma
 from pydal.validators import *
 
@@ -301,10 +301,28 @@ def movie_reccomendations():
     return dict(rows=movie_rows,
                 content_based_recommendations=users_added_movies,
                 url_signer=url_signer,
+                quick_add_movie_url = URL('quick_add_movie', signer=url_signer),
                 add_movie_url = URL('add_movie', signer=url_signer),
                 get_rating_url = URL('get_rating', signer=url_signer),
                 set_rating_url = URL('set_rating', signer=url_signer),
                 user_email=get_user_email())
+
+# quick_add_movie: to add a new entry in watch_list of the recommended movie
+@action('quick_add_movie/<movie_title>', method=["GET", "POST"])
+@action.uses(db, session, auth.user, 'add_movie.html')
+def quick_add(movie_title):
+    db.watch_list.insert(movie_title=movie_title, 
+                         watch_list_watched=False, 
+                         watch_list_date=get_time(),
+                         watch_list_user_email=get_user_email(),
+                         watch_list_user_name=get_user_name(),
+                         watch_list_rating=0,
+                         watch_list_time_stamp=get_time(),
+                         watch_list_review=''
+                         )
+    redirect(URL('index'))
+    return 'Movie Quick Added'
+
 
 # #######################################################
 # Feed
@@ -314,7 +332,7 @@ def movie_reccomendations():
 @action('feed')
 @action.uses(db, auth.user, 'feed.html')
 def feed():
-    movie_rows = db(db.watch_list.watch_list_user_email != get_user_email()).select() # This gets all movie entries besides your own
+    movie_rows = db(db.watch_list.watch_list_user_email).select() # This gets all movie entries besides your own
     #movie_rows = db(db.watch_list).select() # This gets all movie entries
     # print(movie_rows)
     for m in movie_rows:
@@ -359,6 +377,7 @@ def feed():
                 get_comments_url = URL('get_comments', signer=url_signer),
                 post_comment_url = URL('post_comment', signer=url_signer),
                 user_email=get_user_email())
+
 
 # #######################################################
 # Notifications
