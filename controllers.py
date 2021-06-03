@@ -487,6 +487,7 @@ def add_following():
     #print(rows)
     followerthumbnail = None
     followingthumbnail = None
+    
     getfollowerthumbnail = db(db.user.user_email == auth.current_user.get('email')).select().as_list()
     for t in getfollowerthumbnail:
         followerthumbnail = t['user_thumbnail']
