@@ -65,7 +65,10 @@
 
           <div class="tile is-child"> <!-- Movie interactions tile (right side) -->
             <div class="block">
+              [[if row.thumbnail:]]
               <img class="rounded" width="50" src="[[=row.thumbnail]]"> [[=row.watch_list_user_name]]</img>
+              [[else:]]
+                [[pass]]
               [[if row.watch_list_user_email == user_email:]]
               <h5 class="title is-5">My Review</h5>
               [[else:]]

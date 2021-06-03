@@ -108,7 +108,10 @@
             <!-- Movie interactions tile (right side of movie listing) -->
             <div class="tile is-child">
               <div class="block">
+                [[if row.thumbnail:]]
                 <img class="rounded" width="50" src="[[=row.thumbnail]]"> [[=row.watch_list_user_name]]</img>
+                [[else:]]
+                  [[pass]]
                 <h5 class="title is-5">My Review</h5>
                 <p>[[if row.watch_list_review == None:]]No review posted[[else:]][[=row.watch_list_review]][[pass]]</p>
               </div>

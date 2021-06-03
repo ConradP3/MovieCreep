@@ -95,6 +95,8 @@ def index():
         comment_rows = db(db.review_comment.watch_list_id == m['id']).select()
         m['comments'] = comment_rows
 
+        m['thumbnail'] = None
+
         # https://api.themoviedb.org/3/movie/550?api_key=fa5fa1a7dd403108f2c44bf79fca3f2f
 
         # https://image.tmdb.org/t/p/w500/pB8BM7pdSp6B6Ih7QZ4DrQ3PmJK.jpg
@@ -102,6 +104,7 @@ def index():
         for user in user_rows:
             if user['user_email'] == m['watch_list_user_email']:
                 m['thumbnail'] = user['user_thumbnail']
+
 
 
     print(movie_rows)
@@ -371,6 +374,8 @@ def feed():
         m['plot'] = plot
 
         m['comments'] = db(db.review_comment.watch_list_id == m['id']).select()
+
+        m['thumbnail'] = None
 
         for user in user_rows:
             if user['user_email'] == m['watch_list_user_email']:
