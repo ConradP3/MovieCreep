@@ -35,7 +35,7 @@ name = r.first_name + " " + r.last_name if r is not None else "Unknown"
 db.define_table(
     'watch_list',
     Field('movie_title', requires=IS_LENGTH(minsize=1)),
-    Field('watch_list_watched'),
+    Field('watch_list_watched', 'boolean'),
     Field('watch_list_date', 'date'),
     Field('watch_list_user_email', default=get_user_email),
     Field('watch_list_user_name', default=get_user_name),

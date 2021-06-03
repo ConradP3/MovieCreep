@@ -486,6 +486,7 @@ def add_following():
     assert email is not None
     rows = db(db.auth_user.email == email).select().as_list()
     #print(rows)
+    thumbnail = None
     for r in rows:
         getthumbnail = db(db.user.user_email == r['email']).select().as_list()
         for t in getthumbnail:
