@@ -150,6 +150,12 @@
                 </div>
                 <p><B>[[=row.recommended[-1] ]]</B></p>
                 <p>Recommended because you added [[=row.movie_title]] to your list.</p>
+                <div class='is-pulled-right'>
+                  <a class="button is-info" href="[[=URL('quick_add_movie', row.recommended[-1])]]">
+                    <span class="icon"><i class="fa fa-plus"></i></span>
+                    <span>Quick Add</span>
+                  </a>
+                </div>
                 <br />
                 <br />
 
@@ -188,6 +194,12 @@
               Reccommended because [[=row.watch_list_user_name]] added this to their profile.
               [[pass]]
             </p>
+            <div class='is-pulled-right'>
+              <a class="button is-info" href="[[=URL('quick_add_movie', row.movie_title)]]">
+                <span class="icon"><i class="fa fa-plus"></i></span>
+                <span>Quick Add</span>
+              </a>
+            </div>
             <p>[[=row.watch_list_date]]</p>
 
 
@@ -211,6 +223,7 @@
 <!-- Loads the index-specific js for Vue -->
 <script>
   let add_movie_url = "[[=XML(add_movie_url)]]";
+  let quick_add_movie_url = "[[=XML(quick_add_movie_url)]]";
   let get_rating_url = "[[=XML(get_rating_url)]]";
   let set_rating_url = "[[=XML(set_rating_url)]]";
 </script>
