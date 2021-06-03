@@ -399,23 +399,14 @@ def notifications():
 @action('profile')
 @action.uses(db, auth.user, 'profile.html')
 def profile():
-    #rows = db((db.user.user_email == get_user_email())).select()
-    first_name = auth.current_user.get('first_name')
-    last_name = auth.current_user.get('last_name')
-    name = first_name + " " + last_name
-    email = get_user_email()
-    followingrows = db(db.following.reference == auth.current_user.get('id')).select()
 
     db.user.update_or_insert(user_name = auth.current_user.get('first_name') + " " + auth.current_user.get('last_name'),
                    user_email = get_user_email(),
                    user_id = auth.current_user.get('id'))
 
-    userrows = db(db.user.user_email == get_user_email()).select()
-
-    #print(userrows)
-    return dict(followingrows=followingrows, name=name, email=email,
-                load_user_url=URL('load_user', signer=url_signer),
+    return dict(load_user_url=URL('load_user', signer=url_signer),
                 load_following_url=URL('load_following', signer=url_signer),
+                load_follower_url=URL('load_follower', signer=url_signer),
                 upload_thumbnail_url=URL('upload_thumbnail', signer=url_signer),
                 search_url=URL('search_friends', signer=url_signer),
                 add_following_url=URL('add_following', signer=url_signer))
@@ -435,6 +426,14 @@ def load_following():
     followingrows = db(db.following.reference == auth.current_user.get('id')).select().as_list()
 
     return dict(followingrows = followingrows)
+
+@action('load_follower')
+@action.uses(db, auth.user, session, url_signer.verify())
+def load_follower():
+
+    followerrows = db(db.follower.reference == auth.current_user.get('id')).select().as_list()
+
+    return dict(followerrows = followerrows)
 
 """
 @action('following')
@@ -486,19 +485,31 @@ def add_following():
     assert email is not None
     rows = db(db.auth_user.email == email).select().as_list()
     #print(rows)
+    followerthumbnail = None
+    followingthumbnail = None
+    getfollowerthumbnail = db(db.user.user_email == auth.current_user.get('email')).select().as_list()
+    for t in getfollowerthumbnail:
+        followerthumbnail = t['user_thumbnail']
     for r in rows:
-        getthumbnail = db(db.user.user_email == r['email']).select().as_list()
-        for t in getthumbnail:
-            thumbnail = t['user_thumbnail']
+        getfollowingthumbnail = db(db.user.user_email == r['email']).select().as_list()
+        for t in getfollowingthumbnail:
+            followingthumbnail = t['user_thumbnail']
 
-        db.following.insert(following_id = r['id'],
+        db.following.update_or_insert(following_id = r['id'],
                             following_user_name = r['first_name'] + " " + r['last_name'],
                             following_user_email = r['email'],
-                            following_thumbnail = thumbnail,
+                            following_thumbnail = followingthumbnail,
                             reference = auth.current_user.get('id'))
 
-    return "ok"
 
+        db.follower.update_or_insert(follower_id = auth.current_user.get('id'),
+                                     follower_user_name = auth.current_user.get('first_name') + " " + auth.current_user.get('last_name'),
+                                     follower_user_email = auth.current_user.get('email'),
+                                     follower_thumbnail = followerthumbnail,
+                                     reference = r['id'])
+
+    redirect(URL('profile'))
+    return "ok"
 
 
 # get an individual comment for a user given the movie listing id

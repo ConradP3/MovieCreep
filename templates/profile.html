@@ -93,6 +93,7 @@
                 <td>
                     <!-- Profile Pic -->
                     <img v-if="r.following_thumbnail" width="50" :src="r.following_thumbnail" />
+
                 </td>
                 <td>
                     <!-- Name -->
@@ -118,17 +119,20 @@
                 <th>User Email</th>
                 <th></th>
             </tr>
-            <tr>
+            <tr v-for="r in followerrows">
                 <td>
                 </td>
                 <td>
                     <!-- Profile Pic -->
+                    <img v-if="r.follower_thumbnail" width="50" :src="r.follower_thumbnail" />
                 </td>
                 <td>
                     <!-- Name -->
+                    {{r.follower_user_name}}
                 </td>
                 <td>
                     <!-- Email -->
+                    {{r.follower_user_name}}
                 </td>
             </tr>
 
@@ -158,6 +162,7 @@
 <script>
     let load_user_url = "[[=XML(load_user_url)]]";
     let load_following_url = "[[=XML(load_following_url)]]";
+    let load_follower_url = "[[=XML(load_follower_url)]]";
     let upload_thumbnail_url = "[[=XML(upload_thumbnail_url)]]";
     let search_url = "[[=XML(search_url)]]";
     let add_following_url = "[[=XML(add_following_url)]]";

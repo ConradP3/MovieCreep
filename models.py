@@ -89,8 +89,9 @@ db.define_table(
     Field('follower_user_email'),
     Field('follower_thumbnail'),
     Field('follower_id'),
-    Field('user_id')
+    Field('reference')
 )
+
 
 
 db.watch_list.watch_list_time_stamp.readable = db.watch_list.watch_list_time_stamp.writable = False

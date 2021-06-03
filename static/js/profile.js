@@ -126,6 +126,10 @@ let init = (app) => {
         axios.get(load_following_url).then(function(response) {
             app.vue.followingrows = app.enumerate(response.data.followingrows)
         });
+        axios.get(load_follower_url).then(function(response) {
+            app.vue.followerrows = app.enumerate(response.data.followerrows)
+        });
+
     };
 
     // Call to the initializer.
