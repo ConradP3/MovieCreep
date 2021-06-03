@@ -59,7 +59,7 @@ CSV_PATH = os.path.dirname(os.path.abspath(__file__)) + '/movies.csv'
 @action.uses(db, auth.user, 'index.html')
 def index():
     movie_rows = db((db.watch_list.watch_list_user_email == get_user_email())).select()
-    # print(movie_rows)
+    user_rows = db(db.user.user_email).select() # All users
     for m in movie_rows:
         link = ''
         plot = ''
@@ -99,6 +99,9 @@ def index():
 
         # https://image.tmdb.org/t/p/w500/pB8BM7pdSp6B6Ih7QZ4DrQ3PmJK.jpg
         # http://www.omdbapi.com/?t=interstellar&apikey=2710f070
+        for user in user_rows:
+            if user['user_email'] == m['watch_list_user_email']:
+                m['thumbnail'] = user['user_thumbnail']
 
 
     print(movie_rows)
@@ -332,8 +335,9 @@ def quick_add(movie_title):
 @action('feed')
 @action.uses(db, auth.user, 'feed.html')
 def feed():
-    movie_rows = db(db.watch_list.watch_list_user_email).select() # This gets all movie entries besides your own
+    movie_rows = db(db.watch_list.watch_list_user_email).select() # This gets all movie entries
     #movie_rows = db(db.watch_list).select() # This gets all movie entries
+    user_rows = db(db.user.user_email).select() # All users
     # print(movie_rows)
     for m in movie_rows:
         link = ''
@@ -367,6 +371,11 @@ def feed():
         m['plot'] = plot
 
         m['comments'] = db(db.review_comment.watch_list_id == m['id']).select()
+
+        for user in user_rows:
+            if user['user_email'] == m['watch_list_user_email']:
+                m['thumbnail'] = user['user_thumbnail']
+
 
     print(movie_rows)
     return dict(rows=movie_rows, url_signer=url_signer,
@@ -560,10 +569,16 @@ def get_comment():
 def get_comments():
     rows = db(db.review_comment).select()
     comments = {}
+    user_rows = db(db.user.user_email).select()
     # end result should be, as EX:
     #{1:{"name":"John","comment":"Bad opinion"},2:{"name":"Dave","comment":"eh"}}
     for row in rows:
-        comments[str(row.id)] = {"name":row.user_name,"comment":row.comment}
+        for user in user_rows:
+            if row['user_email'] == user['user_email']:
+                row['thumbnail'] = user['user_thumbnail']
+        comments[str(row.id)] = {"name":row.user_name,"comment":row.comment,"thumbnail":row.thumbnail}
+
+        
     return dict(comments=comments)
     
 # post a comment to the review_comment db table

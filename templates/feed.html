@@ -3,6 +3,10 @@
   [v-cloak] {
     display: none;
   }
+
+.rounded {
+  border-radius: 50%;
+}
 </style>
 
 <div class="section" id="vue-target" v-cloak>
@@ -61,6 +65,7 @@
 
           <div class="tile is-child"> <!-- Movie interactions tile (right side) -->
             <div class="block">
+              <img class="rounded" width="50" src="[[=row.thumbnail]]"> [[=row.watch_list_user_name]]</img>
               [[if row.watch_list_user_email == user_email:]]
               <h5 class="title is-5">My Review</h5>
               [[else:]]
@@ -68,12 +73,10 @@
               [[pass]]
               <p>[[if row.watch_list_review == None:]]No review posted[[else:]][[=row.watch_list_review]][[pass]]</p>
             </div>
-
             <div class="block">
               [[if len(row.comments) != 0:]]
               <h5 class="title is-5">[[=row.watch_list_user_name]]'s Follower Comments</h5>
               [[pass]]
-
               [[for comment in row.comments:]]
               <figure class="is-inline-block image is-32x32">
                 <img src="https://www.jing.fm/clipimg/detail/195-1952632_account-cu    stomer-login-man-user-icon-login-icon.png" class="is-rounded" @mouseover="get_comment([[=comment.id]], [[=row.id]])" @mouseout="hide_comment([[=row.id]])">
