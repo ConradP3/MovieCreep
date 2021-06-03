@@ -1,35 +1,37 @@
 [[extend "layout.html"]]
 
-
-
 <style>
   .auth-container {
     max-width: 30%;
     min-width: 400px;
-    margin-left: auto;
-    margin-right: auto;
     margin-top: 5%;
     border-radius: 10px;
     padding: 20px;
+    color: white;
+    position: absolute;
+    margin-left: auto;
+    margin-right: auto;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
   }
   a.button {
       margin-left: 10px;
   }
 
-  .bg-img { 
-    background-color: #3298dc;
- }
+.contain-img {
+  position: relative;
+  color: white;
+}
 
 </style>
-
-
-  <body>
-    <section class="section auth-container" id='Login'>
+  <div class='contain-img'>
+    <img src='./images/bg2.png' />
+    <div class="auth-container">
 
       [[=form]]
   
-  
-    </section>
-  </body>
+    </div>
 
+  </div>
 <br />
