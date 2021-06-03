@@ -397,8 +397,22 @@ def feed():
 @action('notifications')
 @action.uses(db, auth.user, 'notifications.html')
 def notifications():
-    movie_rows = db((db.watch_list.watch_list_user_email == get_user_email())).select()
-    return dict(rows=movie_rows, url_signer=url_signer)
+    user = db(db.user.user_id == auth.current_user.get('id')).select()
+    for u in user:
+        id = u.id
+        #print(u.id)
+    rows = db(db.notifications.user_id == id).select()
+    return dict(rows=rows, url_signer=url_signer)
+
+#delete notification
+@action('delete_notification/<notifications_id:int>')
+@action.uses(db, auth.user, url_signer.verify())
+def delete_notification(notifications_id=None):
+    assert notifications_id is not None
+    db(db.notifications.id == notifications_id).delete()
+    #print("did I delete ?")
+    redirect(URL('notifications'))
+
 
 # #######################################################
 # Profile
@@ -420,6 +434,7 @@ def profile():
                 search_url=URL('search_friends', signer=url_signer),
                 add_following_url=URL('add_following', signer=url_signer))
 
+#intialize user database in profile.js: load_user_url
 @action('load_user')
 @action.uses(db, auth.user, session, url_signer.verify())
 def load_user():
@@ -428,6 +443,7 @@ def load_user():
 
     return dict(userrows = userrows)
 
+#intialize following database in profile.js: load_following_url
 @action('load_following')
 @action.uses(db, auth.user, session, url_signer.verify())
 def load_following():
@@ -436,6 +452,7 @@ def load_following():
 
     return dict(followingrows = followingrows)
 
+#intialize followerdatabase in profile.js: load_follower_url
 @action('load_follower')
 @action.uses(db, auth.user, session, url_signer.verify())
 def load_follower():
@@ -444,6 +461,7 @@ def load_follower():
 
     return dict(followerrows = followerrows)
 
+#sub-nav tags on profile page (for later if I have time)
 """
 @action('following')
 @action.uses(db, auth.user, 'following.html')
@@ -464,7 +482,7 @@ def profile():
     return dict(rows=rows)
 """
 
-
+#uoload thumbnail API
 @action('upload_thumbnail', method="POST")
 @action.uses(url_signer.verify(), db)
 def upload_thumbnail():
@@ -473,6 +491,7 @@ def upload_thumbnail():
     db(db.user.id == user_id).update(user_thumbnail =thumbnail)
     return "ok"
 
+#search friends API
 @action('search_friends')
 @action.uses(db, auth)
 def search_friends():
@@ -485,7 +504,7 @@ def search_friends():
     return dict(results = results)
 
 
-# add people to your following list
+# add people to your following list API
 @action('add_following', method=["GET", "POST"])
 @action.uses(db, auth.user, url_signer.verify())
 def add_following():
@@ -496,7 +515,7 @@ def add_following():
     #print(rows)
     followerthumbnail = None
     followingthumbnail = None
-    
+
     getfollowerthumbnail = db(db.user.user_email == auth.current_user.get('email')).select().as_list()
     for t in getfollowerthumbnail:
         followerthumbnail = t['user_thumbnail']
@@ -504,20 +523,28 @@ def add_following():
         getfollowingthumbnail = db(db.user.user_email == r['email']).select().as_list()
         for t in getfollowingthumbnail:
             followingthumbnail = t['user_thumbnail']
-
+            followingid = t['id']
+        user = db(db.user.user_id == auth.current_user.get('id')).select()
+        for u in user:
+            id = u.id
         db.following.update_or_insert(following_id = r['id'],
                             following_user_name = r['first_name'] + " " + r['last_name'],
                             following_user_email = r['email'],
                             following_thumbnail = followingthumbnail,
                             reference = auth.current_user.get('id'))
 
+        db.notifications.update_or_insert(user_id = id,
+                                          message = "You are now following " + r['first_name'] + " " + r['last_name'] + "!")
 
         db.follower.update_or_insert(follower_id = auth.current_user.get('id'),
                                      follower_user_name = auth.current_user.get('first_name') + " " + auth.current_user.get('last_name'),
                                      follower_user_email = auth.current_user.get('email'),
                                      follower_thumbnail = followerthumbnail,
                                      reference = r['id'])
-
+        db.notifications.update_or_insert(user_id = t['id'],
+                                          message = auth.current_user.get('first_name') + " "
+                                            + auth.current_user.get('last_name') + " "
+                                            + "is now following you!")
     redirect(URL('profile'))
     return "ok"
 

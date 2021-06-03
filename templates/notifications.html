@@ -4,6 +4,16 @@
 
   <h1 class="title">Notifications</h1>
 
+  <div class="container">
+
+      [[for row in rows:]]
+        <div class="notification is-info is-light">
+            <a class="delete" href="[[=URL('delete_notification', row.id, signer=url_signer)]]"></a>
+          [[=row.message]]
+        </div>
+      [[pass]]
+
+  </div>
 
 
 </div>

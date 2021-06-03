@@ -92,6 +92,11 @@ db.define_table(
     Field('reference')
 )
 
+db.define_table(
+    'notifications',
+    Field('message'),
+    Field('user_id', 'reference user')
+)
 
 
 db.watch_list.watch_list_time_stamp.readable = db.watch_list.watch_list_time_stamp.writable = False
