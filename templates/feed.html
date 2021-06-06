@@ -38,17 +38,28 @@
 
             <p><B>[[=row.movie_title]]</B></p>
             <!-- Tooltip -->
-            <div class="tooltip">
-              <i class='fa fa-exclamation-circle'></i>
-              <span class="tooltiptext is-pulled-left">
-                <p><B>[[=row.movie_title]]</B></p>
-                <p><B>Rated: [[=row.rating]]</B></p>
-                <p><B>Released:[[=row.releasedate]]</B></p>
-                <p><B>Runtime: [[=row.runtime]]</B></p>
-                <p><B>Genre: [[=row.genre]]</B></p>
-                <p><B>[[=row.plot]]</B></p>
-              </span>
-            </div> <!-- End of tooltip -->
+            <div class="dropdown is-hoverable">
+              <div class="dropdown-trigger">
+                <button class="button is-light" aria-haspopup="true" aria-controls="dropdown-menu4">
+                  <span class="icon is-small">
+                    <i class='fa fa-exclamation-circle'></i>
+                  </span>
+                </button>
+              </div>
+              <div class="dropdown-menu" id="dropdown-menu4" role="menu">
+                <div class="dropdown-content">
+                  <div class="dropdown-item">
+                    <p><B>[[=row.movie_title]]</B></p>
+                    <p><B>Rated: </B>[[=row.rating]]</p>
+                    <p><B>Released: </B>[[=row.releasedate]]</p>
+                    <p><B>Runtime:</B> [[=row.runtime]]</p>
+                    <p><B>Genre: </B>[[=row.genre]]</p>
+                    <p>[[=row.plot]]</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- End of tooltip -->
 
             <div class="block">
               <p>[[if row.watch_list_watched:]]Seen: [[=row.watch_list_date]][[else:]]Not Seen[[pass]]</p>
@@ -164,54 +175,3 @@
 </script>
 <script src="js/feed.js"></script>
 [[end]]
-
-
-<!-- https://www.w3schools.com/howto/howto_css_tooltip.asp -->
-<style>
-  /* Tooltip container */
-  .tooltip {
-    position: relative;
-    display: inline-block;
-    /* border-bottom: 1px dotted black; If you want dots under the hoverable text */
-  }
-  
-  /* Tooltip text */
-  .tooltip .tooltiptext {
-    visibility: hidden;
-    width: 400px;
-    background-color: #555;
-    color: #fff;
-    text-align: center;
-    padding: 5px 0;
-    border-radius: 6px;
-  
-    /* Position the tooltip text */
-    position: absolute;
-    z-index: 1;
-    bottom: 125%;
-    left: 50%;
-    margin-left: -60px;
-  
-    /* Fade in tooltip */
-    opacity: 0;
-    transition: opacity 0.3s;
-  }
-  
-  /* Tooltip arrow */
-  .tooltip .tooltiptext::after {
-    content: "";
-    position: absolute;
-    top: 100%;
-    left: 50%;
-    margin-left: -5px;
-    border-width: 5px;
-    border-style: solid;
-    border-color: #555 transparent transparent transparent;
-  }
-  
-  /* Show the tooltip text when you mouse over the tooltip container */
-  .tooltip:hover .tooltiptext {
-    visibility: visible;
-    opacity: 1;
-  }
-  </style>

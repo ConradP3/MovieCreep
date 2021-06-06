@@ -39,7 +39,6 @@ db.define_table(
     Field('watch_list_date', 'date'),
     Field('watch_list_user_email', default=get_user_email),
     Field('watch_list_user_name', default=get_user_name),
-    Field('watch_list_rating', 'integer', default=0),
     Field('watch_list_time_stamp', 'datetime', default=get_time),
     Field('watch_list_review')
 )
@@ -117,7 +116,6 @@ db.review_comment.user_email.readable = db.review_comment.user_email.writable = 
 db.review_comment.user_name.readable = db.review_comment.user_name.writable = False
 
 db.watch_list.watch_list_watched.label = T('Seen')
-db.watch_list.watch_list_rating.label = T('Your Movie Rating')
 db.watch_list.watch_list_review.label = T('Your Movie Review')
 
 db.commit()

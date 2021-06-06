@@ -104,7 +104,7 @@ def index():
         m['comments'] = comment_rows
 
         m['thumbnail'] = None
-        m['rating'] = -1
+        m['ratingLike'] = -1
 
         # https://api.themoviedb.org/3/movie/550?api_key=fa5fa1a7dd403108f2c44bf79fca3f2f
 
@@ -116,7 +116,7 @@ def index():
 
         for like in likes_rows:
             if like['likes_user_email'] == m['watch_list_user_email'] and like['likes_movie'] == m['id']:
-                m['rating'] = like['rating']
+                m['ratingLike'] = like['rating']
 
 
 
@@ -325,7 +325,6 @@ def quick_add(movie_title):
                          watch_list_date=get_time(),
                          watch_list_user_email=get_user_email(),
                          watch_list_user_name=get_user_name(),
-                         watch_list_rating=0,
                          watch_list_time_stamp=get_time(),
                          watch_list_review=''
                          )

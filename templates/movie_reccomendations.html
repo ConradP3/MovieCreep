@@ -3,118 +3,75 @@
   [v-cloak] {
     display: none;
   }
-  /* <!-- https://www.w3schools.com/howto/howto_css_tooltip.asp --> */
-  /* Tooltip container */
-  .tooltip {
-    position: relative;
-    display: inline-block;
-    /* border-bottom: 1px dotted black; */
-    /* If you want dots under the hoverable text */
-  }
-
-  /* Tooltip text */
-  .tooltip .tooltiptext {
-    visibility: hidden;
-    width: 400px;
-    background-color: #555;
-    color: #fff;
-    text-align: Left;
-    padding: 5px 0;
-    border-radius: 6px;
-
-    /* Position the tooltip text */
-    position: absolute;
-    z-index: 1;
-    bottom: 125%;
-    left: 50%;
-    margin-left: -60px;
-
-    /* Fade in tooltip */
-    opacity: 0;
-    transition: opacity 0.3s;
-  }
-
-  /* Tooltip arrow */
-  .tooltip .tooltiptext::after {
-    content: "";
-    position: absolute;
-    top: 100%;
-    left: 50%;
-    margin-left: -5px;
-    border-width: 5px;
-    border-style: solid;
-    border-color: #555 transparent transparent transparent;
-  }
-
-  /* Show the tooltip text when you mouse over the tooltip container */
-  .tooltip:hover .tooltiptext {
-    visibility: visible;
-    opacity: 1;
-  }
 </style>
 <div id="vue-target" v-cloak>
 <div class='section'>
   <div class="field has-addons is-pulled-right mr-6">
-    <p class="control">
-      <button class="button is-info" @click="set_view(-1)" v-if="view_mode === -1">
-        <div class="tooltip">
-          <i class="fa fa-bars"></i>
-          <span class="tooltiptext icon is-small">
+    <div class="dropdown is-hoverable">
+      <div class="dropdown-trigger">
+        <p class="control">
+          <button class="button is-info" @click="set_view(-1)" v-if="view_mode === -1">
+              <i class="fa fa-bars" aria-hidden="true"></i>
+          </button>
+        </p>
+        <p class="control">
+          <button class="button is-light" @click="set_view(-1)" v-if="view_mode != -1">
+            <i class="fa fa-bars" aria-hidden="true"></i>
+          </button>
+        </p>
+      </div>
+      <div class="dropdown-menu" id="dropdown-menu7" role="menu">
+        <div class="dropdown-content">
+          <div class="dropdown-item">
             All Recommendations
-          </span>
+          </div>
         </div>
-      </button>
-    </p>
-    <p class="control">
-      <button class="button is-light" @click="set_view(-1)" v-if="view_mode != -1">
-        <div class="tooltip">
-          <i class="fa fa-bars"></i>
-          <span class="tooltiptext icon is-small">
-            All Recommendations
-          </span>
-        </div>
-      </button>
-    </p>
-    <p class="control">
-      <button class="button is-info" @click="set_view(0)" v-if="view_mode === 0">
-        <div class="tooltip">
-          <i class="fa fa-user"></i>
-          <span class="tooltiptext icon is-small">
+      </div>
+    </div>
+    <div class="dropdown is-hoverable">
+      <div class="dropdown-trigger">
+        <p class="control">
+          <button class="button is-info" @click="set_view(0)" v-if="view_mode === 0">
+              <i class="fa fa-user"></i>
+          </button>
+        </p>
+        <p class="control">
+          <button class="button is-light" @click="set_view(0)" v-if="view_mode != 0">
+              <i class="fa fa-user"></i>
+          </button>
+        </p>
+      </div>
+      <div class="dropdown-menu" id="dropdown-menu7" role="menu">
+        <div class="dropdown-content">
+          <div class="dropdown-item">
             Similar Movie Recommendations Based on Watch List
-          </span>
+          </div>
         </div>
-      </button>
-    </p>
-    <p class="control">
-      <button class="button is-light" @click="set_view(0)" v-if="view_mode != 0">
-        <div class="tooltip">
-          <i class="fa fa-user"></i>
-          <span class="tooltiptext icon is-small">
-            Similar Movie Recommendations Based on Watch List
-          </span>
-        </div>
-      </button>
-    </p>
-    <p class="control">
-      <button class="button is-info" @click="set_view(1)" v-if="view_mode === 1">
-        <div class="tooltip">
-          <i class="fa fa-video-camera "></i>
-          <span class="tooltiptext icon is-small">
+      </div>
+    </div>
+
+    <div class="dropdown is-hoverable">
+      <div class="dropdown-trigger">
+        <p class="control">
+          <button class="button is-info" @click="set_view(1)" v-if="view_mode === 1">
+              <i class="fa fa-video-camera "></i>
+          </button>
+        </p>
+        <p class="control">
+          <button class="button is-light" @click="set_view(1)" v-if="view_mode != 1">
+              <i class="fa fa-video-camera "></i>
+          </button>
+        </p>
+      </div>
+      <div class="dropdown-menu" id="dropdown-menu7" role="menu">
+        <div class="dropdown-content">
+          <div class="dropdown-item">
             Movies Other Users Have Seen
-          </span>
+          </div>
         </div>
-      </button>
-    </p>
-    <p class="control">
-      <button class="button is-light" @click="set_view(1)" v-if="view_mode != 1">
-        <div class="tooltip">
-          <i class="fa fa-video-camera "></i>
-          <span class="tooltiptext icon is-small">
-            Movies Other Users Have Seen
-          </span>
-        </div>
-      </button>
-    </p>
+      </div>
+    </div>
+
   </div>
 </div>
 
@@ -137,16 +94,26 @@
             <div class="container block">
               <div class="box has-background-white-ter box-shadow">
                 <img src="[[=row.link]]" width="142">
-                <div class="tooltip"> <i class='fa fa-exclamation-circle'></i>
-                  <span class="tooltiptext is-pulled-left">
-                    <!-- plot, runtime, releasedate, rating, imbdbrating, genre -->
-                    <p><B>[[=row.recommended[-1] ]]</B></p>
-                    <p><B>Rated: [[=row.rating]]</B></p>
-                    <p><B>Released:[[=row.releasedate]]</B></p>
-                    <p><B>Runtime: [[=row.runtime]]</B></p>
-                    <p><B>Genre: [[=row.genre]]</B></p>
-                    <p><B>[[=row.plot]]</B></p>
-                  </span>
+                <div class="dropdown is-hoverable">
+                  <div class="dropdown-trigger">
+                    <button class="button is-light" aria-haspopup="true" aria-controls="dropdown-menu4">
+                      <span class="icon is-small">
+                        <i class='fa fa-exclamation-circle'></i>
+                      </span>
+                    </button>
+                  </div>
+                  <div class="dropdown-menu" id="dropdown-menu4" role="menu">
+                    <div class="dropdown-content">
+                      <div class="dropdown-item">
+                        <p><B>[[=row.recommended[-1] ]]</B></p>
+                        <p><B>Rated: </B>[[=row.rating]]</p>
+                        <p><B>Released: </B>[[=row.releasedate]]</p>
+                        <p><B>Runtime:</B> [[=row.runtime]]</p>
+                        <p><B>Genre: </B>[[=row.genre]]</p>
+                        <p>[[=row.plot]]</p>
+                      </div>
+                    </div>
+                  </div>
                 </div>
                 <p><B>[[=row.recommended[-1] ]]</B></p>
                 <p>Recommended because you added [[=row.movie_title]] to your list.</p>
@@ -177,16 +144,26 @@
           <div class="box has-background-white-ter box-shadow">
             <!-- <img src="./images/logo.png"> -->
             <img src="[[=row.link]]" width="142">
-            <div class="tooltip"> <i class='fa fa-exclamation-circle'></i>
-              <span class="tooltiptext is-pulled-left">
-                <!-- plot, runtime, releasedate, rating, imbdbrating, genre -->
-                <p><B>[[=row.movie_title]]</B></p>
-                <p><B>Rated: [[=row.rating]]</B></p>
-                <p><B>Released:[[=row.releasedate]]</B></p>
-                <p><B>Runtime: [[=row.runtime]]</B></p>
-                <p><B>Genre: [[=row.genre]]</B></p>
-                <p><B>[[=row.plot]]</B></p>
-              </span>
+            <div class="dropdown is-hoverable">
+              <div class="dropdown-trigger">
+                <button class="button is-light" aria-haspopup="true" aria-controls="dropdown-menu3">
+                  <span class="icon is-small">
+                    <i class='fa fa-exclamation-circle'></i>
+                  </span>
+                </button>
+              </div>
+              <div class="dropdown-menu" id="dropdown-menu3" role="menu">
+                <div class="dropdown-content">
+                  <div class="dropdown-item">
+                    <p><B>[[=row.recommended[-1] ]]</B></p>
+                    <p><B>Rated: </B>[[=row.rating]]</p>
+                    <p><B>Released: </B>[[=row.releasedate]]</p>
+                    <p><B>Runtime:</B> [[=row.runtime]]</p>
+                    <p><B>Genre: </B>[[=row.genre]]</p>
+                    <p>[[=row.plot]]</p>
+                  </div>
+                </div>
+              </div>
             </div>
             <p><B>[[=row.movie_title]]</B></p>
             <p> [[if row.watch_list_watched:]]Recommended because [[=row.watch_list_user_name]] watched.
