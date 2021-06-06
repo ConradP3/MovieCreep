@@ -17,6 +17,8 @@ let init = (app) => {
         query: "",
         results: [],
         userrows: [],
+        followingrows: [],
+        followerrows: [],
     };
 
     // This is the file selected for upload.
@@ -96,6 +98,8 @@ let init = (app) => {
             email: r.email,
         });
     };
+
+
 
     // This contains all the methods.
     app.methods = {
