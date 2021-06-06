@@ -196,10 +196,8 @@ def delete(watch_list_id=None):
 @action.uses()
 def search():
     q = request.params.get("q")
-    results = [q + ":" + str(uuid.uuid1()) for _ in range(random.randint(2, 6))]
-    #if (q in movierows)
-    #add row to results
-    #print results
+    results = db(db.watch_list.movie_title == q).select().as_list()
+
     return dict(results = results)
 #return movie rows that contain q
 
