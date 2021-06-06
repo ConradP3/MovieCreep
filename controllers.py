@@ -93,6 +93,13 @@ def index():
 
         # Get the review comments for the movie
         comment_rows = db(db.review_comment.watch_list_id == m['id']).select()
+        # Also get the profile pictures
+        for comment in comment_rows:
+            user_row = db(db.user.user_email == comment['user_email']).select().first()
+            thumbnail_link = user_row['user_thumbnail']
+            if thumbnail_link == None:
+                thumbnail_link == "https://www.jing.fm/clipimg/detail/195-1952632_account-customer-login-man-user-icon-login-icon.png"
+            comment['thumbnail'] = thumbnail_link
         m['comments'] = comment_rows
 
         m['thumbnail'] = None
@@ -373,7 +380,16 @@ def feed():
         m['runtime'] = runtime
         m['plot'] = plot
 
-        m['comments'] = db(db.review_comment.watch_list_id == m['id']).select()
+        # get comments for the post
+        comment_rows = db(db.review_comment.watch_list_id == m['id']).select()
+        # also get the pfps for each commentor
+        for comment in comment_rows:
+            user_row = db(db.user.user_email == comment['user_email']).select().first    ()
+            thumbnail_link = user_row['user_thumbnail']
+            if thumbnail_link == None:
+                thumbnail_link == "https://www.jing.fm/clipimg/detail/195-1952632_account-customer-login-man-user-icon-login-icon.png"
+            comment['thumbnail'] = thumbnail_link
+        m['comments'] = comment_rows
 
         m['thumbnail'] = None
 
@@ -574,15 +590,10 @@ def get_comment():
 def get_comments():
     rows = db(db.review_comment).select()
     comments = {}
-    user_rows = db(db.user.user_email).select()
     # end result should be, as EX:
     #{1:{"name":"John","comment":"Bad opinion"},2:{"name":"Dave","comment":"eh"}}
     for row in rows:
-        for user in user_rows:
-            if row['user_email'] == user['user_email']:
-                row['thumbnail'] = user['user_thumbnail']
-        comments[str(row.id)] = {"name":row.user_name,"comment":row.comment,"thumbnail":row.thumbnail}
-
+        comments[str(row.id)] = {"name":row.user_name,"comment":row.comment}
         
     return dict(comments=comments)
     

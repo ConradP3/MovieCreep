@@ -82,7 +82,7 @@
               [[pass]]
               [[for comment in row.comments:]]
               <figure class="is-inline-block image is-32x32">
-                <img src="https://www.jing.fm/clipimg/detail/195-1952632_account-cu    stomer-login-man-user-icon-login-icon.png" class="is-rounded" @mouseover="get_comment([[=comment.id]], [[=row.id]])" @mouseout="hide_comment([[=row.id]])">
+                <img src="[[=comment.thumbnail]]" class="is-rounded" @mouseover="get_comment([[=comment.id]], [[=row.id]])" @mouseout="hide_comment([[=row.id]])">
               </figure>
               [[pass]]
               <div class="block">
