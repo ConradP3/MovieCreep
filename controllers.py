@@ -60,6 +60,7 @@ CSV_PATH = os.path.dirname(os.path.abspath(__file__)) + '/movies.csv'
 def index():
     movie_rows = db((db.watch_list.watch_list_user_email == get_user_email())).select()
     user_rows = db(db.user.user_email).select() # All users
+    likes_rows = db(db.likes.likes_user_email).select() # All likes
     for m in movie_rows:
         link = ''
         plot = ''
@@ -103,6 +104,7 @@ def index():
         m['comments'] = comment_rows
 
         m['thumbnail'] = None
+        m['rating'] = -1
 
         # https://api.themoviedb.org/3/movie/550?api_key=fa5fa1a7dd403108f2c44bf79fca3f2f
 
@@ -111,6 +113,10 @@ def index():
         for user in user_rows:
             if user['user_email'] == m['watch_list_user_email']:
                 m['thumbnail'] = user['user_thumbnail']
+
+        for like in likes_rows:
+            if like['likes_user_email'] == m['watch_list_user_email'] and like['likes_movie'] == m['id']:
+                m['rating'] = like['rating']
 
 
 
@@ -121,7 +127,8 @@ def index():
                 set_rating_url = URL('set_rating', signer=url_signer),
                 search_url = URL('search', signer=url_signer),
                 get_comments_url = URL('get_comments', signer=url_signer),
-                user_email=get_user_email())
+                user_email=get_user_email(),
+                user_name=get_user_name())
 
 
 # add_movie: to add a new entry. 
@@ -155,31 +162,24 @@ def edit(watch_list_id=None):
     else:
         redirect(URL('index'))
 
-# @action('get_rating')
-# @action.uses(url_signer.verify(), db, auth.user)
-# def get_rating():
-#     """Returns the rating for a user and an image."""
-#     id = request.params.get('review_id')
-#     row = db((db.reviews.id == id) &
-#              (db.reviews.reviews_user_email == get_user_email())).select().first()
-#     rating = row.reviews_rating if row is not None else 0
-#     return dict(rating=rating)
-
-# @action('set_rating', method='POST')
-# @action.uses(url_signer.verify(), db, auth.user)
-# def set_rating():
-#     """Sets the rating for movie."""
-#     id = request.json.get('review_id')
-#     rating = request.json.get('rating')
-#     assert id is not None and rating is not None
-#     db.reviews.update_or_insert(
-#         ((db.reviews.id == id) & (db.reviews.reviews_user_email == get_user_email())),
-#         image=image_id,
-#         rater=get_user(),
-#         rating=rating
-#     )
-#     return "ok" # Just to have some confirmation in the Network tab.
-
+@action('set_rating/<id:int>/<rating:int>',  method=["GET", "POST"])
+@action.uses(url_signer.verify(), db, auth.user)
+def set_rating(id, rating):
+    """Sets the rating for movie."""
+    assert id is not None and rating is not None
+    db.likes.update_or_insert(
+        likes_movie=id,
+        rating=rating,
+        likes_liker=get_user(),
+        likes_name=get_user_name(),
+        likes_user_email=get_user_email,
+    )
+    redirect(URL('index'))
+                # Field('likes_movie', 'reference watch_list'), # Movie liked
+                # Field('rating', 'integer', default=-1),
+                # Field('likes_liker', 'reference auth_user'), # User doing the like.
+                # Field('likes_name'),
+                # Field('likes_user_email', default=get_user_email),
 
 # delete_movie
 @action('delete_movie/<watch_list_id:int>')
@@ -447,13 +447,17 @@ def profile():
     db.user.update_or_insert(user_name = auth.current_user.get('first_name') + " " + auth.current_user.get('last_name'),
                    user_email = get_user_email(),
                    user_id = auth.current_user.get('id'))
+    follower_count = len(db(db.follower.follower_id == get_user()).select().as_list())
+    following_count = len(db(db.following.following_id == get_user()).select().as_list())
 
     return dict(load_user_url=URL('load_user', signer=url_signer),
                 load_following_url=URL('load_following', signer=url_signer),
                 load_follower_url=URL('load_follower', signer=url_signer),
                 upload_thumbnail_url=URL('upload_thumbnail', signer=url_signer),
                 search_url=URL('search_friends', signer=url_signer),
-                add_following_url=URL('add_following', signer=url_signer))
+                add_following_url=URL('add_following', signer=url_signer),
+                following_count=following_count,
+                follower_count=follower_count)
 
 #intialize user database in profile.js: load_user_url
 @action('load_user')
