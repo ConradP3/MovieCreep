@@ -44,27 +44,42 @@
 
 <body>
   <!-- Navigation bar -->
-  <nav class="navbar is-info">
+ <nav class="navbar is-info">
     <img src="./images/logo2.png" href="[[=URL('index')]]" alt="Movue Creep" width="90" height="28">
     <div class="navbar-brand">
       <a class="navbar-item" href="[[=URL('profile')]]">
-        Profile
+        <span class="icon is-small">
+          <i class="fa fa-user"></i>
+        </span>
+        &nbsp Profile
         <!-- Profile -->
       </a>
       <a class="navbar-item" href="[[=URL('index')]]">
-        Movie Watch List
+        <span class="icon is-small">
+          <i class="fa fa-film"></i>
+        </span>
+        &nbsp Movie Watch List
         <!-- Planned and Already Watched Movies come up -->
       </a>
       <a class="navbar-item" href="[[=URL('feed')]]">
-        Feed
+        <span class="icon is-small">
+          <i class="fa fa-users"></i>
+        </span>
+        &nbsp Feed
         <!-- Friends movies and your own -->
       </a>
       <a class="navbar-item" href="[[=URL('movie_reccomendations')]]">
-        Movie Recommendations
+        <span class="icon is-small">
+          <i class="fa fa-plus"></i>
+        </span>
+        &nbsp Movie Recommendations
         <!-- Reccomended movies -->
       </a>
       <a class="navbar-item" href="[[=URL('notifications')]]">
-        Notifications
+        <span class="icon is-small">
+          <i class="fa fa-bell"></i>
+        </span>
+        &nbsp Notifications
         <!-- Can choose to have notifications when friend adds you, they share a movie etc. -->
       </a>
 
