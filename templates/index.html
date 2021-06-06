@@ -93,14 +93,37 @@
 
                 <div class="block">
                   <p>[[if row.watch_list_watched:]]Seen: [[=row.watch_list_date]][[else:]]Not Seen[[pass]]</p>
-                  <!--                <span @mouseout="stars_out(img._idx)">
-                  <span @mouseover="stars_over(img._idx, star_idx)" @click="set_stars(img._idx, star_idx)" v-for="star_idx in [1, 2, 3, 4, 5]">
-                    <i v-if="star_idx <= img.num_stars_display" class="fa fa-star"></i>
-                    <i v-if="star_idx > img.num_stars_display" class="fa fa-star-o"></i>
-                  </span>
+
+
+          <!-- Thumbs up -->
+              [[if row.rating == 1: ]]
+              <a class='button' href="[[=URL('set_rating', row.id, -1, signer=url_signer)]]" >
+                <span>
+                  <i class="fa fa-thumbs-up fa-lg is-size-4" style="color: #0099CC;"></i>
                 </span>
-                <br>
-                <br> -->
+              </a>
+              [[elif row.rating ==0 or row.rating==-1 or row.rating==None: ]]
+              <a class='button' href="[[=URL('set_rating', row.id, 1, signer=url_signer)]]">
+                <span>
+                  <i class="fa fa-thumbs-o-up fa-lg is-size-4"  style="color: #0099CC;"></i>
+                </span>
+              </a>
+              [[pass]]
+          <!-- Thumbs Down -->
+                 [[if row.rating == 0: ]]
+                <a class='button' href="[[=URL('set_rating', row.id, -1, signer=url_signer)]]" >
+                    <span>
+                    <i class="fa fa-thumbs-down fa-lg is-size-4" style="color: #0099CC;"></i>
+                  </span>
+                </a>
+                [[elif row.rating ==1 or row.rating==-1 or row.rating==None: ]]
+                <a class='button' href="[[=URL('set_rating', row.id, 0, signer=url_signer)]]">
+                  <span>
+                  <i class="fa fa-thumbs-o-down fa-lg is-size-4"  style="color: #0099CC;"></i>
+                </span>
+              </a>
+                [[pass]]
+     
                 </div>
 
               </div>
@@ -177,7 +200,8 @@
   <!-- Gallery View -->
   <div v-if="view_mode === 1">
     [[for row in range((len(rows)//3) +1, -1, -3):]]
-    <div class="columns is-variable is-1-mobile is-0-tablet is-3-desktop is-8-widescreen is-2-fullhd" v-if="view_mode === 1">
+    <div class="columns is-variable is-1-mobile is-0-tablet is-3-desktop is-8-widescreen is-2-fullhd"
+      v-if="view_mode === 1">
       [[for i in range(3):]]
       <div class="column container block">
         <!-- Ancestor tile -->
@@ -207,16 +231,10 @@
                 <!-- End of tooltip -->
 
                 <div class="block">
-                  <p>[[if rows[row+i].watch_list_watched:]]Seen: [[=rows[row+i].watch_list_date]][[else:]]Not Seen[[pass]]
+                  <p>[[if rows[row+i].watch_list_watched:]]Seen: [[=rows[row+i].watch_list_date]][[else:]]Not
+                    Seen[[pass]]
                   </p>
-                  <!--                <span @mouseout="stars_out(img._idx)">
-                  <span @mouseover="stars_over(img._idx, star_idx)" @click="set_stars(img._idx, star_idx)" v-for="star_idx in [1, 2, 3, 4, 5]">
-                    <i v-if="star_idx <= img.num_stars_display" class="fa fa-star"></i>
-                    <i v-if="star_idx > img.num_stars_display" class="fa fa-star-o"></i>
-                  </span>
-                </span>
-                <br>
-                <br> -->
+
                 </div>
 
               </div>
@@ -291,14 +309,14 @@
         <!-- End column -->
       </div>
       [[pass]]
-        </div>
-        <!-- End of Ancestor tile -->
-      </div>
-      <br />
-      <br />
-      [[pass]]
     </div>
+    <!-- End of Ancestor tile -->
   </div>
+  <br />
+  <br />
+  [[pass]]
+</div>
+</div>
 
 </div>
 

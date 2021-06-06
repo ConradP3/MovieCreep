@@ -44,6 +44,14 @@ db.define_table(
     Field('watch_list_review')
 )
 
+db.define_table('likes',
+                Field('likes_movie', 'reference watch_list'), # Movie liked
+                Field('rating', 'integer', default=-1),
+                Field('likes_liker', 'reference auth_user'), # User doing the like.
+                Field('likes_name'),
+                Field('likes_user_email', default=get_user_email),
+                )
+
 # Reviews Table
     # Movie ID
     # User ID
