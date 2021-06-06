@@ -447,8 +447,8 @@ def profile():
     db.user.update_or_insert(user_name = auth.current_user.get('first_name') + " " + auth.current_user.get('last_name'),
                    user_email = get_user_email(),
                    user_id = auth.current_user.get('id'))
-    follower_count = len(db(db.follower.follower_id == get_user()).select().as_list())
-    following_count = len(db(db.following.following_id == get_user()).select().as_list())
+    follower_count = len(db(db.follower.reference == auth.current_user.get('id')).select().as_list())
+    following_count = len(db(db.following.reference == auth.current_user.get('id')).select().as_list())
 
     return dict(load_user_url=URL('load_user', signer=url_signer),
                 load_following_url=URL('load_following', signer=url_signer),
