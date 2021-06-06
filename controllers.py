@@ -167,6 +167,9 @@ def edit(watch_list_id=None):
 def set_rating(id, rating):
     """Sets the rating for movie."""
     assert id is not None and rating is not None
+    # db(db.likes).delete()
+    db((db.likes.likes_movie == id) & (db.likes.likes_user_email == get_user_email()) ).delete()
+
     db.likes.update_or_insert(
         likes_movie=id,
         rating=rating,
@@ -175,11 +178,6 @@ def set_rating(id, rating):
         likes_user_email=get_user_email,
     )
     redirect(URL('index'))
-                # Field('likes_movie', 'reference watch_list'), # Movie liked
-                # Field('rating', 'integer', default=-1),
-                # Field('likes_liker', 'reference auth_user'), # User doing the like.
-                # Field('likes_name'),
-                # Field('likes_user_email', default=get_user_email),
 
 # delete_movie
 @action('delete_movie/<watch_list_id:int>')
