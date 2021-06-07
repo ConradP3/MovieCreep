@@ -103,15 +103,16 @@
                 <!-- End of tooltip -->
 
                 <div class="block">
-                  <p>[[if row.watch_list_watched:]]
+                  <p>[[if row.watch_list_watched and row.watch_list_date:]]
                     Last Watched: <br> [[=row.watch_list_date]]
                     <br>
-                    <br>
-                    <p>Watch Count: </p>
+                    <p>Watch Count: [[=row.watch_list_count]]</p>
                     <div class="buttons mt-2">
                       <a class="button" href="[[=URL('increment', row.id, signer=url_signer)]]"><i class="fa fa-plus"></i></a>
-                      <button class="button is-selected is-hoverable">[[=row.watch_list_count]]</button>
+                      [[if row.watch_list_count == 0: ]]
+                      [[else:]]
                       <a class="button" href="[[=URL('decrement', row.id, signer=url_signer)]]"><i class="fa fa-minus"></i></a>
+                      [[pass]]
                     </div>
                     [[else:]]Want to Watch[[pass]]</p>
 

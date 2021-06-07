@@ -41,7 +41,7 @@ db.define_table(
     Field('watch_list_user_name', default=get_user_name),
     Field('watch_list_time_stamp', 'datetime', default=get_time),
     Field('watch_list_review'),
-    Field('watch_list_count', 'integer'),
+    Field('watch_list_count', 'integer', default=0, requires=IS_INT_IN_RANGE(0, 2**31)),
 )
 
 db.define_table('likes',
