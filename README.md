@@ -34,7 +34,7 @@ Most Watched movies at top, takes into account user's added movies and display w
     friend requests, notify user of potential movies user is interested in.
 
 - /Profile 
-    User profile picture, friends list (following/followers).
+    User information, profile picture, friends list (following/followers), following/followers count, movies watched count
 
 ## User Flow
 1. Home page 
@@ -44,7 +44,7 @@ Most Watched movies at top, takes into account user's added movies and display w
 - Sign-up
 - Forgot Password
 
--> After Successful Login
+--> After Successful Login
 2. Go to Main Feed
 - tweet format with a long list of movie reviews/”tweets” from users you follow
 - Has functionality to like and comment on these tweets
@@ -53,13 +53,14 @@ Most Watched movies at top, takes into account user's added movies and display w
 - Search tab to be able to get information about a specific movie?
 
 3. Personal Profile
-- Information about the user + ability to change any
-- Email
-- Username
-- Profile Picture
-- Follower counts, movies watched
+- Information about the user: 
+    - User name
+    - User email
+    - Profile picture
+- User can add, remove and change profile picture here
+- Follower counts, Following counts, movies watched
 - Movie watch List
-- Change Password form
+- Ability to see other users profile's by clicking on their name
 
 4. Movie Watch List
 - This is a list of movies that either the user wants to watch or has watched
@@ -70,8 +71,8 @@ Most Watched movies at top, takes into account user's added movies and display w
 - In order to mark a movie as watched: 
 
 5. Notifications
-- Whenever another user likes or comments on one of the user’s so called “tweets”
-- When clicking on a specific notification, page will go to that “tweet”
+- Whenever a user follows another user or another user follows them, they will receive a notification in this tab
+- Notifications can be deleted whenever the user clicks the "x" on the notification
 
 6. Recommendations
 - Base recommendations on movies watched by users followed
