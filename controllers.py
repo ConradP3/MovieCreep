@@ -213,6 +213,14 @@ def increment(watch_list_id=None):
     db(db.watch_list.id == watch_list_id).update(watch_list_count=watch_list.watch_list_count+1)
     redirect(URL('index'))
 
+@action('decrement/<watch_list_id:int>')
+@action.uses(db, session, auth.user, url_signer.verify())
+def decrement(watch_list_id=None):
+    assert watch_list_id is not None
+    watch_list = db.watch_list[watch_list_id]
+    db(db.watch_list.id == watch_list_id).update(watch_list_count=watch_list.watch_list_count-1)
+    redirect(URL('index'))
+
 # #######################################################
 # Movie Reccomendations
 # #######################################################
