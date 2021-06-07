@@ -195,13 +195,31 @@ def delete(watch_list_id=None):
 
 
 @action('search')
-@action.uses()
+@action.uses(db, url_signer.verify())
 def search():
-    q = request.params.get("q")
-    results = db(db.watch_list.movie_title == q).select().as_list()
+    t = request.params.get('q')
+    q = ((db.watch_list.movie_title.contains(t)))
+    results = db(q).select(db.watch_list.ALL).as_list()
+    # Fixes some fields, to make it easy on the client side.
+    return dict(
+        results=results,
+    )
 
-    return dict(results = results)
-#return movie rows that contain q
+@action('increment/<watch_list_id:int>')
+@action.uses(db, session, auth.user, url_signer.verify())
+def increment(watch_list_id=None):
+    assert watch_list_id is not None
+    watch_list = db.watch_list[watch_list_id]
+    db(db.watch_list.id == watch_list_id).update(watch_list_count=watch_list.watch_list_count+1)
+    redirect(URL('index'))
+
+@action('decrement/<watch_list_id:int>')
+@action.uses(db, session, auth.user, url_signer.verify())
+def decrement(watch_list_id=None):
+    assert watch_list_id is not None
+    watch_list = db.watch_list[watch_list_id]
+    db(db.watch_list.id == watch_list_id).update(watch_list_count=watch_list.watch_list_count-1)
+    redirect(URL('index'))
 
 # #######################################################
 # Movie Reccomendations

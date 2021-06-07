@@ -41,12 +41,13 @@
       </button>
     </p>
   </div>
-  <div class="section">
-    <h2>Search</h2>
+   <div class="section">
     <div class="control block">
-      <input class="input" type="text" v-model="query" @keyup="search">
+      <input class="input" type="text" v-model="query" @keyup="search" placeholder="Search Movie Title..">
     </div>
-    <div v-for="r in results">{{r}}</div>
+    <div v-for ="r in results">
+       {{r}}
+    </div>
   </div>
 
   <div class="section">
@@ -102,8 +103,17 @@
                 <!-- End of tooltip -->
 
                 <div class="block">
-                  <p>[[if row.watch_list_watched:]]Seen: [[=row.watch_list_date]][[else:]]Not Seen[[pass]]</p>
-
+                  <p>[[if row.watch_list_watched:]]
+                    Last Watched: <br> [[=row.watch_list_date]]
+                    <br>
+                    <br>
+                    <p>Watch Count: </p>
+                    <div class="buttons mt-2">
+                      <a class="button" href="[[=URL('increment', row.id, signer=url_signer)]]"><i class="fa fa-plus"></i></a>
+                      <button class="button is-selected is-hoverable">[[=row.watch_list_count]]</button>
+                      <a class="button" href="[[=URL('decrement', row.id, signer=url_signer)]]"><i class="fa fa-minus"></i></a>
+                    </div>
+                    [[else:]]Want to Watch[[pass]]</p>
 
           <!-- Thumbs up -->
               [[if row.ratingLike == 1: ]]
