@@ -97,7 +97,9 @@ let init = (app) => {
         axios.post(add_following_url, {
             email: r.email,
         }).then(function () {
-
+            followingrows.thumbnail = followingrows.thumbnail;
+            followingrows.user_name = followingrows.user_name;
+            followingrows.user_email = followingrows.user_email;
         });
     };
 
