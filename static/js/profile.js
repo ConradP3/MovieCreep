@@ -88,14 +88,29 @@ let init = (app) => {
         } else {
             app.vue.results = [];
         }
-    }
+    };
 
     app.add_following = function(r) {
-        console.log(r);
-        console.log(r.email);
+        //console.log(r);
+        //console.log(r.email);
         //email = r.email;
         axios.post(add_following_url, {
             email: r.email,
+        }).then(function () {
+
+        });
+    };
+
+    app.delete_thumbnail = function(r) {
+        //console.log(r);
+        console.log(r.user_email);
+        user_email = r.user_email;
+        console.log(user_email);
+        axios.post(delete_thumbnail_url, {
+            email: user_email,
+        }).then(function() {
+            // Sets the local preview.
+            r.user_thumbnail = "";
         });
     };
 
@@ -107,6 +122,7 @@ let init = (app) => {
         upload_file: app.upload_file,
         search: app.search,
         add_following: app.add_following,
+        delete_thumbnail: app.delete_thumbnail,
     };
 
     // This creates the Vue instance.

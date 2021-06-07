@@ -451,6 +451,7 @@ def profile():
                 upload_thumbnail_url=URL('upload_thumbnail', signer=url_signer),
                 search_url=URL('search_friends', signer=url_signer),
                 add_following_url=URL('add_following', signer=url_signer),
+                delete_thumbnail_url=URL('delete_thumbnail', signer=url_signer),
                 following_count=following_count,
                 follower_count=follower_count)
 
@@ -508,7 +509,7 @@ def profile():
 def upload_thumbnail():
     user_id = request.json.get("user_id")
     thumbnail = request.json.get("thumbnail")
-    db(db.user.id == user_id).update(user_thumbnail =thumbnail)
+    db(db.user.id == user_id).update(user_thumbnail =  thumbnail)
     return "ok"
 
 #search friends API
@@ -565,8 +566,21 @@ def add_following():
                                           message = auth.current_user.get('first_name') + " "
                                             + auth.current_user.get('last_name') + " "
                                             + "is now following you!")
-    #redirect(URL('profile'))
+    redirect(URL('profile'))
     return "ok"
+
+@action('delete_thumbnail', method="POST")
+@action.uses(db, auth.user, url_signer.verify())
+def delete_thumbnail():
+
+    email = request.json.get("email")
+    #print(email)
+    assert email is not None
+
+    db(db.user.user_email == email).update(user_thumbnail = None)
+    redirect(URL('profile'))
+    return "ok"
+
 
 
 # get an individual comment for a user given the movie listing id

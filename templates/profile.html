@@ -43,7 +43,12 @@
                     </p>
                   </div>
 
-                  <img v-if="r.user_thumbnail" width="50" :src="r.user_thumbnail" />
+                    <div v-if="r.user_thumbnail">
+                       <img width="50" :src="r.user_thumbnail"/>
+                        <button @click="delete_thumbnail(r)" class="delete is-medium">
+                        </button>
+                    </div>
+
 
 
                 </td>
@@ -169,6 +174,7 @@
     let upload_thumbnail_url = "[[=XML(upload_thumbnail_url)]]";
     let search_url = "[[=XML(search_url)]]";
     let add_following_url = "[[=XML(add_following_url)]]";
+    let delete_thumbnail_url = "[[=XML(delete_thumbnail_url)]]";
 </script>
 <script src="js/profile.js"></script>
 [[end]]
