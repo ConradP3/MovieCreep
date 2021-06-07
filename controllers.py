@@ -525,7 +525,7 @@ def search_friends():
 
 
 # add people to your following list API
-@action('add_following', method=["GET", "POST"])
+@action('add_following', method="POST")
 @action.uses(db, auth.user, url_signer.verify())
 def add_following():
     email = request.json.get("email")
@@ -565,7 +565,7 @@ def add_following():
                                           message = auth.current_user.get('first_name') + " "
                                             + auth.current_user.get('last_name') + " "
                                             + "is now following you!")
-    redirect(URL('profile'))
+    #redirect(URL('profile'))
     return "ok"
 
 
