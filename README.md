@@ -61,7 +61,7 @@ Most Watched movies at top, takes into account user's added movies and display w
 - Movie watch List
 - Change Password form
 
-4. Movie List
+4. Movie Watch List
 - This is a list of movies that either the user wants to watch or has watched
 - Separate Lists into has watched and watched into this tab
 - SUB TABS: Watched/To Watch
