@@ -1,4 +1,26 @@
 # MovieCreep
+[![Platform: py4web](https://img.shields.io/badge/platform-py4web-informational.svg)](https://github.com/web2py/py4web)
+## Purpose
+Movie Creep is an app that allows users to create a profile to track shows/movies they watch and share with others with ease. 
+
+<i>Complete documentation on usage of Movie Creep can be found in USAGE.md</i>
+
+## Installation
+1. Install and setup Py4web. (instructions: https://github.com/web2py/py4web)
+2. Install requirements and Movie Creep
+```
+pip install -r requirements.txt
+cd Py4web/apps
+git clone https://github.com/ConradP3/MovieCreep.git
+cd ../..
+py4web run apps
+
+```
+
+Movie Creep will be available locally at : http://127.0.0.1:8000/MovieCreep
+
+
+## Tabs
 - /index 
     feed of users previously added movies, see user profile image/info. Includes already watched movies user has watched and movies user plans to watch. Search bar for movies.
 
@@ -14,116 +36,64 @@ Most Watched movies at top, takes into account user's added movies and display w
 - /Profile 
     User profile picture, friends list (following/followers).
 
+## User Flow
+1. Home page 
+- Main page has logo + basic information 
+- Sign in button in right upper corner -> takes you to sign in page
+- Sign-in
+- Sign-up
+- Forgot Password
+
+-> After Successful Login
+2. Go to Main Feed
+- tweet format with a long list of movie reviews/”tweets” from users you follow
+- Has functionality to like and comment on these tweets
+- Top has an area to make a “tweet” and takes user to form to successfully see it on feed
+- NavBar has list of all the tabs -> when signed in the top right corner changes to options of either signing out or going to personal profile
+- Search tab to be able to get information about a specific movie?
+
+3. Personal Profile
+- Information about the user + ability to change any
+- Email
+- Username
+- Profile Picture
+- Follower counts, movies watched
+- Movie watch List
+- Change Password form
+
+4. Movie List
+- This is a list of movies that either the user wants to watch or has watched
+- Separate Lists into has watched and watched into this tab
+- SUB TABS: Watched/To Watch
+- Each has a list of movies, with all information about the movie
+- This will be used to find possible recommendations based on common genres or actors in the movie
+- In order to mark a movie as watched: 
+
+5. Notifications
+- Whenever another user likes or comments on one of the user’s so called “tweets”
+- When clicking on a specific notification, page will go to that “tweet”
+
+6. Recommendations
+- Base recommendations on movies watched by users followed
+- Base recommendations on user’s movie list (similar content)
+- List of movies based with all information (toggle different recommendations)
+
+## Technologies
+- Py4web
+- Bulma CSS
+- Vue.js
+
+Recommendations
+- Numpy
+- Pandas
+- Sklearn
+
+
+
 ## Data Sources
 - [OMDBb API](http://omdbapi.com/) RESTful web service to obtain movie information, over 280,000 images
 - [The Movies Dataset](https://www.kaggle.com/rounakbanik/the-movies-dataset) Metadata for movies listed in the Full MovieLens Dataset. (Kaggle)
 
 
 
-
-## DB Tables
-CREATE TABLE `auth_user` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `username` varchar(512) DEFAULT NULL,
-  `email` varchar(512) DEFAULT NULL,
-  `password` varchar(512) DEFAULT NULL,
-  `first_name` varchar(512) DEFAULT NULL,
-  `last_name` varchar(512) DEFAULT NULL,
-  `sso_id` varchar(512) DEFAULT NULL,
-  `action_token` varchar(512) DEFAULT NULL,
-  `last_password_change` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  PRIMARY KEY (`id`),
-  `past_passwords_hash` text DEFAULT NULL,
-  UNIQUE KEY `username` (`username`),
-  UNIQUE KEY `email` (`email`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-CREATE TABLE `auth_user_tag_groups` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `path` varchar(512) DEFAULT NULL,
-  `record_id` int(11) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `record_id_fk` (`record_id`),
-  CONSTRAINT `record_id_fk` FOREIGN KEY (`record_id`) REFERENCES `auth_user` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-CREATE TABLE `py4web_session` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `rkey` varchar(512) DEFAULT NULL,
-  `rvalue` text,
-  `expiration` int(11) DEFAULT NULL,
-  `created_on` datetime DEFAULT NULL,
-  `expires_on` datetime DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `rkey__idx` (`rkey`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-
-CREATE TABLE `watch_list` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `movie_title` varchar(512),
-  `watch_list_watched` int,
-  `watch_list_date` DATE,
-  `watch_list_user_email` varchar(512),
-  `watch_list_user_name` varchar(512),
-  `watch_list_rating` int,
-  `watch_list_time_stamp` DATETIME,
-  `watch_list_review` varchar(512),
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-CREATE TABLE `watch_list` (
-	`id` INT NOT NULL AUTO_INCREMENT,
-	`movie_title` TEXT DEFAULT NULL,
-	`watch_list_watched` TEXT DEFAULT NULL,
-	`watch_list_date` DATE DEFAULT NULL,
-	`watch_list_user_email` TEXT DEFAULT NULL,
-	`watch_list_user_name` TEXT DEFAULT NULL,
-	`watch_list_rating` INT DEFAULT '0',
-	`watch_list_time_stamp` DATETIME DEFAULT NULL,
-	`watch_list_review` TEXT DEFAULT NULL, 
-	PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-CREATE TABLE `review_comment` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `watch_list_id` varchar(512),
-  `user_email` varchar(512) DEFAULT NULL,
-  `user_name` varchar(512) DEFAULT NULL,
-  `comment` varchar(512) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  CONSTRAINT `watch_list_id` FOREIGN KEY (`id`) REFERENCES `watch_list` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-CREATE TABLE `user` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `user_email` varchar(512),
-  `user_name` varchar(512),
-  `thumbnail` BINARY(255),
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-
-CREATE TABLE `following` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `following_user_name` varchar(512),
-  `following_user_email` varchar(512),
-  `following_thumbnail` BINARY(255),
-  `following_id` INT,
-  `user_id` INT,
-  PRIMARY KEY (`id`),
-  CONSTRAINT `user_id` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-
-CREATE TABLE `follower` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `following_user_name` varchar(512),
-  `following_user_email` varchar(512),
-  `following_thumbnail` BINARY(255),
-  `following_id` INT,
-  `user_id` INT,
-  PRIMARY KEY (`id`),
-  CONSTRAINT `user_id_follower` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 

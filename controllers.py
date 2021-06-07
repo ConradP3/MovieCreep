@@ -33,13 +33,14 @@ from .models import get_user_email, get_time, get_user_name, get_user
 from py4web.utils.form import Form, FormStyleBulma
 from pydal.validators import *
 
-
+# Movie Recommendations
 import pandas as pd
 import numpy as np
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import linear_kernel, cosine_similarity
 import os
 
+# Get movie posters
 import json
 import requests
 import uuid
@@ -311,7 +312,7 @@ def movie_reccomendations():
                         db.watch_list.watch_list_review,
                         distinct=True
                     ) # This gets all movie entries that the user follows for the feed
-    print(movie_rows)
+
     for m in movie_rows:
         link = ''
         plot = ''
@@ -366,6 +367,7 @@ def quick_add(movie_title):
                          watch_list_user_name=get_user_name(),
                          watch_list_time_stamp=get_time(),
                          watch_list_review='',
+                         watch_list_count=0,
                          )
     redirect(URL('index'))
     return 'Movie Quick Added'
