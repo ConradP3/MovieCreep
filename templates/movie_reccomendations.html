@@ -155,7 +155,7 @@
               <div class="dropdown-menu" id="dropdown-menu3" role="menu">
                 <div class="dropdown-content">
                   <div class="dropdown-item">
-                    <p><B>[[=row.recommended[-1] ]]</B></p>
+                    <p><B>[[=row.movie_title]]</B></p>
                     <p><B>Rated: </B>[[=row.rating]]</p>
                     <p><B>Released: </B>[[=row.releasedate]]</p>
                     <p><B>Runtime:</B> [[=row.runtime]]</p>
@@ -201,10 +201,6 @@
 <script>
   let add_movie_url = "[[=XML(add_movie_url)]]";
   let quick_add_movie_url = "[[=XML(quick_add_movie_url)]]";
-  let get_rating_url = "[[=XML(get_rating_url)]]";
-  let set_rating_url = "[[=XML(set_rating_url)]]";
 </script>
 <script src="js/movie_reccomendations.js"></script>
 [[end]]
-
-
