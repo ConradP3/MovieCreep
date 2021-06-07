@@ -10,4 +10,4 @@ Profiles, User Thumbnails, Following/Followers Implementation, Notifications
 
 
 ## Christian Benavidez | chbenavi@ucsc.edu
-
+Movie Reviews, Follower Comments in Movie Watch List and Feed
