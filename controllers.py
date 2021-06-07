@@ -223,15 +223,15 @@ def movie_reccomendations():
         similarities = sorted(list(enumerate(cosine_sim[indices[title]])), key=lambda x: x[1], reverse=True)[1:31]
         movie_indices = [i[0] for i in similarities]
         return titles.iloc[movie_indices]
-  
-    
 
     users_added_movies = db((db.watch_list.watch_list_user_email == get_user_email())).select()
     for movie in users_added_movies:
+        movie['recommended'] = None
         try:
             recommended = get_recommendations(movie['movie_title']).sample()
             recommended_list = recommended.to_list()
             movie['recommended'] = recommended_list
+
 
             link = ''
             plot = ''
@@ -312,8 +312,6 @@ def movie_reccomendations():
                 url_signer=url_signer,
                 quick_add_movie_url = URL('quick_add_movie', signer=url_signer),
                 add_movie_url = URL('add_movie', signer=url_signer),
-                get_rating_url = URL('get_rating', signer=url_signer),
-                set_rating_url = URL('set_rating', signer=url_signer),
                 user_email=get_user_email())
 
 # quick_add_movie: to add a new entry in watch_list of the recommended movie
@@ -326,7 +324,7 @@ def quick_add(movie_title):
                          watch_list_user_email=get_user_email(),
                          watch_list_user_name=get_user_name(),
                          watch_list_time_stamp=get_time(),
-                         watch_list_review=''
+                         watch_list_review='',
                          )
     redirect(URL('index'))
     return 'Movie Quick Added'
@@ -353,6 +351,7 @@ def feed():
                         distinct=True
                     ) # This gets all movie entries that the user follows for the feed
     user_rows = db(db.user.user_email).select() # All users
+    likes_rows = db(db.likes.likes_user_email).select() # All likes
 
     print(movie_rows)
 
@@ -399,19 +398,44 @@ def feed():
         m['comments'] = comment_rows
 
         m['thumbnail'] = None
+        m['recommended'] = None
+
+        m['ratingLike'] = -1
 
         for user in user_rows:
             if user['user_email'] == m['watch_list_user_email']:
                 m['thumbnail'] = user['user_thumbnail']
 
+        for like in likes_rows:
+            if like['likes_movie'] == m['id'] and like['likes_user_email'] == get_user_email():
+                m['ratingLike'] = like['rating']
+
+
     return dict(rows=movie_rows, url_signer=url_signer,
                 add_movie_url = URL('add_movie', signer=url_signer),
                 get_rating_url = URL('get_rating', signer=url_signer),
-                set_rating_url = URL('set_rating', signer=url_signer),
+                set_rating_feed_url = URL('set_rating_feed', signer=url_signer),
                 get_comment_url = URL('get_comment', signer=url_signer),
                 get_comments_url = URL('get_comments', signer=url_signer),
                 post_comment_url = URL('post_comment', signer=url_signer),
                 user_email=get_user_email())
+
+@action('set_rating_feed/<id:int>/<rating:int>',  method=["GET", "POST"])
+@action.uses(url_signer.verify(), db, auth.user)
+def set_rating_feed(id, rating):
+    """Sets the rating for movie."""
+    assert id is not None and rating is not None
+    # db(db.likes).delete()
+    db((db.likes.likes_movie == id) & (db.likes.likes_user_email == get_user_email()) ).delete()
+
+    db.likes.update_or_insert(
+        likes_movie=id,
+        rating=rating,
+        likes_liker=get_user(),
+        likes_name=get_user_name(),
+        likes_user_email=get_user_email,
+    )
+    redirect(URL('feed'))
 
 
 # #######################################################

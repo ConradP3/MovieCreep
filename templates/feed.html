@@ -62,14 +62,34 @@
 
             <div class="block">
               <p>[[if row.watch_list_watched:]]Seen: [[=row.watch_list_date]][[else:]]Not Seen[[pass]]</p>
-<!--            <span @mouseout="stars_out(img._idx)">
-              <span @mouseover="stars_over(img._idx, star_idx)"
-                    @click="set_stars(img._idx, star_idx)"
-                    v-for="star_idx in [1, 2, 3, 4, 5]">
-                <i v-if="star_idx <= img.num_stars_display" class="fa fa-star"></i>
-                <i v-if="star_idx > img.num_stars_display" class="fa fa-star-o"></i>
+          <!-- Thumbs up -->
+          [[if row.ratingLike == 1: ]]
+          <a class='button is-light' href="[[=URL('set_rating_feed', row.id, -1, signer=url_signer)]]" >
+            <span>
+              <i class="fa fa-thumbs-up fa-lg is-size-4" style="color: #0099CC;"></i>
+            </span>
+          </a>
+          [[elif row.ratingLike ==0 or row.ratingLike==-1 or row.ratingLike==None: ]]
+          <a class='button is-light' href="[[=URL('set_rating_feed', row.id, 1, signer=url_signer)]]">
+            <span>
+              <i class="fa fa-thumbs-o-up fa-lg is-size-4"  style="color: #0099CC;"></i>
+            </span>
+          </a>
+          [[pass]]
+      <!-- Thumbs Down -->
+             [[if row.ratingLike == 0: ]]
+            <a class='button is-light' href="[[=URL('set_rating_feed', row.id, -1, signer=url_signer)]]" >
+                <span>
+                <i class="fa fa-thumbs-down fa-lg is-size-4" style="color: #0099CC;"></i>
               </span>
-            </span> -->
+            </a>
+            [[elif row.ratingLike ==1 or row.ratingLike==-1 or row.ratingLike==None: ]]
+            <a class='button is-light' href="[[=URL('set_rating_feed', row.id, 0, signer=url_signer)]]">
+              <span>
+              <i class="fa fa-thumbs-o-down fa-lg is-size-4"  style="color: #0099CC;"></i>
+            </span>
+          </a>
+            [[pass]]
             </div>
           </div> <!-- End of  movie info tile -->
 
@@ -167,7 +187,7 @@
 <script>
   let add_movie_url = "[[=XML(add_movie_url)]]";
   let get_rating_url = "[[=XML(get_rating_url)]]";
-  let set_rating_url = "[[=XML(set_rating_url)]]";
+  let set_rating_feed_url = "[[=XML(set_rating_feed_url)]]";
   let get_comment_url = "[[=XML(get_comment_url)]]";
   let get_comments_url = "[[=XML(get_comments_url)]]";
   let post_comment_url = "[[=XML(post_comment_url)]]";
