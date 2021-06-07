@@ -61,6 +61,7 @@ def index():
     movie_rows = db((db.watch_list.watch_list_user_email == get_user_email())).select()
     user_rows = db(db.user.user_email).select() # All users
     likes_rows = db(db.likes.likes_user_email).select() # All likes
+    following_rows = db(db.following.following_user_email).select() # All users following
     for m in movie_rows:
         link = ''
         plot = ''
@@ -117,6 +118,9 @@ def index():
         for like in likes_rows:
             if like['likes_user_email'] == m['watch_list_user_email'] and like['likes_movie'] == m['id']:
                 m['ratingLike'] = like['rating']
+        for follower in following_rows:
+            if follower['following_user_email'] == m['watch_list_user_email']:
+                m['following_id'] = follower['following_id']
 
 
 
@@ -224,6 +228,8 @@ def movie_reccomendations():
         movie_indices = [i[0] for i in similarities]
         return titles.iloc[movie_indices]
 
+
+    following_rows = db(db.following.following_user_email).select() # All users following
     users_added_movies = db((db.watch_list.watch_list_user_email == get_user_email())).select()
     for movie in users_added_movies:
         movie['recommended'] = None
@@ -273,7 +279,19 @@ def movie_reccomendations():
 
      
 
-    movie_rows = db((db.watch_list.watch_list_user_email != get_user_email())).select()
+    movie_rows = db( (db.watch_list.watch_list_user_email == (db.following.following_user_email) ) |
+                    (db.watch_list.watch_list_user_email == get_user_email)
+                    ).select(
+                        db.watch_list.id,
+                        db.watch_list.movie_title,
+                        db.watch_list.watch_list_watched,
+                        db.watch_list.watch_list_date,
+                        db.watch_list.watch_list_user_email,
+                        db.watch_list.watch_list_user_name,
+                        db.watch_list.watch_list_time_stamp,
+                        db.watch_list.watch_list_review,
+                        distinct=True
+                    ) # This gets all movie entries that the user follows for the feed
     print(movie_rows)
     for m in movie_rows:
         link = ''
@@ -303,6 +321,10 @@ def movie_reccomendations():
         m['rating'] = rating
         m['runtime'] = runtime
         m['plot'] = plot
+
+        for follower in following_rows:
+            if follower['following_user_email'] == m['watch_list_user_email']:
+                m['following_id'] = follower['following_id']
 
 
 
@@ -350,8 +372,10 @@ def feed():
                         db.watch_list.watch_list_review,
                         distinct=True
                     ) # This gets all movie entries that the user follows for the feed
+
     user_rows = db(db.user.user_email).select() # All users
     likes_rows = db(db.likes.likes_user_email).select() # All likes
+    following_rows = db(db.following.following_user_email).select() # All users following
 
     print(movie_rows)
 
@@ -402,6 +426,8 @@ def feed():
 
         m['ratingLike'] = -1
 
+        m['following_id'] = get_user()
+
         for user in user_rows:
             if user['user_email'] == m['watch_list_user_email']:
                 m['thumbnail'] = user['user_thumbnail']
@@ -409,6 +435,10 @@ def feed():
         for like in likes_rows:
             if like['likes_movie'] == m['id'] and like['likes_user_email'] == get_user_email():
                 m['ratingLike'] = like['rating']
+
+        for follower in following_rows:
+            if follower['following_user_email'] == m['watch_list_user_email']:
+                m['following_id'] = follower['following_id']
 
 
     return dict(rows=movie_rows, url_signer=url_signer,
@@ -640,16 +670,76 @@ def goto_user(id=None):
         user_name = r['user_name']
         #print(user_name)
         thumbnail = r['user_thumbnail']
-    movierows = db(db.watch_list.watch_list_user_email == email).select()
-    #print(movierows)
-    movie_count = len(movierows)
+    movie_rows = db(db.watch_list.watch_list_user_email == email).select()
+    movie_count = len(movie_rows)
     follower_count = len(db(db.follower.reference == id).select().as_list())
     following_count = len(db(db.following.reference == id).select().as_list())
 
-    return dict(user_name = user_name, user_email = email, thumbnail = thumbnail,
+    user_rows = db(db.user.user_email).select() # All users
+    likes_rows = db(db.likes.likes_user_email).select() # All likes
+    for m in movie_rows:
+        link = ''
+        plot = ''
+        runtime = ''
+        rating = ''
+        releasedate = ''
+        imdbrating = ''
+        genre = ''
+
+        url = 'http://www.omdbapi.com/?t=' + str(m['movie_title']) + '&apikey=' + apikeys[random.randint(0,len(apikeys)-1)]
+        movie_data = requests.get(url).json()
+        # Check for this or else user's account can get bricked
+        if movie_data['Response'] != "False":
+            link += str(movie_data['Poster'])
+            plot += str(movie_data['Plot'])
+            runtime += str(movie_data['Runtime'])
+            rating += str(movie_data['Rated'])
+            releasedate += str(movie_data['Released'])
+            # imdbrating += str(movie_data['imdbRating'])
+            genre += str(movie_data['Genre'])
+        else:
+            plot += "Movie not found when attempting to contact omdbapi"
+        m['link'] = link
+        m['genre'] = genre
+        # m['imdbrating'] = imdbrating
+        m['releasedate'] = releasedate
+        m['rating'] = rating
+        m['runtime'] = runtime
+        m['plot'] = plot
+
+        # Get the review comments for the movie
+        comment_rows = db(db.review_comment.watch_list_id == m['id']).select()
+        # Also get the profile pictures
+        for comment in comment_rows:
+            user_row = db(db.user.user_email == comment['user_email']).select().first()
+            thumbnail_link = user_row['user_thumbnail']
+            if thumbnail_link == None:
+                thumbnail_link == "https://www.jing.fm/clipimg/detail/195-1952632_account-customer-login-man-user-icon-login-icon.png"
+            comment['thumbnail'] = thumbnail_link
+        m['comments'] = comment_rows
+
+        m['thumbnail'] = None
+        m['ratingLike'] = -1
+
+        # https://api.themoviedb.org/3/movie/550?api_key=fa5fa1a7dd403108f2c44bf79fca3f2f
+
+        # https://image.tmdb.org/t/p/w500/pB8BM7pdSp6B6Ih7QZ4DrQ3PmJK.jpg
+        # http://www.omdbapi.com/?t=interstellar&apikey=2710f070
+        for user in user_rows:
+            if user['user_email'] == m['watch_list_user_email']:
+                m['thumbnail'] = user['user_thumbnail']
+
+        for like in likes_rows:
+            if like['likes_user_email'] == m['watch_list_user_email'] and like['likes_movie'] == m['id']:
+                m['ratingLike'] = like['rating']
+
+    return dict(user_name = user_name, 
+                user_email = email, 
+                thumbnail = thumbnail,
                 movie_count = movie_count,
                 follower_count=follower_count, following_count=following_count,
-                rows = movierows)
+                rows = movie_rows,
+                url_signer=url_signer)
 
 
 
