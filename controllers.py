@@ -336,14 +336,26 @@ def quick_add(movie_title):
 # Feed
 # #######################################################
 # TODO
-# 1. Find a way to show only friends list's added movies with a timestamp similar to Twitter
 @action('feed')
 @action.uses(db, auth.user, 'feed.html')
 def feed():
-    movie_rows = db(db.watch_list.watch_list_user_email).select() # This gets all movie entries
-    #movie_rows = db(db.watch_list).select() # This gets all movie entries
+    movie_rows = db( (db.watch_list.watch_list_user_email == (db.following.following_user_email) ) |
+                    (db.watch_list.watch_list_user_email == get_user_email)
+                    ).select(
+                        db.watch_list.id,
+                        db.watch_list.movie_title,
+                        db.watch_list.watch_list_watched,
+                        db.watch_list.watch_list_date,
+                        db.watch_list.watch_list_user_email,
+                        db.watch_list.watch_list_user_name,
+                        db.watch_list.watch_list_time_stamp,
+                        db.watch_list.watch_list_review,
+                        distinct=True
+                    ) # This gets all movie entries that the user follows for the feed
     user_rows = db(db.user.user_email).select() # All users
-    # print(movie_rows)
+
+    print(movie_rows)
+
     for m in movie_rows:
         link = ''
         plot = ''
@@ -392,8 +404,6 @@ def feed():
             if user['user_email'] == m['watch_list_user_email']:
                 m['thumbnail'] = user['user_thumbnail']
 
-
-    print(movie_rows)
     return dict(rows=movie_rows, url_signer=url_signer,
                 add_movie_url = URL('add_movie', signer=url_signer),
                 get_rating_url = URL('get_rating', signer=url_signer),
@@ -408,7 +418,7 @@ def feed():
 # Notifications
 # #######################################################
 # TODO
-# 1. Friend added/removed notification
+# 1. Friend added/removed notification XXX
 # 2. Settings to show or not show friends added movies
 @action('notifications')
 @action.uses(db, auth.user, 'notifications.html')
@@ -434,7 +444,7 @@ def delete_notification(notifications_id=None):
 # Profile
 # #######################################################
 # TODO
-# 1. Find a way to display list of all friends
+# 1. Find a way to display list of all friends XXX
 @action('profile')
 @action.uses(db, auth.user, 'profile.html')
 def profile():

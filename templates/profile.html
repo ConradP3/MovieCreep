@@ -4,6 +4,9 @@
   [v-cloak] {
     display: none;
   }
+.rounded {
+    border-radius: 50%;
+}
 </style>
 
 
@@ -43,7 +46,7 @@
                     </p>
                   </div>
 
-                  <img v-if="r.user_thumbnail" width="50" :src="r.user_thumbnail" />
+                  <img class='rounded' v-if="r.user_thumbnail" width="50" :src="r.user_thumbnail" />
 
 
                 </td>
@@ -80,7 +83,7 @@
 
     <h2 class="title is-6 is-spaced">Following ([[=following_count]])
         <div class = "control block">
-        <table class="table is-fullwidth ">
+        <table class="table is-fullwidth is-striped">
             <tr>
                 <th></th>
                 <th>Profile Picture</th>
@@ -93,7 +96,7 @@
                 </td>
                 <td>
                     <!-- Profile Pic -->
-                    <img v-if="r.following_thumbnail" width="50" :src="r.following_thumbnail" />
+                    <img class='rounded' v-if="r.following_thumbnail" width="50" :src="r.following_thumbnail" />
 
                 </td>
                 <td>
@@ -114,7 +117,7 @@
 
     <h2 class="title is-6 is-spaced">Followers ([[=follower_count]])
         <div class = "control block">
-        <table class="table is-fullwidth ">
+        <table class="table is-fullwidth is-striped">
             <tr>
                 <th></th>
                 <th>Profile Picture</th>
@@ -127,7 +130,7 @@
                 </td>
                 <td>
                     <!-- Profile Pic -->
-                    <img v-if="r.follower_thumbnail" width="50" :src="r.follower_thumbnail" />
+                    <img class='rounded' v-if="r.follower_thumbnail" width="50" :src="r.follower_thumbnail" />
                 </td>
                 <td>
                     <!-- Name -->
