@@ -6,7 +6,7 @@ After watching a movie the user can add it to their movies watch list, or if the
 ## Core Functionality
 
 ### Movie Watch List
-
+This page serves as the home page for users as it consists of all the movies a user has added to track particular movies they have watched or to add movies they plan to watch. At first, the page appears blank, with only a button to Add New Movie. Once clicked, the user is taken to a form asking for information about the movie the user is trying to add. These fields include Movie Title, Watched, Watch List Date, Your Movie Review, and Watch List Count. After submission, the page is reloaded to the original Movie Watch List, now with the addition of the movie the user just added
 
 ### Feed
 
