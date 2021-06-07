@@ -114,6 +114,22 @@ let init = (app) => {
         });
     };
 
+    app.delete_following = function(row_idx) {
+        //console.log(r.user_email);
+        //let email = r.user_email
+        //console.log(email);
+        let id = app.vue.followingrows[row_idx].id;
+        axios.get(delete_following_url, {params: {id: id}}).then(function (response) {
+            for(let i=0; i < app.vue.followingrows.length; i++) {
+                if(app.vue.followingrows[i].id == id) {
+                    app.vue.followingrows.splice(i, 1);
+                    app.enumerate(app.vue.followingrows);
+                    break;
+                }
+            }
+        });
+    };
+
 
 
     // This contains all the methods.
@@ -123,6 +139,7 @@ let init = (app) => {
         search: app.search,
         add_following: app.add_following,
         delete_thumbnail: app.delete_thumbnail,
+        delete_following: app.delete_following,
     };
 
     // This creates the Vue instance.

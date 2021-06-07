@@ -462,6 +462,7 @@ def profile():
                 search_url=URL('search_friends', signer=url_signer),
                 add_following_url=URL('add_following', signer=url_signer),
                 delete_thumbnail_url=URL('delete_thumbnail', signer=url_signer),
+                delete_following_url=URL('delete_following', signer=url_signer),
                 following_count=following_count,
                 follower_count=follower_count)
 
@@ -591,7 +592,13 @@ def delete_thumbnail():
     redirect(URL('profile'))
     return "ok"
 
-
+@action('delete_following')
+@action.uses(db, auth.user, url_signer.verify())
+def delete_following():
+    id = request.params.get('id')
+    assert id is not None
+    db(db.following.id == id).delete()
+    return "ok"
 
 # get an individual comment for a user given the movie listing id
 # there's only one comment per user on a given movie listing id so this is ok
