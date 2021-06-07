@@ -19,6 +19,9 @@ let init = (app) => {
         userrows: [],
         followingrows: [],
         followerrows: [],
+
+
+        view_mode: -1,
     };
 
     // This is the file selected for upload.
@@ -133,6 +136,10 @@ let init = (app) => {
     };
 
 
+    // Toggle  view
+    app.set_view = function (new_status) {
+        app.vue.view_mode = new_status;
+    };
 
     // This contains all the methods.
     app.methods = {
@@ -142,6 +149,8 @@ let init = (app) => {
         add_following: app.add_following,
         delete_thumbnail: app.delete_thumbnail,
         delete_following: app.delete_following,
+
+        set_view: app.set_view,
     };
 
     // This creates the Vue instance.

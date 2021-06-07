@@ -511,6 +511,64 @@ def profile():
                    user_email = get_user_email(),
                    user_id = auth.current_user.get('id'))
 
+    user_rows = db(db.user.user_email).select() # All users
+    likes_rows = db(db.likes.likes_user_email).select() # All likes
+    for m in movie_rows:
+        link = ''
+        plot = ''
+        runtime = ''
+        rating = ''
+        releasedate = ''
+        imdbrating = ''
+        genre = ''
+
+        url = 'http://www.omdbapi.com/?t=' + str(m['movie_title']) + '&apikey=' + apikeys[random.randint(0,len(apikeys)-1)]
+        movie_data = requests.get(url).json()
+        # Check for this or else user's account can get bricked
+        if movie_data['Response'] != "False":
+            link += str(movie_data['Poster'])
+            plot += str(movie_data['Plot'])
+            runtime += str(movie_data['Runtime'])
+            rating += str(movie_data['Rated'])
+            releasedate += str(movie_data['Released'])
+            # imdbrating += str(movie_data['imdbRating'])
+            genre += str(movie_data['Genre'])
+        else:
+            plot += "Movie not found when attempting to contact omdbapi"
+        m['link'] = link
+        m['genre'] = genre
+        # m['imdbrating'] = imdbrating
+        m['releasedate'] = releasedate
+        m['rating'] = rating
+        m['runtime'] = runtime
+        m['plot'] = plot
+
+        # Get the review comments for the movie
+        comment_rows = db(db.review_comment.watch_list_id == m['id']).select()
+        # Also get the profile pictures
+        for comment in comment_rows:
+            user_row = db(db.user.user_email == comment['user_email']).select().first()
+            thumbnail_link = user_row['user_thumbnail']
+            if thumbnail_link == None:
+                thumbnail_link == "https://www.jing.fm/clipimg/detail/195-1952632_account-customer-login-man-user-icon-login-icon.png"
+            comment['thumbnail'] = thumbnail_link
+        m['comments'] = comment_rows
+
+        m['thumbnail'] = None
+        m['ratingLike'] = -1
+
+        # https://api.themoviedb.org/3/movie/550?api_key=fa5fa1a7dd403108f2c44bf79fca3f2f
+
+        # https://image.tmdb.org/t/p/w500/pB8BM7pdSp6B6Ih7QZ4DrQ3PmJK.jpg
+        # http://www.omdbapi.com/?t=interstellar&apikey=2710f070
+        for user in user_rows:
+            if user['user_email'] == m['watch_list_user_email']:
+                m['thumbnail'] = user['user_thumbnail']
+
+        for like in likes_rows:
+            if like['likes_user_email'] == m['watch_list_user_email'] and like['likes_movie'] == m['id']:
+                m['ratingLike'] = like['rating']
+
     return dict(load_user_url=URL('load_user', signer=url_signer),
                 load_following_url=URL('load_following', signer=url_signer),
                 load_follower_url=URL('load_follower', signer=url_signer),
@@ -520,6 +578,7 @@ def profile():
                 delete_thumbnail_url=URL('delete_thumbnail', signer=url_signer),
                 delete_following_url=URL('delete_following', signer=url_signer),
                 movie_count = movie_count,
+                rows=movie_rows,
                 follower_count=follower_count, following_count=following_count,)
 
 #intialize user database in profile.js: load_user_url
