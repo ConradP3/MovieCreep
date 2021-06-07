@@ -71,7 +71,7 @@
           <input class = "input" type="text" v-model="query" @keyup="search" placeholder="Search for Friends (by email)" style="width: 500px;"/>
         </div>
         <div v-for ="r in results">
-            <button @click="add_following(r)" class="button is-success is-light is-hoverable" >
+            <button @click="add_following(r)" onClick="window.location.reload();" class="button is-success is-light is-hoverable" >
                     <i class="fa fa-plus fa-fw"></i> {{r.first_name + " " + r.last_name + ", " + r.email}}
             </button>
 
