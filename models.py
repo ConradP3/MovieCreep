@@ -76,7 +76,7 @@ db.define_table(
     'user',
     Field('user_name', default=get_user),
     Field('user_email', default=get_user_email),
-    Field('user_id', default = get_user),
+    Field('user_id', default = get_user), #auth.user.id for this user
     Field('user_thumbnail', default=None)
 )
 
@@ -86,7 +86,7 @@ db.define_table(
     Field('following_user_name'),
     Field('following_user_email'),
     Field('following_thumbnail'),
-    Field('following_id'),
+    Field('following_id'), #auth.user.id for this user
     Field('reference')
 )
 
@@ -95,7 +95,7 @@ db.define_table(
     Field('follower_user_name'),
     Field('follower_user_email'),
     Field('follower_thumbnail'),
-    Field('follower_id'),
+    Field('follower_id'), #auth.user.id for this user
     Field('reference')
 )
 

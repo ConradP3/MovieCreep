@@ -604,6 +604,7 @@ def add_following():
     redirect(URL('profile'))
     return "ok"
 
+#delete profile picture API
 @action('delete_thumbnail', method="POST")
 @action.uses(db, auth.user, url_signer.verify())
 def delete_thumbnail():
@@ -616,6 +617,7 @@ def delete_thumbnail():
     redirect(URL('profile'))
     return "ok"
 
+#unfollow API
 @action('delete_following')
 @action.uses(db, auth.user, url_signer.verify())
 def delete_following():
@@ -623,6 +625,35 @@ def delete_following():
     assert id is not None
     db(db.following.id == id).delete()
     return "ok"
+
+#gos to a different user's profile page
+@action('goto_user/<id:int>')
+@action.uses(db, auth.user, 'goto_user.html')
+def goto_user(id=None):
+    assert id is not None
+    userrows = db(db.user.user_id == id).select().as_list()
+    for r in userrows:
+        #print(r)
+        #print(r['user_email'])
+        email = r['user_email']
+        #print(email)
+        user_name = r['user_name']
+        #print(user_name)
+        thumbnail = r['user_thumbnail']
+    movierows = db(db.watch_list.watch_list_user_email == email).select()
+    #print(movierows)
+    movie_count = len(movierows)
+    follower_count = len(db(db.follower.reference == id).select().as_list())
+    following_count = len(db(db.following.reference == id).select().as_list())
+
+    return dict(user_name = user_name, user_email = email, thumbnail = thumbnail,
+                movie_count = movie_count,
+                follower_count=follower_count, following_count=following_count,
+                rows = movierows)
+
+
+
+
 
 # get an individual comment for a user given the movie listing id
 # there's only one comment per user on a given movie listing id so this is ok

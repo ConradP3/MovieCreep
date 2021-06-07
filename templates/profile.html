@@ -96,16 +96,19 @@
                 <th></th>
             </tr>
             <tr v-for="r in followingrows">
+
                 <td>
                 </td>
                 <td>
                     <!-- Profile Pic -->
-                    <img class='rounded' v-if="r.following_thumbnail" width="50" :src="r.following_thumbnail" />
-
+                        <img class='rounded' v-if="r.following_thumbnail" width="50" :src="r.following_thumbnail" />
                 </td>
                 <td>
                     <!-- Name -->
-                   {{r.following_user_name}}
+                    <a :href="'[[=URL('goto_user') ]]' + '/' + r.following_id">
+                      <i> {{r.following_user_name}} </i>
+                    </a>
+
                 </td>
                 <td>
                     <!-- Email -->
@@ -116,6 +119,7 @@
                         Unfollow
                     </button>
                 </td>
+
             </tr>
         </table>
         </div>
@@ -143,7 +147,10 @@
                 </td>
                 <td>
                     <!-- Name -->
-                    {{r.follower_user_name}}
+                     <a :href="'[[=URL('goto_user') ]]' + '/' + r.follower_id">
+                         <i> {{r.follower_user_name}} </i>
+                     </a>
+
                 </td>
                 <td>
                     <!-- Email -->

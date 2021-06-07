@@ -1,0 +1,83 @@
+[[extend 'layout.html']]
+
+<style>
+  [v-cloak] {
+    display: none;
+  }
+.rounded {
+    border-radius: 50%;
+}
+</style>
+
+    <div class="section">
+        <div class="columns">
+            <div class="column">
+                <figure class="image is-128x128 is-pulled-right">
+                    <img class="is-rounded" src=[[=thumbnail]]>
+                </figure>
+            </div>
+            <div class="column">
+                <h1 class="title is-spaced">[[=user_name]]</h1>
+
+                <h2 class="title is-6 is-spaced">[[=user_email]]</h2>
+            </div>
+            <div class="column"></div>
+            <div class="column"></div>
+        </div>
+        <br />
+
+        <nav class="level">
+            <div class="level-item has-text-centered">
+              <div>
+                <p class="heading">Movies Watched</p>
+                <p class="title">[[=movie_count]]</p>
+              </div>
+            </div>
+            <div class="level-item has-text-centered">
+              <div>
+                <p class="heading">Following</p>
+                <p class="title">[[=following_count]]</p>
+              </div>
+            </div>
+            <div class="level-item has-text-centered">
+              <div>
+                <p class="heading">Followers</p>
+                <p class="title">[[=follower_count]]</p>
+              </div>
+            </div>
+      </nav>
+
+       <table class="table is-fullwidth is-striped">
+            <tr>
+                <th></th>
+                <th>Movie Title</th>
+                <th>Date Watched</th>
+                <th>Review</th>
+                <th></th>
+            </tr>
+           [[for r in rows:]]
+            <tr>
+                <td>
+                </td>
+                <td>
+                    [[=r.movie_title]]
+                </td>
+                <td>
+                    [[=r.watch_list_date]]
+                </td>
+                <td>
+                    [[=r.watch_list_review]]
+                </td>
+                <td>
+                </td>
+            </tr>
+           [[pass]]
+        </table>
+
+    </div>
+
+
+
+
+
+
