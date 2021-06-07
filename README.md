@@ -16,6 +16,7 @@ Most Watched movies at top, takes into account user's added movies and display w
 
 ## Data Sources
 - [OMDBb API](http://omdbapi.com/) RESTful web service to obtain movie information, over 280,000 images
+- [The Movies Dataset](https://www.kaggle.com/rounakbanik/the-movies-dataset) Metadata for movies listed in the Full MovieLens Dataset. (Kaggle)
 
 
 

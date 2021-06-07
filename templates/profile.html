@@ -4,161 +4,174 @@
   [v-cloak] {
     display: none;
   }
-.rounded {
+
+  .rounded {
     border-radius: 50%;
-}
+  }
 </style>
 
 
 <div class="section" id="vue-target" v-cloak>
-
-  <h1 class="title">Profile</h1>
-    <h2 class="title is-6 is-spaced">My Info
-
-
-        <table class="table is-fullwidth ">
-            <tr>
-                <th></th>
-                <th>Profile Picture</th>
-                <th>User Name </th>
-                <th>User Email</th>
-                <th></th>
-            </tr>
-            <tr v-for="r in userrows">
-                <td>
-                </td>
-                <td>
-
-                    <div v-if="!r.user_thumbnail">
-                    <p class="control">
-                      <div class="file is-info">
-                        <label class="file-label">
-                          <input class="file-input" type="file"
-                                 accept=".jpg, .png, .jpeg, .gif, .bmp, .tif, .tiff|image/*"
-                                 @change="upload_file($event, r._idx)">
-                          <span class="file-cta">
-                            <span class="file-label">
-                              <span><i class="fa fa-upload"></i></span>
-                            </span>
-                          </span>
-                        </label>
-                      </div>
-                    </p>
-                  </div>
+  <div v-for="r in userrows">
+    <div class="columns">
+      <div class="column">
+        <figure class="image is-128x128 is-pulled-right">
+          <div v-if="!r.user_thumbnail">
+            <p class="control">
+            <div class="file is-info">
+              <label class="file-label">
+                <input class="file-input" type="file" accept=".jpg, .png, .jpeg, .gif, .bmp, .tif, .tiff|image/*"
+                  @change="upload_file($event, r._idx)">
+                <span class="file-cta">
+                  <span class="file-label">
+                    <span><i class="fa fa-upload"></i></span>
+                  </span>
+                </span>
+              </label>
+            </div>
+            </p>
+          </div>
 
 
-                    <div v-if="r.user_thumbnail">
-                       <img class='rounded' width="50" :src="r.user_thumbnail"/>
-                        <button @click="delete_thumbnail(r)" class="delete is-medium">
-                        </button>
-                    </div>
+          <div v-if="r.user_thumbnail">
+            <img class='rounded' width="50" :src="r.user_thumbnail" />
+            <button @click="delete_thumbnail(r)" class="delete is-medium">
+            </button>
+          </div>
+        </figure>
+      </div>
+      <div class="column">
+        <h1 class="title is-spaced">{{r.user_name}}</h1>
 
-                </td>
-                <td>
-                    {{r.user_name}}
-                </td>
-                <td>
-                    {{r.user_email}}
-                </td>
-            </tr>
-        </table>
+        <h2 class="title is-6 is-spaced">{{r.user_email}}</h2>
+      </div>
+      <div class="column"></div>
+      <div class="column"></div>
+    </div>
+    <br />
+
+    <nav class="level">
+      <div class="level-item has-text-centered">
+        <div>
+          <p class="heading">Movies Watched</p>
+          <p class="title">[[=movie_count]]</p>
+        </div>
+      </div>
+      <div class="level-item has-text-centered">
+        <div>
+          <p class="heading">Following</p>
+          <p class="title">[[=following_count]]</p>
+        </div>
+      </div>
+      <div class="level-item has-text-centered">
+        <div>
+          <p class="heading">Followers</p>
+          <p class="title">[[=follower_count]]</p>
+        </div>
+      </div>
+    </nav>
+
+
+
 
     </h2>
 
 
-      <h2>Add Friends
-        <div class = "control block">
-          <input class = "input" type="text" v-model="query" @keyup="search" placeholder="Search for Friends (by email)" style="width: 500px;"/>
-        </div>
-        <div v-for ="r in results">
-            <button @click="add_following(r)" onClick="window.location.reload();" class="button is-success is-light is-hoverable" >
-                    <i class="fa fa-plus fa-fw"></i> {{r.first_name + " " + r.last_name + ", " + r.email}}
-            </button>
+    <h2>Add Friends
+      <div class="control block">
+        <input class="input" type="text" v-model="query" @keyup="search" placeholder="Search for Friends (by email)"
+          style="width: 500px;" />
+      </div>
+      <div v-for="r in results">
+        <button @click="add_following(r)" onClick="window.location.reload();"
+          class="button is-success is-light is-hoverable">
+          <i class="fa fa-plus fa-fw"></i> {{r.first_name + " " + r.last_name + ", " + r.email}}
+        </button>
 
-        </div>
-      </h2>
+      </div>
+    </h2>
 
     <br />
 
-  </h3>
-  </h2>
+    </h3>
+    </h2>
 
-  <br />
+    <br />
 
     <h2 class="title is-6 is-spaced">Following ([[=following_count]])
-        <div class = "control block">
+      <div class="control block">
         <table class="table is-fullwidth is-striped">
-            <tr>
-                <th></th>
-                <th>Profile Picture</th>
-                <th>User Name </th>
-                <th>User Email</th>
-                <th></th>
-            </tr>
-            <tr v-for="r in followingrows">
+          <tr>
+            <th></th>
+            <th>Profile Picture</th>
+            <th>User Name </th>
+            <th>User Email</th>
+            <th></th>
+          </tr>
+          <tr v-for="r in followingrows">
 
-                <td>
-                </td>
-                <td>
-                    <!-- Profile Pic -->
-                        <img class='rounded' width="50" :src="r.following_thumbnail" />
-                </td>
-                <td>
-                    <!-- Name -->
-                    <a :href="'[[=URL('goto_user') ]]/' + r.following_id">
-                      <i> {{r.following_user_name}} </i>
-                    </a>
+            <td>
+            </td>
+            <td>
+              <!-- Profile Pic -->
+              <img class='rounded' width="50" :src="r.following_thumbnail" />
+            </td>
+            <td>
+              <!-- Name -->
+              <a :href="'[[=URL('goto_user') ]]/' + r.following_id">
+                <i> {{r.following_user_name}} </i>
+              </a>
 
-                </td>
-                <td>
-                    <!-- Email -->
-                  {{r.following_user_email}}
-                </td>
-                <td>
-                    <button @click="delete_following(r._idx)" class="button is-light">
-                        Unfollow
-                    </button>
-                </td>
+            </td>
+            <td>
+              <!-- Email -->
+              {{r.following_user_email}}
+            </td>
+            <td>
+              <button @click="delete_following(r._idx)" class="button is-light">
+                Unfollow
+              </button>
+            </td>
 
-            </tr>
+          </tr>
         </table>
-        </div>
+      </div>
     </h2>
 
     <br />
 
 
     <h2 class="title is-6 is-spaced">Followers ([[=follower_count]])
-        <div class = "control block">
+      <div class="control block">
         <table class="table is-fullwidth is-striped">
-            <tr>
-                <th></th>
-                <th>Profile Picture</th>
-                <th>User Name </th>
-                <th>User Email</th>
-                <th></th>
-            </tr>
-            <tr v-for="r in followerrows">
-                <td>
-                </td>
-                <td>
-                    <!-- Profile Pic -->
-                    <img class='rounded' width="50" :src="r.follower_thumbnail" />
-                </td>
-                <td>
-                    <!-- Name -->
-                     <a :href="'[[=URL('goto_user') ]]' + '/' + r.follower_id">
-                         <i> {{r.follower_user_name}} </i>
-                     </a>
+          <tr>
+            <th></th>
+            <th>Profile Picture</th>
+            <th>User Name </th>
+            <th>User Email</th>
+            <th></th>
+          </tr>
+          <tr v-for="r in followerrows">
+            <td>
+            </td>
+            <td>
+              <!-- Profile Pic -->
+              <img class='rounded' width="50" :src="r.follower_thumbnail" />
+            </td>
+            <td>
+              <!-- Name -->
+              <a :href="'[[=URL('goto_user') ]]' + '/' + r.follower_id">
+                <i> {{r.follower_user_name}} </i>
+              </a>
 
-                </td>
-                <td>
-                    <!-- Email -->
-                    {{r.follower_user_email}}
-                </td>
-            </tr>
+            </td>
+            <td>
+              <!-- Email -->
+              {{r.follower_user_email}}
+            </td>
+          </tr>
         </table>
-        </div>
+      </div>
     </h2>
 
 
@@ -176,12 +189,12 @@
 
 
 
-</div>
+  </div>
 
 
-[[block page_scripts]]
-<!-- Loads the index-specific js for Vue -->
-<script>
+  [[block page_scripts]]
+  <!-- Loads the index-specific js for Vue -->
+  <script>
     let load_user_url = "[[=XML(load_user_url)]]";
     let load_following_url = "[[=XML(load_following_url)]]";
     let load_follower_url = "[[=XML(load_follower_url)]]";
@@ -190,6 +203,6 @@
     let add_following_url = "[[=XML(add_following_url)]]";
     let delete_thumbnail_url = "[[=XML(delete_thumbnail_url)]]";
     let delete_following_url = "[[=XML(delete_following_url)]]";
-</script>
-<script src="js/profile.js"></script>
-[[end]]
+  </script>
+  <script src="js/profile.js"></script>
+  [[end]]

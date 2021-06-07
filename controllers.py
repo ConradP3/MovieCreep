@@ -223,6 +223,7 @@ def movie_reccomendations():
     indices = pd.Series(movieData.index, index=movieData['title'])
 
     # Get similar movies based on description of movie added to user profile
+    # https://www.kaggle.com/rounakbanik/movie-recommender-systems/notebook?select=movies_metadata.csv
     def get_recommendations(title):
         similarities = sorted(list(enumerate(cosine_sim[indices[title]])), key=lambda x: x[1], reverse=True)[1:31]
         movie_indices = [i[0] for i in similarities]
@@ -502,12 +503,13 @@ def delete_notification(notifications_id=None):
 @action('profile')
 @action.uses(db, auth.user, 'profile.html')
 def profile():
-
+    movie_rows = db(db.watch_list.watch_list_user_email == get_user_email()).select()
+    movie_count = len(movie_rows)
+    follower_count = len(db(db.follower.reference == get_user).select().as_list())
+    following_count = len(db(db.following.reference == get_user).select().as_list())
     db.user.update_or_insert(user_name = auth.current_user.get('first_name') + " " + auth.current_user.get('last_name'),
                    user_email = get_user_email(),
                    user_id = auth.current_user.get('id'))
-    follower_count = len(db(db.follower.reference == auth.current_user.get('id')).select().as_list())
-    following_count = len(db(db.following.reference == auth.current_user.get('id')).select().as_list())
 
     return dict(load_user_url=URL('load_user', signer=url_signer),
                 load_following_url=URL('load_following', signer=url_signer),
@@ -517,8 +519,8 @@ def profile():
                 add_following_url=URL('add_following', signer=url_signer),
                 delete_thumbnail_url=URL('delete_thumbnail', signer=url_signer),
                 delete_following_url=URL('delete_following', signer=url_signer),
-                following_count=following_count,
-                follower_count=follower_count)
+                movie_count = movie_count,
+                follower_count=follower_count, following_count=following_count,)
 
 #intialize user database in profile.js: load_user_url
 @action('load_user')
