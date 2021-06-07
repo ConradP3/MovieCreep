@@ -4,50 +4,51 @@
   [v-cloak] {
     display: none;
   }
-.rounded {
+
+  .rounded {
     border-radius: 50%;
-}
+  }
 </style>
 
-    <div class="section">
-        <div class="columns">
-            <div class="column">
-                <figure class="image is-128x128 is-pulled-right">
-                    <img class="is-rounded" src=[[=thumbnail]]>
-                </figure>
-            </div>
-            <div class="column">
-                <h1 class="title is-spaced">[[=user_name]]</h1>
+<div class="section">
+  <div class="columns">
+    <div class="column">
+      <figure class="image is-128x128 is-pulled-right">
+        <img class="is-rounded" src=[[=thumbnail]]>
+      </figure>
+    </div>
+    <div class="column">
+      <h1 class="title is-spaced">[[=user_name]]</h1>
 
-                <h2 class="title is-6 is-spaced">[[=user_email]]</h2>
-            </div>
-            <div class="column"></div>
-            <div class="column"></div>
-        </div>
-        <br />
+      <h2 class="title is-6 is-spaced">[[=user_email]]</h2>
+    </div>
+    <div class="column"></div>
+    <div class="column"></div>
+  </div>
+  <br />
 
-        <nav class="level">
-            <div class="level-item has-text-centered">
-              <div>
-                <p class="heading">Movies Watched</p>
-                <p class="title">[[=movie_count]]</p>
-              </div>
-            </div>
-            <div class="level-item has-text-centered">
-              <div>
-                <p class="heading">Following</p>
-                <p class="title">[[=following_count]]</p>
-              </div>
-            </div>
-            <div class="level-item has-text-centered">
-              <div>
-                <p class="heading">Followers</p>
-                <p class="title">[[=follower_count]]</p>
-              </div>
-            </div>
-      </nav>
+  <nav class="level">
+    <div class="level-item has-text-centered">
+      <div>
+        <p class="heading">Movies Watched</p>
+        <p class="title">[[=movie_count]]</p>
+      </div>
+    </div>
+    <div class="level-item has-text-centered">
+      <div>
+        <p class="heading">Following</p>
+        <p class="title">[[=following_count]]</p>
+      </div>
+    </div>
+    <div class="level-item has-text-centered">
+      <div>
+        <p class="heading">Followers</p>
+        <p class="title">[[=follower_count]]</p>
+      </div>
+    </div>
+  </nav>
 
-       <table class="table is-fullwidth is-striped">
+  <!-- <table class="table is-fullwidth is-striped">
             <tr>
                 <th></th>
                 <th>Movie Title</th>
@@ -72,12 +73,105 @@
                 </td>
             </tr>
            [[pass]]
-        </table>
+        </table> -->
+  [[for row in reversed(rows):]]
+  <div class="container block" v-if="view_mode === 0">
+    <!-- Ancestor tile -->
+    <div class="box has-background-white-ter box-shadow tile is-ancestor">
+      <div class="tile is-vertical">
 
+        <!-- Parent tile for the actual content-->
+        <div class="tile is-parent">
+
+          <!-- Movie info tile (left side of movie listing) -->
+          <div class="tile is-child is-2">
+            <img src="[[=row.link]]" width="142">
+
+            <p><B>[[=row.movie_title]]</B></p>
+            <!-- Tooltip -->
+            <div class="dropdown is-hoverable">
+              <div class="dropdown-trigger">
+                <button class="button is-light" aria-haspopup="true" aria-controls="dropdown-menu4">
+                  <span class="icon is-small">
+                    <i class='fa fa-exclamation-circle'></i>
+                  </span>
+                </button>
+              </div>
+              <div class="dropdown-menu" id="dropdown-menu4" role="menu">
+                <div class="dropdown-content">
+                  <div class="dropdown-item">
+                    <p><B>[[=row.movie_title]]</B></p>
+                    <p><B>Rated: </B>[[=row.rating]]</p>
+                    <p><B>Released: </B>[[=row.releasedate]]</p>
+                    <p><B>Runtime:</B> [[=row.runtime]]</p>
+                    <p><B>Genre: </B>[[=row.genre]]</p>
+                    <p>[[=row.plot]]</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- End of tooltip -->
+
+            <div class="block">
+              <p>[[if row.watch_list_watched:]]Seen: [[=row.watch_list_date]][[else:]]Not Seen[[pass]]</p>
+            </div>
+
+          </div>
+          <!-- End of Movie info tile (left side of movie listing) -->
+
+          <!-- Movie interactions tile (right side of movie listing) -->
+          <div class="tile is-child">
+            <div class="block">
+              [[if row.thumbnail:]]
+              <img class="rounded" width="50" src="[[=row.thumbnail]]"> [[=row.watch_list_user_name]]</img>
+              [[else:]]
+              [[pass]]
+              <h5 class="title is-5">My Review</h5>
+              <p>[[if row.watch_list_review == None:]]No review posted[[else:]][[=row.watch_list_review]][[pass]]
+              </p>
+            </div>
+
+            <div class="block">
+              [[if len(row.comments) != 0:]]
+              <h5 class="title is-5">Comments</h5>
+              [[pass]]
+
+              [[for comment in row.comments:]]
+              <figure class="is-inline-block image is-32x32">
+                <img src="[[=comment.thumbnail]]" class="is-rounded"
+                  @mouseover="get_comment([[=comment.id]], [[=row.id]])" @mouseout="hide_comment([[=row.id]])">
+              </figure>
+              [[pass]]
+              <p id="[[=row.id]]"></p> <!-- For identifying the row -->
+            </div>
+          </div>
+          <!-- End of movie interactions tile -->
+
+        </div>
+        <!-- End of Parent tile for movie content -->
+      </div>
     </div>
+    <!-- End of Ancestor tile -->
+  </div>
+
+  [[pass]]
+</div>
+</div>
+
+<!-- Gallery View -->
+
+[[pass]]
+</div>
+</div>
+
+</div>
 
 
 
 
 
 
+[[block page_scripts]]
+<!-- Loads the index-specific js for Vue -->
+
+[[end]]
