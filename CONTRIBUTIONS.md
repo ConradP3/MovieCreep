@@ -7,7 +7,7 @@ Profile, Movie Watch List, Feed, Recommendations, Deployment, Likes/Dislikes
 Profile, Other user's profiles, Following/Followers Implementation, Notifications
 
 ## Ahana Narang | anarang@ucsc.edu
-
+Movie Watch List Components: Seen, Count, Search
 
 ## Christian Benavidez | chbenavi@ucsc.edu
 Movie Reviews, Follower Comments in Movie Watch List and Feed
