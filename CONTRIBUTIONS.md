@@ -1,7 +1,7 @@
 # Contributions
 
 ## Conrad Pereira | colperei@ucsc.edu
-Profile, Movie Watch List, Feed, Recommendations, Deployment
+Profile, Movie Watch List, Feed, Recommendations, Deployment, Likes/Dislikes
 
 ## Swetha Madala | swmadala@ucsc.edu
 Profile, Other user's profiles, Following/Followers Implementation, Notifications
