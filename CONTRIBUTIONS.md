@@ -4,7 +4,7 @@
 Profile, Movie Watch List, Feed, Recommendations, Deployment
 
 ## Swetha Madala | swmadala@ucsc.edu
-Profiles, User Thumbnails, Following/Followers Implementation, Notifications
+Profile, User Thumbnails, Other user's profiles, Following/Followers Implementation, Notifications
 
 ## Ahana Narang | anarang@ucsc.edu
 
